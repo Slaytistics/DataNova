@@ -1,4 +1,5 @@
-🎉 Datalicious
+🎉 Welcome to Datalicious
+
 A no-code Streamlit web app that lets you effortlessly:
 
 📁 Upload structured data (CSV/Excel)

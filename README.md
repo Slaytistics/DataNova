@@ -1,10 +1,15 @@
-🎉 Welcome to Datalicious
+🎉 Datalicious
+Datalicious is a no-code Streamlit web app that transforms structured data into meaningful insights — instantly.
 
-A no-code Streamlit web app that lets you effortlessly:
+Whether you're a data newbie or a pro, Datalicious helps you upload, summarize, and visualize your data with ease. Plus, export-ready visuals via Figma make it presentation-perfect. 💡📊
 
-📁 Upload structured data (CSV/Excel)
-🧠 Generate smart summaries with GPT-4
-📊 Create stunning, interactive charts using Plotly
-🎨 Export ready-to-share designs via Figma API integration
+✨ Features
+📁 Upload CSV or Excel files
 
-Turn raw data into beautiful insights — no coding required! 🚀📈✨
+🤖 AI-powered summaries using GPT-4
+
+📊 Interactive charts with Plotly
+
+🎨 Export-ready designs via Figma API
+
+⚡ No coding required

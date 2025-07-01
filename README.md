@@ -1,2 +1,9 @@
-# Datalicious
-A no-code Streamlit web app that allows users to upload structured data (CSV/Excel), and automatically generates concise text summaries using GPT-4 and beautiful interactive infographics using Plotly. The app also supports export-ready designs through Figma API integration
+🎉 Datalicious
+A no-code Streamlit web app that lets you effortlessly:
+
+📁 Upload structured data (CSV/Excel)
+🧠 Generate smart summaries with GPT-4
+📊 Create stunning, interactive charts using Plotly
+🎨 Export ready-to-share designs via Figma API integration
+
+Turn raw data into beautiful insights — no coding required! 🚀📈✨

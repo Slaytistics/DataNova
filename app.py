@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 
 # 🔐 Load OpenRouter API key from Streamlit secrets
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
 # 🖥️ Page setup
 st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
@@ -32,7 +32,7 @@ if uploaded_file:
         # 🤖 GPT Summary
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Talking to GPT..."):
-                summary = summarize_dataset(df.head(7), OPENROUTER_API_KEY)
+                summary = summarize_dataset(df.head(7), OPENAI_API_KEY)
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 

@@ -1,22 +1,26 @@
+import requests
 import streamlit as st
-from openai import OpenAI
-
-# 🔐 Create OpenAI client using Streamlit secret
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def summarize_dataset(df):
+    api_key = st.secrets["TOGETHER_API_KEY"]
     sample_data = df.head(5).to_string(index=False)
     prompt = f"Give a plain-English summary of this dataset:\n\n{sample_data}"
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful data analyst."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        return response.choices[0].message.content.strip()
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
 
+    payload = {
+        "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        "messages": [
+            {"role": "system", "content": "You are a helpful data analyst."},
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    try:
+        response = requests.post("https://api.together.xyz/v1/chat/completions", headers=headers, json=payload)
+        return response.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        return f"❌ GPT error: {e}"
+        return f"❌ Together AI error: {e}"

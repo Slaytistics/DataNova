@@ -43,7 +43,6 @@ if uploaded_file:
 
         # 📈 Interactive Chart Generator
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
-
         if numeric_columns:
             st.markdown("### 📊 Infographic Generator")
             selected_column = st.selectbox("Choose a numeric column:", numeric_columns)
@@ -56,24 +55,37 @@ if uploaded_file:
 
         # 💬 AI Q&A Chat Interface
         st.markdown("### 💬 Ask About This Dataset")
+
+        # Initialize chat history
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        user_input = st.text_input("Ask a question about your data:", placeholder="e.g. What is the average salary?", key="qna_input")
+        # 🎯 Answer style selector
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
 
+        # 💬 User question input
+        user_input = st.text_input(
+            "Your question:",
+            placeholder="e.g. What is the average salary?",
+            key="qna_input"
+        )
+
+        # 💡 Ask and respond
         if user_input:
-            with st.spinner("Asking AI..."):
-                reply = ask_dataset_question(df, user_input)
+            with st.spinner("Thinking like a data analyst..."):
+                reply = ask_dataset_question(df, user_input, mode=mode)
                 st.session_state.chat_history.append(("user", user_input))
                 st.session_state.chat_history.append(("ai", reply))
 
-        for role, message in st.session_state.chat_history:
+        # 🧠 Display chat history
+        for role, msg in st.session_state.chat_history:
             if role == "user":
-                st.markdown(f"🧑‍💻 **You:** {message}")
+                st.markdown(f"🧑‍💻 **You:** {msg}")
             else:
-                st.markdown(f"🤖 **AI:** {message}")
+                st.markdown(f"🤖 **AI:** {msg}")
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
+
 else:
     st.info("⬆️ Upload a CSV file to get started.")

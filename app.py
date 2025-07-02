@@ -1,5 +1,6 @@
 from summarizer import summarize_dataset
-from utils.visualizer import plot_top_column
+from visualizer import plot_top_column
+
 
 import streamlit as st
 import pandas as pd

@@ -77,3 +77,5 @@ if uploaded_file:
 else:
     st.info("⬆️ Upload a CSV file to get started.")
 
+if _name_ == "_main_":
+    main()

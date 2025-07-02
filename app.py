@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 
 # 🔐 Load API key from Streamlit secrets
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+OPENROUTER_API_KEY = st.secrets["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"]
 
 # 🖥️ Streamlit App UI
 st.set_page_config(page_title="📊 Datalicious — AI-Powered Data Summary", layout="centered")

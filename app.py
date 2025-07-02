@@ -3,12 +3,13 @@ import pandas as pd
 import plotly.express as px
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
-from figma_exporter import export_to_figma  # 🔁 Import Figma export helper
+from figma_exporter import export_to_figma
+from qna import ask_dataset_question
 
 # 🖥️ Page setup
 st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
 st.title("🎉 Datalicious")
-st.markdown("Upload structured data and generate GPT-style summaries & charts. No code needed! ✨")
+st.markdown("Upload structured data and generate GPT-style summaries, visual charts, and even export designs to Figma. No code needed! ✨")
 
 # 📂 File Upload
 uploaded_file = st.file_uploader("📁 Upload a CSV file", type=["csv"])
@@ -19,15 +20,13 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-
-        # 🔢 Attempt to convert to numeric
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        st.subheader("📄 Dataset Preview:")
+        st.subheader("📄 Dataset Preview")
         st.dataframe(df.head())
 
-        # 🤖 AI Summary from Together AI
+        # 🤖 AI Summary
         summary = None
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Calling Together AI..."):
@@ -42,19 +41,37 @@ if uploaded_file:
                     result = export_to_figma(summary)
                     st.success(result)
 
-        # 📈 Interactive Plotly Chart
+        # 📈 Interactive Chart Generator
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
 
         if numeric_columns:
             st.markdown("### 📊 Infographic Generator")
             selected_column = st.selectbox("Choose a numeric column:", numeric_columns)
             top_n = st.slider("Top N rows to display:", min_value=5, max_value=20, value=10)
-
             if selected_column:
                 fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("⚠️ No numeric columns found for chart generation.")
+
+        # 💬 AI Q&A Chat Interface
+        st.markdown("### 💬 Ask About This Dataset")
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        user_input = st.text_input("Ask a question about your data:", placeholder="e.g. What is the average salary?", key="qna_input")
+
+        if user_input:
+            with st.spinner("Asking AI..."):
+                reply = ask_dataset_question(df, user_input)
+                st.session_state.chat_history.append(("user", user_input))
+                st.session_state.chat_history.append(("ai", reply))
+
+        for role, message in st.session_state.chat_history:
+            if role == "user":
+                st.markdown(f"🧑‍💻 **You:** {message}")
+            else:
+                st.markdown(f"🤖 **AI:** {message}")
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

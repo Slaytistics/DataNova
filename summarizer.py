@@ -1,26 +1,22 @@
-import requests
+import openai
 
 def summarize_dataset(df, api_key):
+    openai.api_key = api_key
+
     sample_data = df.head(5).to_string(index=False)
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com/GAMINGISFUN/Datalicious",  
-        "X-Title": "datalicious-app",
-        "Content-Type": "application/json"
-    }
-
     prompt = f"Give a plain-English summary of this dataset:\n\n{sample_data}"
 
-    data = {
-        "model": "mistralai/mistral-7b-instruct",  # You can swap for other OpenRouter models
-        "messages": [{"role": "user", "content": prompt}]
-    }
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # or "gpt-3.5-turbo" for cheaper use
+            messages=[
+                {"role": "system", "content": "You are a helpful data analyst."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        summary = response['choices'][0]['message']['content']
+        return summary.strip()
 
-    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
-    response_json = response.json()
+    except Exception as e:
+        return f"❌ GPT error: {e}"
 
-    if "choices" in response_json:
-        return response_json["choices"][0]["message"]["content"]
-    else:
-        return "❌ GPT error: " + str(response_json)

@@ -1,16 +1,17 @@
 import plotly.express as px
+import pandas as pd
 
 def plot_top_column(df, column_name, label_column=None):
     """
-    Creates a bar chart of the top 10 rows in a DataFrame based on a numeric column.
-    
+    Plots a bar chart of the top 10 rows in a DataFrame based on a numeric column.
+
     Args:
-        df (pd.DataFrame): Input dataframe
-        column_name (str): Column to sort and plot (must be numeric)
-        label_column (str, optional): Column to use as X-axis labels. If None, uses first column.
-    
+        df (pd.DataFrame): Input DataFrame.
+        column_name (str): Numeric column to sort and plot.
+        label_column (str, optional): Label for x-axis. Defaults to first column.
+
     Returns:
-        fig (plotly.graph_objects.Figure): Plotly bar chart figure
+        fig: Plotly figure object.
     """
     df_sorted = df.sort_values(by=column_name, ascending=False).head(10)
     x_col = label_column if label_column else df_sorted.columns[0]
@@ -24,7 +25,7 @@ def plot_top_column(df, column_name, label_column=None):
         color_discrete_sequence=["#4B8BBE"]
     )
 
-    fig.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+    fig.update_traces(texttemplate='%{text}', textposition='outside')
     fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
 
     return fig

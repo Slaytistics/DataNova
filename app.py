@@ -32,7 +32,7 @@ if uploaded_file:
         # 🤖 GPT Summary
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Talking to GPT..."):
-                summary = summarize_dataset(df.head(7), OPENAI_API_KEY)
+                summary = summarize_dataset(df.head(7))
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 

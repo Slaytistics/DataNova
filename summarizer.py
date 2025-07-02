@@ -1,15 +1,13 @@
 import openai
 
 def summarize_dataset(df, api_key):
-    from openai import OpenAI
-
-    client = OpenAI(api_key=api_key)
+    openai.api_key = api_key  # Correct way to set the key
 
     sample_data = df.head(5).to_string(index=False)
     prompt = f"Give a plain-English summary of this dataset:\n\n{sample_data}"
 
     try:
-        response = client.chat.completions.create(
+        response = openai.ChatCompletion.create(  # Correct method call
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful data analyst."},

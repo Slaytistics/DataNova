@@ -5,7 +5,7 @@ def summarize_dataset(df, api_key):
 
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com/yourusername/datalicious",  # Replace with your GitHub repo
+        "HTTP-Referer": "https://github.com/GAMINGISFUN/Datalicious",  
         "X-Title": "datalicious-app",
         "Content-Type": "application/json"
     }

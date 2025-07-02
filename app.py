@@ -4,36 +4,40 @@ import plotly.express as px
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+# 🔐 Load OpenRouter API key from Streamlit secrets
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
+# 🖥️ UI Setup
 st.set_page_config(page_title="📊 Datalicious — AI-Powered Data Summary", layout="centered")
 st.title("🎉 Datalicious")
 st.markdown("Upload structured data and generate summaries & charts using AI. No code needed! ✨")
 
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+# 📂 File Upload
+uploaded_file = st.file_uploader("📁 Upload a CSV file", type=["csv"])
 
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
 
-        # 🔍 Clean column names and drop unnamed/index columns
+        # 🔍 Clean column names and remove unnamed/index cols
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
 
-        # 🧠 Try convert all to numeric (for charts)
-        df = df.apply(pd.to_numeric, errors="ignore")
+        # 🔢 Try converting everything to numeric where possible
+        for col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        st.subheader("📁 Preview of Dataset:")
+        st.subheader("📄 Dataset Preview:")
         st.dataframe(df.head())
 
-        # 🤖 GPT Summary
+        # 🧠 GPT Summary Button
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Talking to GPT..."):
-                summary = summarize_dataset(df.head(7), OPENAI_API_KEY)
+                summary = summarize_dataset(df.head(7), OPENROUTER_API_KEY)
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 
-        # 📊 Infographic
+        # 📈 Infographic Button
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
 
         if numeric_columns:

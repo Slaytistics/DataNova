@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from summarizer import summarize_dataset
-from visualizer import plot_top_column  # Make sure this now accepts `top_n` parameter
+from visualizer import plot_top_column
+from figma_exporter import export_to_figma  # 🔁 Import Figma export helper
 
 # 🖥️ Page setup
 st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
@@ -27,11 +28,19 @@ if uploaded_file:
         st.dataframe(df.head())
 
         # 🤖 AI Summary from Together AI
+        summary = None
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Calling Together AI..."):
                 summary = summarize_dataset(df.head(7))
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
+
+        # 🎨 Export to Figma
+        if summary:
+            if st.button("🎨 Export to Figma"):
+                with st.spinner("Sending to Figma..."):
+                    result = export_to_figma(summary)
+                    st.success(result)
 
         # 📈 Interactive Plotly Chart
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()

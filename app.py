@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from summarizer import summarize_dataset
-from visualizer import plot_top_column
+from visualizer import plot_top_column  # Make sure this now accepts `top_n` parameter
 
 # 🖥️ Page setup
 st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
@@ -16,8 +16,8 @@ if uploaded_file:
     try:
         # 🔍 Read and clean dataset
         df = pd.read_csv(uploaded_file)
-        df.columns = [col.strip() for col in df.columns]  # Strip column names
-        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]  # Drop index cols
+        df.columns = [col.strip() for col in df.columns]
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
 
         # 🔢 Attempt to convert to numeric
         for col in df.columns:
@@ -29,17 +29,20 @@ if uploaded_file:
         # 🤖 AI Summary from Together AI
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Calling Together AI..."):
-                summary = summarize_dataset(df.head(7))  # No need to pass API key
+                summary = summarize_dataset(df.head(7))
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 
-        # 📈 Infographic Generator
+        # 📈 Interactive Plotly Chart
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
 
         if numeric_columns:
-            selected_column = st.selectbox("📊 Select numeric column to visualize:", numeric_columns)
+            st.markdown("### 📊 Infographic Generator")
+            selected_column = st.selectbox("Choose a numeric column:", numeric_columns)
+            top_n = st.slider("Top N rows to display:", min_value=5, max_value=20, value=10)
+
             if selected_column:
-                fig = plot_top_column(df, selected_column)
+                fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("⚠️ No numeric columns found for chart generation.")

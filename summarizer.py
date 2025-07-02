@@ -5,15 +5,15 @@ def summarize_dataset(df, api_key):
 
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com/yourgithub",  # Replace with your GitHub
-        "X-Title": "ai-chatbot-student-project",
+        "HTTP-Referer": "https://github.com/yourusername/datalicious",  # Replace with your GitHub repo
+        "X-Title": "datalicious-app",
         "Content-Type": "application/json"
     }
 
     prompt = f"Give a plain-English summary of this dataset:\n\n{sample_data}"
 
     data = {
-        "model": "mistralai/mistral-7b-instruct",
+        "model": "mistralai/mistral-7b-instruct",  # You can swap for other OpenRouter models
         "messages": [{"role": "user", "content": prompt}]
     }
 

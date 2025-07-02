@@ -4,9 +4,6 @@ import plotly.express as px
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 
-# 🔐 Load OpenRouter API key from Streamlit secrets
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-
 # 🖥️ Page setup
 st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
 st.title("🎉 Datalicious")
@@ -29,10 +26,10 @@ if uploaded_file:
         st.subheader("📄 Dataset Preview:")
         st.dataframe(df.head())
 
-        # 🤖 GPT Summary
+        # 🤖 AI Summary from Together AI
         if st.button("🧠 Generate AI Summary"):
-            with st.spinner("Talking to GPT..."):
-                summary = summarize_dataset(df.head(7))
+            with st.spinner("Calling Together AI..."):
+                summary = summarize_dataset(df.head(7))  # No need to pass API key
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 

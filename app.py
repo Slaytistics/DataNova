@@ -4,7 +4,7 @@ import requests
 import plotly.express as px
 
 # 🔑 Your OpenRouter API key (replace with your real key)
-OPENROUTER_API_KEY = "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"  # ← yahan apna key daal
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
 # 🧠 GPT summary using OpenRouter (Mistral model)
 def summarize_dataframe(df):

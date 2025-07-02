@@ -7,37 +7,36 @@ from visualizer import plot_top_column
 # 🔐 Load OpenRouter API key from Streamlit secrets
 OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
-# 🖥️ UI Setup
-st.set_page_config(page_title="📊 Datalicious — AI-Powered Data Summary", layout="centered")
+# 🖥️ Page setup
+st.set_page_config(page_title="📊 Datalicious — AI Data Summary", layout="centered")
 st.title("🎉 Datalicious")
-st.markdown("Upload structured data and generate summaries & charts using AI. No code needed! ✨")
+st.markdown("Upload structured data and generate GPT-style summaries & charts. No code needed! ✨")
 
 # 📂 File Upload
 uploaded_file = st.file_uploader("📁 Upload a CSV file", type=["csv"])
 
 if uploaded_file:
     try:
+        # 🔍 Read and clean dataset
         df = pd.read_csv(uploaded_file)
+        df.columns = [col.strip() for col in df.columns]  # Strip column names
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]  # Drop index cols
 
-        # 🔍 Clean column names and remove unnamed/index cols
-        df.columns = [col.strip() for col in df.columns]
-        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-
-        # 🔢 Try converting everything to numeric where possible
+        # 🔢 Attempt to convert to numeric
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
         st.subheader("📄 Dataset Preview:")
         st.dataframe(df.head())
 
-        # 🧠 GPT Summary Button
+        # 🤖 GPT Summary
         if st.button("🧠 Generate AI Summary"):
             with st.spinner("Talking to GPT..."):
                 summary = summarize_dataset(df.head(7), OPENROUTER_API_KEY)
                 st.success("✅ Summary Ready!")
                 st.markdown(f"### 📋 Summary\n{summary}")
 
-        # 📈 Infographic Button
+        # 📈 Infographic Generator
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
 
         if numeric_columns:
@@ -49,6 +48,6 @@ if uploaded_file:
             st.warning("⚠️ No numeric columns found for chart generation.")
 
     except Exception as e:
-        st.error(f"❌ Error reading file: {e}")
+        st.error(f"❌ Error processing file: {e}")
 else:
     st.info("⬆️ Upload a CSV file to get started.")

@@ -7,13 +7,13 @@ from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
 # 🌄 Add background image
-background_image_url = "https://i.imgur.com/282tRpY.jpeg"
+background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 
 st.markdown(
     f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background-image: url("https://i.imgur.com/282tRpY.jpeg");
+        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;

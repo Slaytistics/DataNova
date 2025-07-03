@@ -12,7 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🌌 Background */
+    /* 🌌 App background */
     [data-testid="stAppViewContainer"] {{
         background-image: url('{background_image_url}');
         background-size: cover;
@@ -21,57 +21,85 @@ st.markdown(
         background-position: center;
     }}
 
-    /* 🌫️ Translucent cards/dabba style */
-    .stButton > button, 
+    /* 🔲 Translucent dark cards for ALL widgets */
+    .stButton > button,
     .stFileUploader,
     .stTextInput, 
-    .stSelectbox, 
-    .stSlider, 
+    .stSelectbox,
+    .stSlider,
+    .stTextArea,
     .stDataFrame,
     .stExpander,
     .stAlert,
+    .stRadio,
     .stMarkdown,
     .element-container,
-    .css-1cpxqw2,  /* input container */
-    .css-1kyxreq   /* chat boxes sometimes */
-    {{
-        background-color: rgba(0, 0, 0, 0.6) !important;  /* Translucent dark */
+    .css-1kyxreq,
+    .css-1cpxqw2,
+    .block-container {{
+        background-color: rgba(0, 0, 0, 0.6) !important;
         border-radius: 12px;
-        padding: 8px;
-    }}
-
-    /* 📝 White text for everything */
-    html, body, .stApp, 
-    h1, h2, h3, h4, h5, h6, p, span, label, div, 
-    .stButton > button, 
-    .stTextInput > label,
-    .stSelectbox > label,
-    .stFileUploader > label,
-    .stMarkdown,
-    .stAlert p,
-    .css-q8sbsg, 
-    .css-10trblm, 
-    .css-1v0mbdj
-    {{
+        padding: 10px;
         color: white !important;
-        font-weight: 400;
     }}
 
-    /* 🧼 File uploader tweaks */
+    /* 🎨 Inputs, Select, Uploader fix */
+    input, textarea, select {{
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+    }}
+
+    /* 📂 File uploader tweaks */
     [data-testid="stFileUploader"] > div {{
-        background-color: rgba(255,255,255,0.1) !important;
-        border: 1px solid rgba(255,255,255,0.3);
+        background-color: rgba(255, 255, 255, 0.1) !important;
         border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.3);
     }}
 
-    /* 🖋️ Optional text glow for readability */
-    h1, h2, h3, label, p {{
+    /* 🧠 Spinner & Toasts */
+    .stSpinner, .stToast {{
+        color: white !important;
+    }}
+
+    /* ✨ Text styles */
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+        color: white !important;
         text-shadow: 1px 1px 2px #000000;
     }}
 
-    /* 🧠 Spinner & toast visibility */
-    .stToast, .stSpinner {{
+    /* 💬 Chat bubble styling */
+    .chat-message {{
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        color: white;
+    }}
+
+    /* 🔘 Buttons - uniform dark glass */
+    button[kind="primary"] {{
+        background-color: rgba(255, 255, 255, 0.15) !important;
         color: white !important;
+        border: none !important;
+    }}
+
+    /* 🔽 Expander */
+    details {{
+        background-color: rgba(0,0,0,0.6) !important;
+        border-radius: 10px;
+        color: white !important;
+    }}
+
+    /* 📊 Plotly chart padding */
+    .stPlotlyChart {{
+        background-color: rgba(0,0,0,0.4) !important;
+        border-radius: 10px;
+    }}
+
+    /* 🎛️ Slider knob color */
+    .stSlider > div > div > div > div {{
+        background-color: #ffffff33 !important;
     }}
     </style>
     """,

@@ -18,6 +18,14 @@ st.markdown(
         background-repeat: no-repeat;
         background-attachment: fixed;
     }}
+     h1, h2, h3, h4, h5, h6, p, span, div {{
+        color: white !important;  /* Force white text across elements */
+    }}
+    
+    [data-testid="stSidebar"] {{
+        background-color: rgba(255, 255, 255, 0.7);
+        color: black !important;  /* Sidebar text stays dark for readability */
+    }}
     </style>
     """,
     unsafe_allow_html=True

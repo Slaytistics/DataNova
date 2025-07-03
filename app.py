@@ -72,12 +72,7 @@ html, body {{
     border-radius: 15px;
     margin: 6px 0;
 }}
-</style>
-""", unsafe_allow_html=True)
-
-# 💬 Floating Avatar Trigger
-components.html(f"""
-<div onclick="document.getElementById('chat_trigger').click();" style="
+.floating-avatar {{
     position: fixed;
     bottom: 25px;
     right: 25px;
@@ -90,12 +85,107 @@ components.html(f"""
     box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
     cursor: pointer;
     z-index: 9999;
-"></div>
-<button id="chat_trigger" style="display:none;"></button>
-""", height=0)
+    transition: transform 0.2s ease;
+}}
+.floating-avatar:hover {{
+    transform: scale(1.05);
+}}
+.chat-panel {{
+    position: fixed;
+    bottom: 120px;
+    right: 25px;
+    width: 400px;
+    max-height: 500px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.3);
+    z-index: 9998;
+    padding: 20px;
+    overflow-y: auto;
+}}
+.close-chat {{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}}
+</style>
+""", unsafe_allow_html=True)
 
-if st.button("Open Assistant", key="chat_trigger"):
-    st.session_state.chatbox_open = True
+# 💬 Floating Avatar with Chat Panel
+def render_floating_chat():
+    chat_visibility = "block" if st.session_state.chatbox_open else "none"
+    
+    components.html(f"""
+    <div class="floating-avatar" onclick="toggleChat()"></div>
+    
+    <div id="chatPanel" class="chat-panel" style="display: {chat_visibility};">
+        <button class="close-chat" onclick="closeChat()">&times;</button>
+        <h3 style="margin-top: 0; color: #333;">💬 Ask About Dataset</h3>
+        <div id="chatMessages" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
+            <!-- Chat messages will be populated by Streamlit -->
+        </div>
+        <input type="text" id="questionInput" placeholder="Ask a question about your data..." 
+               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px;">
+        <button onclick="sendQuestion()" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Send Question
+        </button>
+    </div>
+    
+    <script>
+        function toggleChat() {{
+            const panel = document.getElementById('chatPanel');
+            const isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : 'block';
+            
+            // Trigger Streamlit rerun to update session state
+            window.parent.postMessage({{
+                type: 'streamlit:setComponentValue',
+                value: !isOpen
+            }}, '*');
+        }}
+        
+        function closeChat() {{
+            document.getElementById('chatPanel').style.display = 'none';
+            window.parent.postMessage({{
+                type: 'streamlit:setComponentValue',
+                value: false
+            }}, '*');
+        }}
+        
+        function sendQuestion() {{
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            if (question) {{
+                window.parent.postMessage({{
+                    type: 'streamlit:setComponentValue',
+                    value: question
+                }}, '*');
+                input.value = '';
+            }}
+        }}
+        
+        // Handle Enter key in input
+        document.getElementById('questionInput').addEventListener('keypress', function(e) {{
+            if (e.key === 'Enter') {{
+                sendQuestion();
+            }}
+        }});
+    </script>
+    """, height=0)
+
+# Handle chat interaction
+chat_state = st.empty()
+with chat_state:
+    chat_component = components.html(f"""
+    <div style="display: none;">
+        <input type="text" id="hiddenChatInput" />
+    </div>
+    """, height=0, key="chat_handler")
 
 # 📊 App Interface
 st.title("📊 Datalicious — AI Data Assistant")
@@ -158,25 +248,40 @@ if uploaded_file:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # 💬 Step 5: Q&A Chat Panel
+        # Render floating chat only when dataset is loaded
+        render_floating_chat()
+
+        # Handle chat messages in main area when chat is open
         if st.session_state.chatbox_open:
             st.divider()
-            st.header("💬 Ask About This Dataset")
-
-            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-            user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="chat_input")
-
+            st.header("💬 Dataset Q&A Chat")
+            
+            # Chat history display
+            for role, msg in st.session_state.chat_history:
+                class_name = "chat-message-user" if role == "user" else "chat-message-ai"
+                st.markdown(f"<div class='{class_name}'><strong>{'🧑‍💻 You' if role == 'user' else '🤖 AI'}:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            
+            # Input area
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="main_chat_input")
+            with col2:
+                mode = st.selectbox("Style:", ["Normal", "ELI5", "Detailed"], key="answer_mode")
+            
             if user_input:
                 with st.spinner("Thinking like a data analyst..."):
                     reply = ask_dataset_question(df, user_input, mode=mode)
                     st.session_state.chat_history.append(("user", user_input))
                     st.session_state.chat_history.append(("ai", reply))
-
-            for role, msg in st.session_state.chat_history:
-                class_name = "chat-message-user" if role == "user" else "chat-message-ai"
-                st.markdown(f"<div class='{class_name}'><strong>{'🧑‍💻 You' if role == 'user' else '🤖 AI'}:</strong><br>{msg}</div>", unsafe_allow_html=True)
+                    st.rerun()
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
 else:
     st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")
+
+# Manual chat toggle button (backup)
+if uploaded_file:
+    if st.button("💬 Toggle Chat", key="manual_chat_toggle"):
+        st.session_state.chatbox_open = not st.session_state.chatbox_open
+        st.rerun()

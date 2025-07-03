@@ -13,7 +13,7 @@ st.markdown(
     f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background-image: url("https://i.imgur.com/A0GenE5.jpeg");
+        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;

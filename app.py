@@ -6,6 +6,26 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
+# 🌄 Add background image
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-image: url("https://imgur.com/a/Lo7Ybn6");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .block-container {
+        background-color: rgba(255, 255, 255, 0.85);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # 📐 App layout and style
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
 st.title("📊 Datalicious — AI Data Assistant")

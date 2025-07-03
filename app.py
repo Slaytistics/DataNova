@@ -11,24 +11,19 @@ st.markdown(
     """
     <style>
     [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/xlx2V3C.jpeg");
+        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
         font-family: Arial, italic;
     }
-
     .block-container {
     padding: 2rem 3rem;
     max-width: 900px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.85) !important;
+    background: transparent !important;
     font-family: Arial, italic;
-    border: 20px solid transparent;
-    border-image: url("https://i.imgur.com/qo8IZvH.jpeg") 2 stretch;
-    border-radius: 16px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     }
 
     /* Remove background boxes */

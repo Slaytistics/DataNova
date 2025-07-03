@@ -6,7 +6,7 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# --- Custom Styles ---
+# --- Custom Styles (No big boxes) ---
 st.markdown(
     """
     <style>
@@ -22,15 +22,6 @@ st.markdown(
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-    }
-    .glass-panel {
-        background: rgba(255,255,255,0.75);
-        border-radius: 18px;
-        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
-        padding: 2.5rem 2rem 2rem 2rem;
-        margin-bottom: 2rem;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
     }
     .stButton > button {
         background: linear-gradient(90deg, #ff69b4, #ff1493);
@@ -92,11 +83,9 @@ st.markdown(
 )
 
 # --- Upload Section ---
-with st.container():
-    st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
-    st.header("📤 Upload Your Dataset")
-    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-    st.markdown("</div>", unsafe_allow_html=True)
+st.header("📤 Upload Your Dataset")
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+st.divider()
 
 if uploaded_file:
     try:
@@ -107,13 +96,11 @@ if uploaded_file:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
         # --- Preview Section ---
-        st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
         st.subheader("👀 Preview")
         st.dataframe(df.head(), use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.divider()
 
         # --- Summary Section ---
-        st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
         st.header("📝 Generate Summary")
         summary = None
         col1, col2 = st.columns([1, 3])
@@ -126,10 +113,9 @@ if uploaded_file:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.divider()
 
         # --- Chart Section ---
-        st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
         st.header("📊 Chart Generator")
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
@@ -140,10 +126,9 @@ if uploaded_file:
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.divider()
 
         # --- Export Section ---
-        st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
         st.header("🎨 Export to Figma")
         if summary:
             dataset_name = uploaded_file.name.split(".")[0]
@@ -152,10 +137,9 @@ if uploaded_file:
                     result = export_to_figma(summary, dataset_name=dataset_name)
                     st.toast("Exported to Figma!")
                     st.success(result)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.divider()
 
         # --- Q&A Section ---
-        st.markdown("<div class='glass-panel'>", unsafe_allow_html=True)
         st.header("💬 Ask About This Dataset")
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
@@ -171,7 +155,7 @@ if uploaded_file:
                 st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.divider()
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

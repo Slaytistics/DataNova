@@ -1,139 +1,176 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import streamlit.components.v1 as components
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# Session State Initialization
-def init_session_state():
-    if "chatbox_open" not in st.session_state:
-        st.session_state.chatbox_open = False
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-    if "pending_question" not in st.session_state:
-        st.session_state.pending_question = ""
-    if "summary" not in st.session_state:
-        st.session_state.summary = None
+# 🌄 Add background image
+background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 
-# Page Configuration
-def configure_page():
-    st.set_page_config(page_title="📊 Datalicious", layout="wide")
-    st.markdown("""
-        <style>
-            /* Add your CSS styles here */
-        </style>
-    """, unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    [data-testid="stAppViewContainer"] {
+        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 
-# Floating Chat Widget
-def render_floating_chat_widget():
-    # Your chat widget HTML and JavaScript code here
-    components.html("""
-        <!-- Your chat widget HTML here -->
-        <script>
-            // Your JavaScript code here
-        </script>
-    """, height=0)
+    .block-container {
+        padding: 2rem 3rem;
+        max-width: 900px;
+        margin: auto;
+        background: transparent !important;
+    }
 
-# Main Application
-def main():
-    init_session_state()
-    configure_page()
+    /* Remove background boxes */
+    .stButton > button,
+    .stFileUploader,
+    .stTextInput,
+    .stSelectbox,
+    .stSlider,
+    .stTextArea,
+    .stRadio,
+    .stExpander,
+    .stDataFrame,
+    .element-container,
+    .stPlotlyChart,
+    .chat-message,
+    details {
+        background-color: transparent !important;
+        color: black !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 12px;
+    }
 
-    st.title("📊 Datalicious — AI Data Assistant")
-    st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
-    st.divider()
+    input, textarea, select {
+        background-color: rgba(255,255,255,0.8) !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
 
-    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+    [data-testid="stFileUploader"] > div {
+        background-color: rgba(255,255,255,0.8) !important;
+    }
 
-    if uploaded_file is not None:
-        try:
-            df = pd.read_csv(uploaded_file)
-            df = clean_dataset(df)
+    button {
+        background-color: rgba(240,240,240,0.9) !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
 
-            st.subheader("👓 Preview")
-            st.dataframe(df.head(), use_container_width=True)
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+        color: black !important;
+    }
 
-            st.divider()
-            st.header("📋 Step2: Generate Summary")
+    .stSlider > div > div > div > div {
+        background-color: #888 !important;
+    }
 
-            col1, col2 = st.columns([1,3])
-            with col1:
-                if st.button("🧠 Generate Summary"):
-                    with st.spinner("Calling Together AI..."):
-                        summary = summarize_dataset(df.head(7))
-                        st.session_state["summary"] = summary
-                        st.success("✅ Summary Generated!")
-            with col2:
-                st.markdown("This summary provides a GPT-style interpretation of your dataset.")
+    .stDataFrame div {
+        color: black !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-            if st.session_state["summary"] is not None:
-                st.markdown(f"#### 🔍 Summary Output:\n{st.session_state['summary']}")
+# 📐 App layout and style
+st.set_page_config(page_title="📊 Datalicious", layout="wide")
+st.title("📊 Datalicious — AI Data Assistant")
+st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 
-            st.divider()
-            st.header("📊 Step3: Chart Generator")
+st.divider()
+st.header("📁 Step 1: Upload Your Dataset")
 
-            numeric_columns = df.select_dtypes(include=["float", "int"]).columns.tolist()
-            if numeric_columns:
-                with st.expander("📈 Chart Controls", expanded=True):
-                    selected_column = st.selectbox("Choose column:", numeric_columns)
-                    top_n = st.slider("Top N values:", 5, 20, 10)
-                    fig = plot_top_column(df, selected_column, top_n=top_n)
-                    st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning("⚠️ No numeric columns found for charts.")
+# 🔼 File uploader
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+if uploaded_file:
+    try:
+        # 🧼 Read and clean dataset
+        df = pd.read_csv(uploaded_file)
+        df.columns = [col.strip() for col in df.columns]
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
+        for col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="ignore")
 
-            st.divider()
-            st.header("🎨 Step4: Export to Figma")
-            if st.session_state["summary"] is not None:
-                dataset_name = uploaded_file.name.split(".")[0]
-                if st.button("🎨 Export Summary to Figma"):
-                    with st.spinner("Sending to Figma..."):
-                        result = export_to_figma(st.session_state["summary"], dataset_name=dataset_name)
-                        st.toast("📤 Exported to Figma!")
-                        st.success(result)
+        # 👀 Dataset preview
+        st.subheader("👓 Preview")
+        st.dataframe(df.head(), use_container_width=True)
 
-            render_floating_chat_widget()
-            handle_js_events(df)
+        st.divider()
+        st.header("📋 Step 2: Generate Summary")
 
-        except Exception as e:
-            st.error(f"❌ Error processing file: {e}")
+        # 🧠 AI summary
+        summary = None
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            if st.button("🧠 Generate Summary"):
+                with st.spinner("Calling Together AI..."):
+                    summary = summarize_dataset(df.head(7))
+                    st.success("✅ Summary Generated!")
+        with col2:
+            st.markdown("The summary provides a GPT-style overview based on sample data.")
 
-    else:
-        st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")
+        if summary:
+            st.markdown(f"#### 🔍 Summary Output:\n{summary}")
 
-def clean_dataset(df):
-    df.columns = [col.strip() for col in df.columns]
-    df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-    for col in df.columns:
-        df[col] = pd.to_numeric(df[col], errors="ignore")
-    return df
+        st.divider()
+        st.header("📊 Step 3: Chart Generator")
 
-def handle_js_events(df):
-    # Handle incoming messages from JavaScript
-    message = st.experimental_get_query_params().get('message', [None])[0]
-    if message:
-        st.session_state.pending_question = message
+        numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
+        if numeric_columns:
+            with st.expander("📈 Chart Controls", expanded=True):
+                selected_column = st.selectbox("Choose column:", numeric_columns)
+                top_n = st.slider("Top N values:", 5, 20, 10)
 
-    if st.session_state.pending_question:
-        user_question = st.session_state.pending_question
-        st.session_state.pending_question = ""
-        
-        with st.spinner("AI is thinking..."):
-            ai_response = ask_dataset_question(df, user_question, mode="Normal")
-            st.session_state.chat_history.append(("user", user_question))
-            st.session_state.chat_history.append(("ai", ai_response))
-            
-        st.components.v1.html(f"""
-            <script>
-                window.parent.postMessage({{
-                    type: 'ai-response',
-                    message: `{ai_response.replace('`', '\\`').replace('"', '\\"')}`
-                }}, '*');
-            </script>
-        """, height=0)
+                fig = plot_top_column(df, selected_column, top_n=top_n)
+                st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("⚠️ No numeric columns found for charts.")
 
-if __name__ == "__main__":
-    main()
+        st.divider()
+        st.header("🎨 Step 4: Export to Figma")
+
+        if summary:
+            dataset_name = uploaded_file.name.split(".")[0]
+            if st.button("🎨 Export Summary to Figma"):
+                with st.spinner("Sending to Figma..."):
+                    result = export_to_figma(summary, dataset_name=dataset_name)
+                    st.toast("📤 Exported to Figma!")
+                    st.success(result)
+
+        st.divider()
+        st.header("💬 Step 5: Ask About This Dataset")
+
+        # 🧠 Chat interface
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
+
+        if user_input:
+            with st.spinner("Thinking like a data analyst..."):
+                reply = ask_dataset_question(df, user_input, mode=mode)
+                st.session_state.chat_history.append(("user", user_input))
+                st.session_state.chat_history.append(("ai", reply))
+
+        # 🗨️ Styled chat display
+        for role, msg in st.session_state.chat_history:
+            bg = "#DCF8C6" if role == "user" else "#EAEAEA"
+            prefix = "🧑‍💻 You:" if role == "user" else "🤖 AI:"
+            st.markdown(
+                f"<div style='background:{bg};padding:10px;border-radius:8px;margin:6px'><strong>{prefix}</strong><br>{msg}</div>",
+                unsafe_allow_html=True
+            )
+
+    except Exception as e:
+        st.error(f"❌ Error processing file: {e}")
+else:
+    st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")

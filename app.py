@@ -12,7 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🔲 Background Image */
+    /* 🌄 Background setup */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
@@ -21,86 +21,105 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🔳 Universal dark background + white text */
-    * {{
+    /* 🔲 Base container styling */
+    .block-container {{
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background-color: rgba(0, 0, 0, 0.35) !important;
+        border-radius: 12px;
         color: white !important;
     }}
 
-    /* 🧱 Main blocks */
-    .block-container, .stMarkdown, .stText, .stCaption, .stHtml,
-    .stDataFrame, .stPlotlyChart, .stAltairChart, .element-container,
-    .stButton > button, .stTextInput, .stTextArea, .stSelectbox, 
-    .stSlider, .stRadio, .stExpander, .css-1cpxqw2 {{
-        background-color: rgba(15, 15, 15, 0.90) !important;
+    /* 📦 Common components */
+    .stButton > button,
+    .stFileUploader,
+    .stTextInput, 
+    .stSelectbox,
+    .stSlider,
+    .stTextArea,
+    .stDataFrame,
+    .stExpander,
+    .stAlert,
+    .stRadio,
+    .element-container,
+    .css-1cpxqw2,
+    .css-1kyxreq {{
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        border-radius: 12px;
+        padding: 12px;
         color: white !important;
-        border-radius: 10px;
-        padding: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
     }}
 
-    /* 🔘 Buttons */
-    .stButton > button {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-    }}
-
-    /* 🗂 File uploader full dark */
-    [data-testid="stFileUploader"] {{
-        background-color: rgba(25, 25, 25, 0.95) !important;
+    /* 🧾 Preview, markdowns, Q&A messages */
+    .stMarkdown, .css-ffhzg2, .chat-message, .element-container p,
+    .css-ocqkz7, .css-1y4p8pa {{
+        background-color: rgba(20, 20, 20, 0.8) !important;
         color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 10px;
-    }}
-    [data-testid="stFileUploader"] section {{
-        background-color: rgba(25, 25, 25, 0.95) !important;
-        color: white !important;
-    }}
-
-    /* ⬇ Dropdown menu + options */
-    .stSelectbox div[data-baseweb="select"] {{
-        background-color: rgba(25, 25, 25, 0.95) !important;
-        color: white !important;
-    }}
-    [role="listbox"], [role="option"] {{
-        background-color: rgba(20, 20, 20, 1) !important;
-        color: white !important;
-    }}
-
-    /* 🧾 Inputs */
-    input, textarea, select {{
-        background-color: rgba(25, 25, 25, 0.9) !important;
-        color: white !important;
-        border: none;
-    }}
-
-    /* 🔼 Slider thumb */
-    .stSlider > div > div > div > div {{
-        background-color: white !important;
-    }}
-
-    /* 💬 Preview / output markdown area */
-    .stMarkdown, .element-container p {{
-        background-color: rgba(20, 20, 20, 0.9) !important;
         padding: 12px;
         border-radius: 10px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    }}
+
+    /* ✍️ Input fields */
+    input, textarea, select {{
+        background-color: rgba(255, 255, 255, 0.07) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+    }}
+
+    /* 📂 File uploader */
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }}
+
+    /* 🧠 Buttons */
+    button[kind="primary"], .stButton > button {{
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border: none;
+        border-radius: 8px;
+    }}
+
+    /* 🧭 Expander */
+    details {{
+        background-color: rgba(255, 255, 255, 0.07) !important;
+        border-radius: 10px;
         color: white !important;
     }}
 
-    /* 📐 Center layout */
-    .block-container {{
-        padding: 1.5rem 3rem !important;
-        max-width: 900px;
-        margin: auto;
+    /* 🎚️ Slider handle */
+    .stSlider > div > div > div > div {{
+        background-color: #ffffff88 !important;
     }}
 
+    /* 🎨 General text styling */
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+        color: white !important;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    }}
+
+    /* 🏷️ Dropdown labels */
+    label, .stSelectbox label {{
+        color: #fff !important;
+        font-weight: 500;
+        text-shadow: 0 0 2px rgba(0,0,0,0.6);
+    }}
+
+    /* 📈 Chart area */
+    .stPlotlyChart {{
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border-radius: 10px;
+        padding: 8px;
+    }}
     </style>
     """,
     unsafe_allow_html=True
 )
-
-
-
 
 
 

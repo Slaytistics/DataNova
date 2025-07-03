@@ -12,106 +12,94 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🌄 Background setup */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
     }}
 
     .block-container {{
-        max-width: 900px;
-        margin: 0 auto;
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+        padding: 2rem 3rem;
+        max-width: 1000px;
+        margin: auto;
     }}
 
-    /* 🔲 Universal container styling */
+    /* 🟤 General containers */
     .stButton > button,
     .stFileUploader,
-    .stTextInput, 
+    .stTextInput,
     .stSelectbox,
     .stSlider,
     .stTextArea,
-    .stDataFrame,
-    .stExpander,
-    .stAlert,
     .stRadio,
-    .stPlotlyChart,
+    .stExpander,
+    .stDataFrame,
     .element-container,
+    .stPlotlyChart,
     .css-1kyxreq,
     .css-1cpxqw2 {{
-        background-color: rgba(10, 10, 10, 0.7) !important;
+        background-color: rgba(20, 20, 20, 0.9) !important;
         color: white !important;
-        border-radius: 12px;
-        padding: 12px;
-        border: 1px solid rgba(255,255,255,0.08);
-    }}
-
-    /* 📃 Markdown, Q&A, chat, preview */
-    .stMarkdown, .css-ffhzg2, .chat-message, .element-container p {{
-        background-color: rgba(20, 20, 20, 0.75) !important;
-        color: white !important;
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        border: 1px solid rgba(255,255,255,0.08);
-    }}
-
-    /* ✍️ Input fields (search, textarea, etc) */
-    input, textarea, select {{
-        background-color: rgba(20, 20, 20, 0.8) !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-    }}
-
-    /* 📂 File uploader */
-    [data-testid="stFileUploader"] > div {{
-        background-color: rgba(20, 20, 20, 0.8) !important;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.1);
+        padding: 12px;
+    }}
+
+    /* 📥 File uploader */
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(30, 30, 30, 0.9) !important;
+    }}
+
+    /* 📄 DataFrame */
+    .stDataFrame div {{
+        color: white !important;
+    }}
+
+    /* 🔘 Dropdowns */
+    select, input, textarea {{
+        background-color: #222 !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
     }}
 
     /* 🧠 Buttons */
-    button[kind="primary"], .stButton > button {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
+    button {{
+        background-color: rgba(40, 40, 40, 1) !important;
         color: white !important;
-        border: none;
-        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.2) !important;
     }}
 
-    /* 🧭 Expander headers */
+    /* 💬 Q&A bubbles */
+    .chat-message {{
+        background-color: rgba(40, 40, 40, 0.9);
+        color: white;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }}
+
+    /* 📝 Text */
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+        color: white !important;
+    }}
+
+    /* 🧭 Expander details */
     details {{
-        background-color: rgba(20, 20, 20, 0.75) !important;
+        background-color: rgba(30, 30, 30, 0.9) !important;
         border-radius: 10px;
         color: white !important;
     }}
 
-    /* 🎛️ Slider handle */
+    /* 🎚️ Slider handle */
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
-    }}
-
-    /* 🏷️ All text white and centered */
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
-        color: white !important;
-        text-align: center !important;
-    }}
-
-    /* 📑 Center file uploader */
-    .stFileUploader {{
-        text-align: center !important;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
-
-
 
 
 # 📐 App layout and style

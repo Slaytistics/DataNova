@@ -138,7 +138,14 @@ st.markdown(
 
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
-st.title("Datalicious — AI Data Assistant")
+# Page setup
+st.set_page_config(page_title="Datalicious", layout="wide")
+st.image("https://i.imgur.com/4Hqe6a0.png", use_column_width=True)  # Replace with your banner URL
+
+st.markdown(
+    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
+)
+
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )

@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import streamlit.components.v1 as components
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from figma_exporter import export_to_figma
@@ -17,7 +19,7 @@ st.set_page_config(page_title="📊 Datalicious", layout="wide")
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
 
-# CSS + JS for avatar toggle and chat popup
+# CSS and avatar + chat popup + hidden toggle button + JS
 st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
@@ -35,11 +37,36 @@ st.markdown(f"""
     background: transparent !important;
 }}
 
-button[aria-label="Toggle chat"] {{
-    display: none !important;
+.stButton > button,
+.stTextInput,
+.stSelectbox,
+.stSlider,
+.stExpander,
+.stDataFrame,
+.element-container {{
+    background-color: transparent !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
 }}
 
-/* Bigger floating avatar */
+input, textarea, select {{
+    background-color: rgba(255,255,255,0.8) !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}}
+
+button {{
+    background-color: rgba(240,240,240,0.9) !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}}
+
+.stSlider > div > div > div > div {{
+    background-color: #888 !important;
+}}
+
+/* Floating avatar */
 .chat-float {{
     position: fixed;
     bottom: 25px;
@@ -156,31 +183,46 @@ button[aria-label="Toggle chat"] {{
 .chat-send-button:hover {{
     background-color: #005a9e;
 }}
+
+/* Hidden toggle button */
+#toggle-btn {{
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+}}
 </style>
 
 <div class="chat-float" id="avatar" title="Toggle Chat"></div>
 
 <script>
-const avatar = window.parent.document.getElementById('avatar');
+const avatar = document.getElementById('avatar');
+const toggleBtn = document.getElementById('toggle-btn');
 avatar.onclick = () => {{
-    const btn = window.parent.document.querySelector('button[aria-label="Toggle chat"]');
-    if(btn) btn.click();
+    if(toggleBtn){{
+        toggleBtn.click();
+    }}
 }};
 </script>
 """, unsafe_allow_html=True)
 
-# Hidden toggle button (clicked by avatar and close icon)
-if st.button("", key="toggle_btn", help="Toggle chat", args=None, kwargs=None):
+# Hidden toggle button
+if st.button("Toggle Chat", key="toggle_btn"):
     st.session_state.chatbox_open = not st.session_state.chatbox_open
 
-# Main content without Step 5
+# Main App UI
+
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 st.divider()
 
 st.header("📁 Upload Your Dataset")
-
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+df = None
+summary = None
+
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -194,18 +236,19 @@ if uploaded_file:
 
         st.divider()
         st.header("📋 Generate Summary")
-        summary = None
+
         col1, col2 = st.columns([1, 3])
         with col1:
-            if st.button("🧠 Generate Summary"):
+            if st.button("🧠 Generate Summary", key="generate_summary"):
                 with st.spinner("Calling Together AI..."):
                     summary = summarize_dataset(df.head(7))
+                    st.session_state["summary"] = summary
                     st.success("✅ Summary Generated!")
         with col2:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
 
-        if summary:
-            st.markdown(f"#### 🔍 Summary Output:\n{summary}")
+        if "summary" in st.session_state:
+            st.markdown(f"#### 🔍 Summary Output:\n{st.session_state['summary']}")
 
         st.divider()
         st.header("📊 Chart Generator")
@@ -222,47 +265,43 @@ if uploaded_file:
 
         st.divider()
         st.header("🎨 Export to Figma")
-        if summary:
+        if "summary" in st.session_state:
             dataset_name = uploaded_file.name.split(".")[0]
-            if st.button("🎨 Export Summary to Figma"):
+            if st.button("🎨 Export Summary to Figma", key="export_figma"):
                 with st.spinner("Sending to Figma..."):
-                    result = export_to_figma(summary, dataset_name=dataset_name)
+                    result = export_to_figma(st.session_state["summary"], dataset_name=dataset_name)
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
-
-        # Show chat popup ONLY when toggled open
-        if st.session_state.chatbox_open:
-            st.markdown("""
-            <div class="chat-popup" id="chat-popup">
-                <div class="chat-popup-header">
-                    💬 AI Data Chat
-                    <span id="chat-close" class="chat-popup-close" onclick="document.querySelector('button[aria-label=\\'Toggle chat\\']').click();">&times;</span>
-                </div>
-            """, unsafe_allow_html=True)
-
-            # Messages container
-            st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
-            for role, msg in st.session_state.chat_history:
-                if role == "user":
-                    st.markdown(f'<div class="chat-message-user">{msg}</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<div class="chat-message-ai">{msg}</div>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            # Chat input and send button
-            user_question = st.text_input("Ask a question about your dataset:", key="qna_input", label_visibility="collapsed")
-            submit_button = st.button("Send", key="qna_send")
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            if submit_button and user_question:
-                with st.spinner("Thinking like a data analyst..."):
-                    reply = ask_dataset_question(df, user_question, mode="Normal")
-                    st.session_state.chat_history.append(("user", user_question))
-                    st.session_state.chat_history.append(("ai", reply))
-                    st.experimental_rerun()
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
 else:
     st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")
+
+# Chat popup UI only when toggled open
+if st.session_state.chatbox_open:
+
+    # Make sure df exists for Q&A
+    if df is None:
+        st.warning("Upload and load a dataset first to ask questions.")
+    else:
+
+        st.markdown("""
+        <div class="chat-popup" id="chat-popup">
+            <div class="chat-popup-header">
+                💬 AI Data Chat
+                <span id="chat-close" class="chat-popup-close" style="cursor:pointer;">&times;</span>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Chat messages container
+        st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
+        for role, msg in st.session_state.chat_history:
+            if role == "user":
+                st.markdown(f'<div class="chat-message-user">{msg}</div>', unsafe_allow_html=True)
+            else:
+                st.markdown(f'<div class="chat-message-ai">{msg}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # Chat input and send button
+        user_question = st

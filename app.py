@@ -201,11 +201,11 @@ if st.button("", key="toggle_btn", help="Toggle chat", args=None, kwargs=None):
     st.session_state.chatbox_open = not st.session_state.chatbox_open
 
 # Main app content without Step 5
-st.title("📊 Datalicious — AI Data Assistant")
-st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
+st.title("Datalicious — AI Data Assistant")
+st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma ")
 st.divider()
 
-st.header("📁 Step 1: Upload Your Dataset")
+st.header("Upload Your Dataset")
 
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
@@ -220,11 +220,11 @@ if uploaded_file:
         st.dataframe(df.head(), use_container_width=True)
 
         st.divider()
-        st.header("📋 Step 2: Generate Summary")
+        st.header("Generate Summary")
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
-            if st.button("🧠 Generate Summary"):
+            if st.button("Generate Summary"):
                 with st.spinner("Calling Together AI..."):
                     summary = summarize_dataset(df.head(7))
                     st.success("✅ Summary Generated!")
@@ -232,14 +232,14 @@ if uploaded_file:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
 
         if summary:
-            st.markdown(f"#### 🔍 Summary Output:\n{summary}")
+            st.markdown(f"#### Summary Output:\n{summary}")
 
         st.divider()
-        st.header("📊 Step 3: Chart Generator")
+        st.header("Chart Generator")
 
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
-            with st.expander("📈 Chart Controls", expanded=True):
+            with st.expander("Chart Controls", expanded=True):
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
                 fig = plot_top_column(df, selected_column, top_n=top_n)
@@ -248,13 +248,13 @@ if uploaded_file:
             st.warning("⚠️ No numeric columns found for charts.")
 
         st.divider()
-        st.header("🎨 Step 4: Export to Figma")
+        st.header("Export to Figma")
         if summary:
             dataset_name = uploaded_file.name.split(".")[0]
-            if st.button("🎨 Export Summary to Figma"):
+            if st.button("Export Summary to Figma"):
                 with st.spinner("Sending to Figma..."):
                     result = export_to_figma(summary, dataset_name=dataset_name)
-                    st.toast("📤 Exported to Figma!")
+                    st.toast("Exported to Figma!")
                     st.success(result)
 
         # Chat popup UI only when toggled open

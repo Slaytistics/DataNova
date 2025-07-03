@@ -7,7 +7,7 @@ from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
 # 🌄 Add background image
-background_image_url = "https://i.imgur.com/yourImageID.png"
+background_image_url = "https://i.imgur.com/gBCTd0j.jpeg"
 
 st.markdown(
     f"""

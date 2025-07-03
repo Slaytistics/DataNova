@@ -10,22 +10,24 @@ from qna import ask_dataset_question
 st.markdown(
     """
     <style>
-    .stApp {
+    [data-testid="stAppViewContainer"] {
         background-image: url("https://imgur.com/a/Lo7Ybn6");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
-    .block-container {
-        background-color: rgba(255, 255, 255, 0.85);
-        padding: 2rem;
-        border-radius: 10px;
+
+    [data-testid="stHeader"] {
+        background: rgba(255, 255, 255, 0.0);
+    }
+
+    [data-testid="stToolbar"] {
+        right: 2rem;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
-
 # 📐 App layout and style
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
 st.title("📊 Datalicious — AI Data Assistant")

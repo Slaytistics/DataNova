@@ -93,7 +93,7 @@ st.markdown(
 
     /* Heading colors */
     h1, .stTitle {
-        color: #FF69B4 !important; /* Hot Pink */
+        color: #FF0000 !important; /* Red */
     }
     h2, .stHeader {
         color: #FF0000 !important; /* Red */

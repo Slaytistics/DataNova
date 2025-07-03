@@ -12,6 +12,8 @@ if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "pending_question" not in st.session_state:
+    st.session_state.pending_question = ""
 
 # 🎨 Page Styling
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
@@ -93,10 +95,292 @@ html, body {{
 </style>
 """, unsafe_allow_html=True)
 
-# 💬 Floating Avatar (Simplified)
-def render_floating_avatar():
+# 💬 Floating Chat Widget (Like LinkedIn)
+def render_floating_chat_widget():
+    is_open = st.session_state.chatbox_open
+    chat_display = "block" if is_open else "none"
+    
     components.html(f"""
-    <div class="floating-avatar" title="AI Assistant Available - Use Toggle Button Below"></div>
+    <div id="floating-chat-widget">
+        <!-- Floating Avatar Button -->
+        <div class="floating-avatar" onclick="toggleChatWidget()" title="Click to chat with AI Assistant">
+            <div class="chat-notification">💬</div>
+        </div>
+        
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-window" style="display: {chat_display};">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <img src="{assistant_avatar_url}" class="chat-avatar-small" alt="AI">
+                    <span>AI Data Assistant</span>
+                </div>
+                <button class="close-chat" onclick="closeChatWidget()">&times;</button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="ai-message">
+                    <img src="{assistant_avatar_url}" class="message-avatar" alt="AI">
+                    <div class="message-content">
+                        <div class="message-bubble ai-bubble">
+                            Hi! I'm your AI data assistant. Upload a dataset and I'll help you analyze it! 📊
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ask about your dataset..." 
+                       onkeypress="handleEnterKey(event)">
+                <button onclick="sendMessage()" class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .floating-avatar {{
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-image: url('{assistant_avatar_url}');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0px 4px 16px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            border: 3px solid #fff;
+        }}
+        
+        .floating-avatar:hover {{
+            transform: scale(1.1);
+            box-shadow: 0px 6px 20px rgba(0,0,0,0.4);
+        }}
+        
+        .chat-notification {{
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }}
+        
+        .chat-window {{
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0px 8px 30px rgba(0,0,0,0.3);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }}
+        
+        .chat-header {{
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }}
+        
+        .chat-title {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }}
+        
+        .chat-avatar-small {{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }}
+        
+        .close-chat {{
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        
+        .chat-messages {{
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8f9fa;
+        }}
+        
+        .ai-message, .user-message {{
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }}
+        
+        .user-message {{
+            justify-content: flex-end;
+        }}
+        
+        .message-avatar {{
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }}
+        
+        .message-content {{
+            max-width: 70%;
+        }}
+        
+        .message-bubble {{
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }}
+        
+        .ai-bubble {{
+            background: #e9ecef;
+            color: #333;
+        }}
+        
+        .user-bubble {{
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+        }}
+        
+        .chat-input-area {{
+            padding: 15px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            gap: 10px;
+        }}
+        
+        #chatInput {{
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }}
+        
+        .send-button {{
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }}
+        
+        .send-button:hover {{
+            background: #0056b3;
+        }}
+    </style>
+    
+    <script>
+        let chatOpen = {str(is_open).lower()};
+        
+        function toggleChatWidget() {{
+            chatOpen = !chatOpen;
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatOpen ? 'block' : 'none';
+            
+            // Notify Streamlit about state change
+            window.parent.postMessage({{
+                type: 'chat-toggle',
+                isOpen: chatOpen
+            }}, '*');
+        }}
+        
+        function closeChatWidget() {{
+            chatOpen = false;
+            document.getElementById('chatWindow').style.display = 'none';
+            
+            // Notify Streamlit about state change
+            window.parent.postMessage({{
+                type: 'chat-toggle',
+                isOpen: false
+            }}, '*');
+        }}
+        
+        function sendMessage() {{
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {{
+                // Add user message to chat
+                addMessageToChat(message, 'user');
+                
+                // Send to Streamlit
+                window.parent.postMessage({{
+                    type: 'chat-message',
+                    message: message
+                }}, '*');
+                
+                input.value = '';
+            }}
+        }}
+        
+        function handleEnterKey(event) {{
+            if (event.key === 'Enter') {{
+                sendMessage();
+            }}
+        }}
+        
+        function addMessageToChat(message, sender) {{
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'user-message' : 'ai-message';
+            
+            if (sender === 'user') {{
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble user-bubble">${{message}}</div>
+                    </div>
+                `;
+            }} else {{
+                messageDiv.innerHTML = `
+                    <img src="{assistant_avatar_url}" class="message-avatar" alt="AI">
+                    <div class="message-content">
+                        <div class="message-bubble ai-bubble">${{message}}</div>
+                    </div>
+                `;
+            }}
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }}
+        
+        // Listen for messages from Streamlit
+        window.addEventListener('message', function(event) {{
+            if (event.data.type === 'ai-response') {{
+                addMessageToChat(event.data.message, 'ai');
+            }}
+        }});
+    </script>
     """, height=0)
 
 # 📊 App Interface
@@ -159,47 +443,31 @@ if uploaded_file is not None:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # Render floating avatar when dataset is loaded
-        render_floating_avatar()
+        # Render floating chat widget when dataset is loaded
+        render_floating_chat_widget()
 
-        st.divider()
-        st.header("💬 Step 5: Q&A Chat Assistant")
-        
-        # Chat toggle button
-        if st.button("💬 Toggle Chat Assistant", key="main_chat_toggle", help="Click to open/close the Q&A chat"):
-            st.session_state.chatbox_open = not st.session_state.chatbox_open
-            st.rerun()
-
-        # Show chat interface when open
+        # Handle chat messages (hidden from main interface)
         if st.session_state.chatbox_open:
-            st.subheader("🤖 Ask Questions About Your Dataset")
-            
-            # Input area
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="main_chat_input")
-            with col2:
-                mode = st.selectbox("Answer Style:", ["Normal", "ELI5", "Detailed"], key="answer_mode")
-            
-            # Process user input
-            if user_input:
-                with st.spinner("Thinking like a data analyst..."):
-                    reply = ask_dataset_question(df, user_input, mode=mode)
-                    st.session_state.chat_history.append(("user", user_input))
-                    st.session_state.chat_history.append(("ai", reply))
-                    st.rerun()
-            
-            # Display chat history
-            if st.session_state.chat_history:
-                st.subheader("Chat History")
-                for role, msg in st.session_state.chat_history:
-                    class_name = "chat-message-user" if role == "user" else "chat-message-ai"
-                    st.markdown(f"<div class='{class_name}'><strong>{'🧑‍💻 You' if role == 'user' else '🤖 AI'}:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            # Process any new messages
+            if "pending_question" in st.session_state and st.session_state.pending_question:
+                user_question = st.session_state.pending_question
+                st.session_state.pending_question = ""
                 
-                # Clear chat history button
-                if st.button("🗑️ Clear Chat History", key="clear_chat"):
-                    st.session_state.chat_history = []
-                    st.rerun()
+                # Get AI response
+                with st.spinner("AI is thinking..."):
+                    ai_response = ask_dataset_question(df, user_question, mode="Normal")
+                    st.session_state.chat_history.append(("user", user_question))
+                    st.session_state.chat_history.append(("ai", ai_response))
+                    
+                    # Send response back to chat widget
+                    st.components.v1.html(f"""
+                    <script>
+                        window.parent.postMessage({{
+                            type: 'ai-response',
+                            message: `{ai_response.replace('`', '\\`').replace('"', '\\"')}`
+                        }}, '*');
+                    </script>
+                    """, height=0)
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

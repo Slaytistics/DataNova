@@ -6,7 +6,7 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# --- Custom Styles (No big boxes) ---
+# --- Custom Styles (No dividers, no big boxes) ---
 st.markdown(
     """
     <style>
@@ -85,7 +85,6 @@ st.markdown(
 # --- Upload Section ---
 st.header("📤 Upload Your Dataset")
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-st.divider()
 
 if uploaded_file:
     try:
@@ -98,7 +97,6 @@ if uploaded_file:
         # --- Preview Section ---
         st.subheader("👀 Preview")
         st.dataframe(df.head(), use_container_width=True)
-        st.divider()
 
         # --- Summary Section ---
         st.header("📝 Generate Summary")
@@ -113,7 +111,6 @@ if uploaded_file:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
-        st.divider()
 
         # --- Chart Section ---
         st.header("📊 Chart Generator")
@@ -126,7 +123,6 @@ if uploaded_file:
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
-        st.divider()
 
         # --- Export Section ---
         st.header("🎨 Export to Figma")
@@ -137,7 +133,6 @@ if uploaded_file:
                     result = export_to_figma(summary, dataset_name=dataset_name)
                     st.toast("Exported to Figma!")
                     st.success(result)
-        st.divider()
 
         # --- Q&A Section ---
         st.header("💬 Ask About This Dataset")
@@ -155,7 +150,6 @@ if uploaded_file:
                 st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-        st.divider()
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

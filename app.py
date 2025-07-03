@@ -6,148 +6,124 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# Custom styles with Arial Italic font, colored headings, styled button, background image
+# Page setup
+st.set_page_config(page_title="Datalicious", page_icon="📊", layout="wide")
+
+# Custom styles
 st.markdown(
     """
     <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+    html, body, [data-testid="stAppViewContainer"] {
+        font-family: 'Segoe UI', sans-serif;
+        background-image: linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.94)), url("https://i.imgur.com/qo8IZvH.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-        font-family: Arial, italic;
     }
 
     .block-container {
         padding: 2rem 3rem;
-        max-width: 900px;
+        max-width: 1000px;
         margin: auto;
-        background: transparent !important;
-        font-family: Arial, italic;
     }
 
-    /* Remove background boxes */
-    .stButton > button,
-    .stFileUploader,
-    .stTextInput,
-    .stSelectbox,
-    .stSlider,
-    .stTextArea,
-    .stRadio,
-    .stExpander,
-    .stDataFrame,
-    .element-container,
-    .stPlotlyChart,
-    .chat-message,
-    details {
-        background-color: transparent !important;
-        color: #222 !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 12px;
-        font-family: Arial, italic;
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600 !important;
+        color: #2C3E50 !important;
+    }
+
+    h1 {
+        font-size: 2.6rem;
+        color: #1A5276 !important;
+    }
+
+    .stButton > button {
+        background: linear-gradient(90deg, #2874A6, #1ABC9C);
+        color: white !important;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 10px 24px;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+    }
+
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #1ABC9C, #2874A6);
+        transform: scale(1.02);
     }
 
     input, textarea, select {
-        background-color: rgba(255,255,255,0.85) !important;
-        color: #222 !important;
-        border: 1px solid #bbb !important;
+        border: 1px solid #ccc !important;
         border-radius: 6px;
-        font-family: Arial, italic;
-        font-style: italic;
+        padding: 8px;
+        font-size: 1rem;
+        background-color: #fff !important;
     }
 
-    [data-testid="stFileUploader"] > div {
-        background-color: rgba(255,255,255,0.85) !important;
-        border-radius: 6px;
+    .stTextInput > div > div > input,
+    .stTextArea textarea {
+        background-color: #f9f9f9 !important;
     }
 
-    /* Styled generate summary button */
-    .stButton > button {
-        background: linear-gradient(90deg, #ff69b4, #ff1493);
-        color: white !important;
-        font-weight: 700;
-        font-family: Arial, italic;
-        border-radius: 12px !important;
-        border: none !important;
-        padding: 12px 30px !important;
-        box-shadow: 0 4px 10px rgba(255, 20, 147, 0.6);
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(90deg, #ff1493, #ff69b4);
-        box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
-    }
-
-    button {
-        font-family: Arial, italic;
-    }
-
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #222 !important;
-        font-family: Arial, italic !important;
-        font-style: italic !important;
-    }
-
-    /* Heading colors */
-    h1, .stTitle {
-        color: #FF69B4 !important; /* Hot Pink */
-    }
-    h2, .stHeader {
-        color: #FF0000 !important; /* Red */
-    }
-    h3 {
-        color: #0000FF !important; /* Blue */
-    }
-    h4 {
-        color: #FF00FF !important; /* Magenta */
-    }
-    h5 {
-        color: #800080 !important; /* Purple */
-    }
-    h6 {
-        color: #C71585 !important; /* Medium Violet Red */
-    }
-
-    .stSlider > div > div > div > div {
-        background-color: #666 !important;
+    .stSelectbox > div > div {
+        background-color: #f9f9f9 !important;
     }
 
     .stDataFrame div {
-        color: #222 !important;
+        color: #333 !important;
+        font-size: 14px;
     }
 
-    /* Chat message boxes */
     .chat-user {
-        background: #FADADD;
-        padding: 10px;
+        background: #D6EAF8;
+        padding: 12px 16px;
         border-radius: 8px;
         margin: 6px;
+        font-size: 0.95rem;
     }
+
     .chat-ai {
-        background: #E6E6FA;
-        padding: 10px;
+        background: #FDEDEC;
+        padding: 12px 16px;
         border-radius: 8px;
         margin: 6px;
+        font-size: 0.95rem;
+    }
+
+    .stExpanderHeader {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #2C3E50;
+    }
+
+    .stSlider > div > div > div > div {
+        background-color: #1ABC9C !important;
+    }
+
+    .stMarkdown {
+        font-size: 1rem;
+        color: #34495E;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Page setup
-st.set_page_config(page_title="Datalicious", layout="wide")
-st.title("Datalicious — AI Data Assistant")
+# Main title
+st.title("📊 Datalicious — AI Data Assistant")
 st.markdown(
-    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
+    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma."
 )
-
 st.divider()
-st.header("Upload Your Dataset")
 
+# Upload section
+st.header("📁 Upload Your Dataset")
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -156,12 +132,12 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        st.subheader("Preview")
+        st.subheader("🔍 Preview")
         st.dataframe(df.head(), use_container_width=True)
 
+        # Summary section
         st.divider()
-        st.header("Generate Summary")
-
+        st.header("📝 Generate Summary")
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
@@ -173,12 +149,13 @@ if uploaded_file:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
 
         if summary:
-            st.markdown(f"#### Summary Output:\n{summary}")
+            st.markdown(f"#### 📌 Summary Output:\n{summary}")
 
+        # Chart section
         st.divider()
-        st.header("Chart Generator")
-
+        st.header("📈 Chart Generator")
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
+
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
                 selected_column = st.selectbox("Choose column:", numeric_columns)
@@ -187,10 +164,11 @@ if uploaded_file:
                 fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
-            st.warning("No numeric columns found for charts.")
+            st.warning("⚠️ No numeric columns found for charts.")
 
+        # Export to Figma
         st.divider()
-        st.header("Export to Figma")
+        st.header("📤 Export to Figma")
 
         if summary:
             dataset_name = uploaded_file.name.split(".")[0]
@@ -200,8 +178,9 @@ if uploaded_file:
                     st.toast("Exported to Figma!")
                     st.success(result)
 
+        # QnA Section
         st.divider()
-        st.header("Ask About This Dataset")
+        st.header("💬 Ask About This Dataset")
 
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
@@ -222,6 +201,7 @@ if uploaded_file:
                 st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"Error processing file: {e}")
+        st.error(f"❌ Error processing file: {e}")
 else:
-    st.info("Upload a CSV file to begin your Datalicious journey.")
+    st.info("📌 Upload a CSV file to begin your Datalicious journey.")
+

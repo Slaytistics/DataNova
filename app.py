@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import streamlit.components.v1 as components
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from figma_exporter import export_to_figma
@@ -19,7 +17,7 @@ st.set_page_config(page_title="📊 Datalicious", layout="wide")
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
 
-# CSS Styling with bigger floating avatar and popup chat box
+# CSS + JS for avatar toggle and chat popup
 st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
@@ -37,33 +35,8 @@ st.markdown(f"""
     background: transparent !important;
 }}
 
-.stButton > button,
-.stTextInput,
-.stSelectbox,
-.stSlider,
-.stExpander,
-.stDataFrame,
-.element-container {{
-    background-color: transparent !important;
-    color: black !important;
-    border: none !important;
-    box-shadow: none !important;
-}}
-
-input, textarea, select {{
-    background-color: rgba(255,255,255,0.8) !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-}}
-
-button {{
-    background-color: rgba(240,240,240,0.9) !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-}}
-
-.stSlider > div > div > div > div {{
-    background-color: #888 !important;
+button[aria-label="Toggle chat"] {{
+    display: none !important;
 }}
 
 /* Bigger floating avatar */
@@ -183,29 +156,24 @@ button {{
 .chat-send-button:hover {{
     background-color: #005a9e;
 }}
-
-/* Hide toggle button */
-button[aria-label="Toggle chat"] {{
-    display: none !important;
-}}
 </style>
 
-<div class="chat-float" id="avatar"></div>
+<div class="chat-float" id="avatar" title="Toggle Chat"></div>
 
 <script>
-const avatar = document.getElementById('avatar');
+const avatar = window.parent.document.getElementById('avatar');
 avatar.onclick = () => {{
-    const btn = document.querySelector('button[aria-label="Toggle chat"]');
+    const btn = window.parent.document.querySelector('button[aria-label="Toggle chat"]');
     if(btn) btn.click();
 }};
 </script>
 """, unsafe_allow_html=True)
 
-# Hidden toggle button for chatbox state (no label, hidden by CSS)
-if st.button("", key="toggle_btn", help="Toggle chat", args=None, kwargs=None, disabled=False):
+# Hidden toggle button (clicked by avatar and close icon)
+if st.button("", key="toggle_btn", help="Toggle chat", args=None, kwargs=None):
     st.session_state.chatbox_open = not st.session_state.chatbox_open
 
-# Main app content (without Step 5 chat visible)
+# Main content without Step 5
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 st.divider()
@@ -262,7 +230,7 @@ if uploaded_file:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # Chat popup UI only when toggled open
+        # Show chat popup ONLY when toggled open
         if st.session_state.chatbox_open:
             st.markdown("""
             <div class="chat-popup" id="chat-popup">
@@ -272,7 +240,7 @@ if uploaded_file:
                 </div>
             """, unsafe_allow_html=True)
 
-            # Chat messages container
+            # Messages container
             st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
             for role, msg in st.session_state.chat_history:
                 if role == "user":
@@ -281,7 +249,7 @@ if uploaded_file:
                     st.markdown(f'<div class="chat-message-ai">{msg}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-            # Chat input and submit button
+            # Chat input and send button
             user_question = st.text_input("Ask a question about your dataset:", key="qna_input", label_visibility="collapsed")
             submit_button = st.button("Send", key="qna_send")
 

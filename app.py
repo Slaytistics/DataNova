@@ -7,18 +7,17 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# 🌐 Initialize session state
+# 🔄 Session State
 if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# 📐 Page config
+# 🎨 Page Styling
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
-avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
+assistant_avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
 
-# 🎨 Custom styling
 st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
@@ -28,90 +27,118 @@ st.markdown(f"""
     background-position: center;
     background-repeat: no-repeat;
 }}
-
-.chat-float {{
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background-image: url('{avatar_url}');
-    background-size: cover;
-    background-position: center;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
-    cursor: pointer;
-    z-index: 10000;
+.block-container {{
+    padding: 2rem 3rem;
+    max-width: 900px;
+    margin: auto;
+    background: transparent !important;
 }}
-
+.stButton > button,
+.stTextInput,
+.stSelectbox,
+.stSlider,
+.stExpander,
+.stDataFrame,
+.element-container,
+.stPlotlyChart {{
+    background-color: transparent !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 12px;
+}}
+input, textarea, select {{
+    background-color: rgba(255,255,255,0.8) !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}}
+button {{
+    background-color: rgba(240,240,240,0.9) !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}}
+html, body {{
+    color: black !important;
+}}
 .chat-message-user {{
     background: #DCF8C6;
     padding: 8px 12px;
     border-radius: 15px;
-    margin-bottom: 8px;
-    max-width: 80%;
-    align-self: flex-end;
+    margin: 6px 0;
 }}
-
 .chat-message-ai {{
     background: #EAEAEA;
     padding: 8px 12px;
     border-radius: 15px;
-    margin-bottom: 8px;
-    max-width: 80%;
-    align-self: flex-start;
+    margin: 6px 0;
 }}
 </style>
 """, unsafe_allow_html=True)
 
-# 🧠 Floating avatar logic
-components.html("""
-<div onclick="document.getElementById('chat_toggle_button').click();" class="chat-float"></div>
-<button id="chat_toggle_button" style="display:none;"></button>
+# 💬 Floating Avatar Trigger
+components.html(f"""
+<div onclick="document.getElementById('chat_trigger').click();" style="
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background-image: url('{assistant_avatar_url}');
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999;
+"></div>
+<button id="chat_trigger" style="display:none;"></button>
 """, height=0)
 
-if st.button("💬 Toggle Assistant", key="chat_toggle_button"):
-    st.session_state.chatbox_open = not st.session_state.chatbox_open
+if st.button("Open Assistant", key="chat_trigger"):
+    st.session_state.chatbox_open = True
 
-# 📁 Dataset upload
+# 📊 App Interface
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 st.divider()
+st.header("📁 Step 1: Upload Your Dataset")
 
-st.header("📁 Upload Your Dataset")
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 df = None
-summary = None
 
 if uploaded_file:
     try:
+        # 🧼 Clean dataset
         df = pd.read_csv(uploaded_file)
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
+        # 👀 Preview
         st.subheader("👓 Preview")
         st.dataframe(df.head(), use_container_width=True)
 
         st.divider()
-        st.header("📋 Generate Summary")
+        st.header("📋 Step 2: Generate Summary")
+
         col1, col2 = st.columns([1, 3])
         with col1:
-            if st.button("🧠 Generate Summary", key="generate_summary"):
+            if st.button("🧠 Generate Summary"):
                 with st.spinner("Calling Together AI..."):
                     summary = summarize_dataset(df.head(7))
                     st.session_state["summary"] = summary
                     st.success("✅ Summary Generated!")
         with col2:
-            st.markdown("The summary provides a GPT-style overview based on sample data.")
+            st.markdown("This summary provides a GPT-style interpretation of your dataset.")
 
         if "summary" in st.session_state:
             st.markdown(f"#### 🔍 Summary Output:\n{st.session_state['summary']}")
 
         st.divider()
-        st.header("📊 Chart Generator")
-        numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
+        st.header("📊 Step 3: Chart Generator")
+
+        numeric_columns = df.select_dtypes(include=["float", "int"]).columns.tolist()
         if numeric_columns:
             with st.expander("📈 Chart Controls", expanded=True):
                 selected_column = st.selectbox("Choose column:", numeric_columns)
@@ -122,34 +149,32 @@ if uploaded_file:
             st.warning("⚠️ No numeric columns found for charts.")
 
         st.divider()
-        st.header("🎨 Export to Figma")
+        st.header("🎨 Step 4: Export to Figma")
         if "summary" in st.session_state:
             dataset_name = uploaded_file.name.split(".")[0]
-            if st.button("🎨 Export Summary to Figma", key="export_figma"):
+            if st.button("🎨 Export Summary to Figma"):
                 with st.spinner("Sending to Figma..."):
                     result = export_to_figma(st.session_state["summary"], dataset_name=dataset_name)
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # 💬 Inline Chat Assistant Panel
+        # 💬 Step 5: Q&A Chat Panel
         if st.session_state.chatbox_open:
             st.divider()
             st.header("💬 Ask About This Dataset")
+
             mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-            with st.form(key="chat_form"):
-                user_input = st.text_input("Ask your question:", placeholder="e.g. Which country starts with C?")
-                send = st.form_submit_button("Send")
-                if send and user_input:
-                    with st.spinner("Thinking..."):
-                        reply = ask_dataset_question(df, user_input, mode=mode)
+            user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="chat_input")
+
+            if user_input:
+                with st.spinner("Thinking like a data analyst..."):
+                    reply = ask_dataset_question(df, user_input, mode=mode)
                     st.session_state.chat_history.append(("user", user_input))
                     st.session_state.chat_history.append(("ai", reply))
-                    st.experimental_rerun()
 
-            # Chat transcript
             for role, msg in st.session_state.chat_history:
-                cls = "chat-message-user" if role == "user" else "chat-message-ai"
-                st.markdown(f"<div class='{cls}'>{msg}</div>", unsafe_allow_html=True)
+                class_name = "chat-message-user" if role == "user" else "chat-message-ai"
+                st.markdown(f"<div class='{class_name}'><strong>{'🧑‍💻 You' if role == 'user' else '🤖 AI'}:</strong><br>{msg}</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

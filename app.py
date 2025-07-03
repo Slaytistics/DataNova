@@ -12,7 +12,6 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🌌 Background image setup */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
@@ -21,69 +20,80 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🧊 Central block: max-width & center */
+    /* 🔳 Semi-transparent widgets */
+    .stSelectbox, .stTextInput, .stTextArea, .stSlider, .stRadio,
+    .stFileUploader, .stButton > button, .stDataFrame, .stExpander,
+    .css-1cpxqw2, .block-container {{
+        background: rgba(0, 0, 0, 0.35) !important;
+        color: white !important;
+        border-radius: 10px;
+        padding: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }}
+
+    /* 🔳 Fix dropdown menu */
+    .stSelectbox div[data-baseweb="select"] > div {{
+        background-color: rgba(0, 0, 0, 0.75) !important;
+        color: white !important;
+    }}
+
+    /* 🔽 Dropdown items */
+    .stSelectbox [role="listbox"] {{
+        background-color: rgba(0, 0, 0, 0.85) !important;
+        color: white !important;
+    }}
+    .stSelectbox [role="option"] {{
+        background-color: transparent !important;
+        color: white !important;
+    }}
+
+    /* 🖊️ Inputs */
+    input, textarea, select {{
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }}
+
+    /* ⬛ File uploader fix */
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-radius: 10px;
+        color: white !important;
+    }}
+
+    /* ✨ Universal text color */
+    html, body, label, div, p, span, h1, h2, h3, h4, h5, h6 {{
+        color: white !important;
+    }}
+
+    /* 🧭 Center & tighten layout */
     .block-container {{
+        padding: 1.5rem 3rem !important;
         max-width: 900px;
         margin: auto;
-        padding: 2rem 1rem !important;
     }}
 
-    /* 🔳 Common UI glass style */
-    .stFileUploader, .stTextInput, .stSelectbox, .stSlider,
-    .stTextArea, .stDataFrame, .stExpander, .stRadio,
-    .element-container, .css-1kyxreq, .css-1cpxqw2 {{
-        background-color: rgba(0, 0, 0, 0.4) !important;
-        border-radius: 12px !important;
-        padding: 14px !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        color: white !important;
-    }}
-
-    /* ✅ Inputs clean + padded */
-    input, textarea, select {{
-        background-color: rgba(255,255,255,0.08) !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        border-radius: 8px !important;
-        padding: 10px 14px !important;
-        font-size: 15px !important;
-    }}
-
-    /* 🧾 Fix dropdown popup (was white before) */
-    .stSelectbox div[data-baseweb="select"] {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        color: white !important;
-        border-radius: 10px !important;
-    }}
-    .stSelectbox div[role="listbox"] {{
-        background-color: rgba(40, 40, 40, 0.95) !important;
-    }}
-    .stSelectbox span {{
-        color: white !important;
-    }}
-
-    /* 🧠 Buttons */
-    .stButton > button {{
-        background-color: rgba(255,255,255,0.12) !important;
-        color: white !important;
-        padding: 10px 16px !important;
-        border: none;
-        border-radius: 10px !important;
-    }}
-
-    /* ✨ Text color globally */
-    html, body, h1, h2, h3, h4, h5, h6, p, label, div {{
-        color: white !important;
-    }}
-
-    /* 🎛️ Slider knob */
+    /* 🎛️ Slider handle color */
     .stSlider > div > div > div > div {{
-        background-color: #ffffff99 !important;
+        background-color: #ffffffaa !important;
+    }}
+
+    /* 🧠 Button styling */
+    .stButton > button {{
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border: none;
+    }}
+
+    /* 📈 Chart background fix */
+    .stPlotlyChart {{
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border-radius: 8px;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 
 

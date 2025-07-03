@@ -12,7 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🌌 Background */
+    /* 🌌 Background image setup */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
@@ -21,105 +21,70 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🔲 Main UI components */
-    .stFileUploader,
-    .stTextInput, 
-    .stSelectbox,
-    .stSlider,
-    .stTextArea,
-    .stDataFrame,
-    .stExpander,
-    .stAlert,
-    .stRadio,
-    .element-container,
-    .css-1kyxreq,
-    .css-1cpxqw2 {{
-        background-color: rgba(0, 0, 0, 0.35) !important;
-        border-radius: 12px !important;
-        padding: 16px !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
+    /* 🧊 Central block: max-width & center */
+    .block-container {{
+        max-width: 900px;
+        margin: auto;
+        padding: 2rem 1rem !important;
     }}
 
-    /* ✅ Input fields (clean + spaced) */
+    /* 🔳 Common UI glass style */
+    .stFileUploader, .stTextInput, .stSelectbox, .stSlider,
+    .stTextArea, .stDataFrame, .stExpander, .stRadio,
+    .element-container, .css-1kyxreq, .css-1cpxqw2 {{
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        color: white !important;
+    }}
+
+    /* ✅ Inputs clean + padded */
     input, textarea, select {{
-        background-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: rgba(255,255,255,0.08) !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.2) !important;
-        padding: 12px 16px !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        font-size: 15px !important;
+    }}
+
+    /* 🧾 Fix dropdown popup (was white before) */
+    .stSelectbox div[data-baseweb="select"] {{
+        background-color: rgba(30, 30, 30, 0.9) !important;
+        color: white !important;
         border-radius: 10px !important;
-        font-size: 16px !important;
+    }}
+    .stSelectbox div[role="listbox"] {{
+        background-color: rgba(40, 40, 40, 0.95) !important;
+    }}
+    .stSelectbox span {{
+        color: white !important;
     }}
 
-    /* 📂 File uploader inner box */
-    [data-testid="stFileUploader"] > div {{
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        border-radius: 10px;
-        padding: 12px !important;
-        border: 1px solid rgba(255,255,255,0.15);
+    /* 🧠 Buttons */
+    .stButton > button {{
+        background-color: rgba(255,255,255,0.12) !important;
+        color: white !important;
+        padding: 10px 16px !important;
+        border: none;
+        border-radius: 10px !important;
     }}
 
-    /* 💬 Chat-like messages */
-    .chat-message {{
-        background-color: rgba(255, 255, 255, 0.07);
-        color: white;
-        padding: 12px 16px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-    }}
-
-    /* ✨ Text color */
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+    /* ✨ Text color globally */
+    html, body, h1, h2, h3, h4, h5, h6, p, label, div {{
         color: white !important;
     }}
 
     /* 🎛️ Slider knob */
     .stSlider > div > div > div > div {{
-        background-color: #ffffff88 !important;
-    }}
-
-    /* 🧠 Buttons */
-    button[kind="primary"], .stButton > button {{
-        background-color: rgba(255, 255, 255, 0.12) !important;
-        color: white !important;
-        border: none !important;
-        padding: 10px 16px !important;
-        border-radius: 10px !important;
-    }}
-
-    /* 📈 Charts */
-    .stPlotlyChart {{
-        background-color: rgba(0, 0, 0, 0.25) !important;
-        border-radius: 10px;
-        padding: 8px;
-    }}
-
-    /* 🧭 Expander */
-    details {{
-        background-color: rgba(255, 255, 255, 0.07) !important;
-        border-radius: 10px;
-        color: white !important;
-        padding: 10px;
-    }}
-
-    /* 🧊 General layout */
-    .block-container {{
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }}
-
-    /* 🔄 Fix text cutoff on selectboxes & inputs */
-    .stTextInput > div > input,
-    .stSelectbox > div > div {{
-        padding: 12px 16px !important;
-        font-size: 16px !important;
+        background-color: #ffffff99 !important;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 
 

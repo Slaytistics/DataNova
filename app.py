@@ -11,7 +11,7 @@ st.markdown(
     """
     <style>
     [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+        background-image: url("https://i.imgur.com/xlx2V3C.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
@@ -26,7 +26,7 @@ st.markdown(
     background: rgba(255, 255, 255, 0.85) !important;
     font-family: Arial, italic;
     border: 20px solid transparent;
-    border-image: url("https://i.imgur.com/xlx2V3C.jpeg") 30 stretch;
+    border-image: url("https://i.imgur.com/qo8IZvH.jpeg") 2 stretch;
     border-radius: 16px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     }

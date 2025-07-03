@@ -12,24 +12,48 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
+    /* 🌌 Background setup */
     [data-testid="stAppViewContainer"] {{
-        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg");
+        background-image: url('{background_image_url}');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        background-position: center;
     }}
-     h1, h2, h3, h4, h5, h6, p, span, div {{
-        color: white !important;  /* Force white text across elements */
+
+    /* 🎨 Text styling override */
+    html, body, .stApp {{
+        color: white !important;
     }}
-    
+
+    /* 📁 File uploader label fix */
+    [data-testid="stFileUploaderLabel"] > div {{
+        color: white !important;
+        font-weight: 500;
+    }}
+
+    /* 🧱 Common headings and text */
+    h1, h2, h3, h4, h5, h6, p, span, label, div {{
+        color: white !important;
+    }}
+
+    /* 🧭 Sidebar style */
     [data-testid="stSidebar"] {{
-        background-color: rgba(255, 255, 255, 0.7);
-        color: black !important;  /* Sidebar text stays dark for readability */
+        background-color: rgba(255,255,255,0.1);
+        color: white !important;
+    }}
+
+    /* 📤 Button styling (optional) */
+    button {{
+        background-color: #ffffff11;
+        color: white !important;
+        border: 1px solid white;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 # 📐 App layout and style
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
 st.title("📊 Datalicious — AI Data Assistant")

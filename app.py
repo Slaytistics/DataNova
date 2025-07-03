@@ -7,19 +7,18 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# Initialize chat state and history
+# 🌐 Initialize session state
 if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Page config and URLs
+# 📐 Page config
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
-
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
 
-# CSS and avatar + chat popup + hidden toggle button + JS
+# 🎨 Custom styling
 st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
@@ -30,43 +29,6 @@ st.markdown(f"""
     background-repeat: no-repeat;
 }}
 
-.block-container {{
-    padding: 2rem 3rem;
-    max-width: 900px;
-    margin: auto;
-    background: transparent !important;
-}}
-
-.stButton > button,
-.stTextInput,
-.stSelectbox,
-.stSlider,
-.stExpander,
-.stDataFrame,
-.element-container {{
-    background-color: transparent !important;
-    color: black !important;
-    border: none !important;
-    box-shadow: none !important;
-}}
-
-input, textarea, select {{
-    background-color: rgba(255,255,255,0.8) !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-}}
-
-button {{
-    background-color: rgba(240,240,240,0.9) !important;
-    color: black !important;
-    border: 1px solid #ccc !important;
-}}
-
-.stSlider > div > div > div > div {{
-    background-color: #888 !important;
-}}
-
-/* Floating avatar */
 .chat-float {{
     position: fixed;
     bottom: 25px;
@@ -80,58 +42,8 @@ button {{
     box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
     cursor: pointer;
     z-index: 10000;
-    transition: transform 0.2s ease;
-}}
-.chat-float:hover {{
-    transform: scale(1.1);
 }}
 
-/* Chat popup container */
-.chat-popup {{
-    position: fixed;
-    bottom: 125px;
-    right: 25px;
-    width: 350px;
-    max-height: 500px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    z-index: 10001;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}}
-
-/* Chat popup header */
-.chat-popup-header {{
-    background-color: #0078D4;
-    color: white;
-    padding: 10px 15px;
-    font-weight: bold;
-    font-size: 18px;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}}
-
-/* Close button */
-.chat-popup-close {{
-    cursor: pointer;
-    font-size: 22px;
-    font-weight: bold;
-}}
-
-/* Chat messages area */
-.chat-messages {{
-    flex: 1;
-    padding: 10px 15px;
-    overflow-y: auto;
-    background: #f7f7f7;
-}}
-
-/* Message bubbles */
 .chat-message-user {{
     background: #DCF8C6;
     padding: 8px 12px;
@@ -149,71 +61,19 @@ button {{
     max-width: 80%;
     align-self: flex-start;
 }}
-
-/* Input area */
-.chat-input-area {{
-    padding: 10px 15px;
-    border-top: 1px solid #ccc;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}}
-
-.chat-input {{
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    font-size: 14px;
-    outline: none;
-}}
-
-.chat-send-button {{
-    background-color: #0078D4;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}}
-
-.chat-send-button:hover {{
-    background-color: #005a9e;
-}}
-
-/* Hidden toggle button */
-#toggle-btn {{
-    position: fixed;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-    user-select: none;
-}}
 </style>
-
-<div class="chat-float" id="avatar" title="Toggle Chat"></div>
-
-<script>
-const avatar = document.getElementById('avatar');
-const toggleBtn = document.getElementById('toggle-btn');
-avatar.onclick = () => {{
-    if(toggleBtn){{
-        toggleBtn.click();
-    }}
-}};
-</script>
 """, unsafe_allow_html=True)
 
-# Hidden toggle button
-if st.button("Toggle Chat", key="toggle_btn"):
+# 🧠 Floating avatar logic
+components.html("""
+<div onclick="document.getElementById('chat_toggle_button').click();" class="chat-float"></div>
+<button id="chat_toggle_button" style="display:none;"></button>
+""", height=0)
+
+if st.button("💬 Toggle Assistant", key="chat_toggle_button"):
     st.session_state.chatbox_open = not st.session_state.chatbox_open
 
-# Main App UI
-
+# 📁 Dataset upload
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 st.divider()
@@ -236,7 +96,6 @@ if uploaded_file:
 
         st.divider()
         st.header("📋 Generate Summary")
-
         col1, col2 = st.columns([1, 3])
         with col1:
             if st.button("🧠 Generate Summary", key="generate_summary"):
@@ -252,7 +111,6 @@ if uploaded_file:
 
         st.divider()
         st.header("📊 Chart Generator")
-
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("📈 Chart Controls", expanded=True):
@@ -273,35 +131,27 @@ if uploaded_file:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
+        # 💬 Inline Chat Assistant Panel
+        if st.session_state.chatbox_open:
+            st.divider()
+            st.header("💬 Ask About This Dataset")
+            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+            with st.form(key="chat_form"):
+                user_input = st.text_input("Ask your question:", placeholder="e.g. Which country starts with C?")
+                send = st.form_submit_button("Send")
+                if send and user_input:
+                    with st.spinner("Thinking..."):
+                        reply = ask_dataset_question(df, user_input, mode=mode)
+                    st.session_state.chat_history.append(("user", user_input))
+                    st.session_state.chat_history.append(("ai", reply))
+                    st.experimental_rerun()
+
+            # Chat transcript
+            for role, msg in st.session_state.chat_history:
+                cls = "chat-message-user" if role == "user" else "chat-message-ai"
+                st.markdown(f"<div class='{cls}'>{msg}</div>", unsafe_allow_html=True)
+
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
 else:
     st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")
-
-# Chat popup UI only when toggled open
-if st.session_state.chatbox_open:
-
-    # Make sure df exists for Q&A
-    if df is None:
-        st.warning("Upload and load a dataset first to ask questions.")
-    else:
-
-        st.markdown("""
-        <div class="chat-popup" id="chat-popup">
-            <div class="chat-popup-header">
-                💬 AI Data Chat
-                <span id="chat-close" class="chat-popup-close" style="cursor:pointer;">&times;</span>
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Chat messages container
-        st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
-        for role, msg in st.session_state.chat_history:
-            if role == "user":
-                st.markdown(f'<div class="chat-message-user">{msg}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="chat-message-ai">{msg}</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Chat input and send button
-        user_question = st

@@ -1,19 +1,21 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit.components.v1 as components
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# Initialize session state for chat
+# 💬 Initialize chat state and history
 if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Set page config and styles
+# 🌄 Background + Avatar Styling
 st.set_page_config(page_title="📊 Datalicious", layout="wide")
+
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
 
@@ -76,44 +78,31 @@ button {{
     box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
     cursor: pointer;
     z-index: 9999;
-    transition: transform 0.2s ease-in-out;
-}}
-.chat-float:hover {{
-    transform: scale(1.05);
 }}
 </style>
+
+<div class="chat-float" id="avatar"></div>
+
+<script>
+const avatar = window.parent.document.getElementById('avatar');
+avatar.onclick = () => {{
+    const btn = window.parent.document.getElementById('toggle_btn');
+    if(btn) btn.click();
+}};
+</script>
 """, unsafe_allow_html=True)
 
-# Floating avatar as a button (toggle chatbox)
-clicked = st.button("", key="chat_toggle", help="Toggle chat", args=None, kwargs=None,
-                    css_class="chat-float")  # Trick: You can't add css_class in st.button, so we'll use a workaround below
-
-# Workaround: Render avatar div that triggers the toggle button click using JS
-# This snippet is to trigger st.button click event via clicking on the avatar div
-# Only render it once per run
-if 'avatar_js_injected' not in st.session_state:
-    st.markdown(f"""
-    <script>
-    const chatFloat = window.parent.document.querySelector('.chat-float');
-    if(chatFloat){{
-        chatFloat.onclick = () => {{
-            const btn = window.parent.document.querySelector('button[kind="primary"]');
-            if(btn) btn.click();
-        }}
-    }}
-    </script>
-    """, unsafe_allow_html=True)
-    st.session_state.avatar_js_injected = True
-
-if clicked:
+# Hidden toggle button for chatbox state
+if st.button("Toggle Chat", key="toggle_btn", help="Toggle chat"):
     st.session_state.chatbox_open = not st.session_state.chatbox_open
 
-# Main App Title & Description
+# ✅ Main App Title & Description
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma 🎨")
 st.divider()
 
 st.header("📁 Step 1: Upload Your Dataset")
+
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -143,6 +132,7 @@ if uploaded_file:
 
         st.divider()
         st.header("📊 Step 3: Chart Generator")
+
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("📈 Chart Controls", expanded=True):
@@ -163,12 +153,12 @@ if uploaded_file:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # Step 5: Chat assistant
+        # 💬 Step 5: Ask About This Dataset
         if st.session_state.chatbox_open:
             st.divider()
             st.header("💬 Step 5: Ask About This Dataset")
 
-            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], key="answer_mode")
+            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
             user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
             if user_input:
@@ -176,8 +166,6 @@ if uploaded_file:
                     reply = ask_dataset_question(df, user_input, mode=mode)
                     st.session_state.chat_history.append(("user", user_input))
                     st.session_state.chat_history.append(("ai", reply))
-                    # Clear input field after submission
-                    st.experimental_rerun()
 
             for role, msg in st.session_state.chat_history:
                 bg = "#DCF8C6" if role == "user" else "#EAEAEA"

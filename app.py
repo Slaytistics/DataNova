@@ -12,7 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
-    /* 🌌 Background setup */
+    /* 🌌 Background */
     [data-testid="stAppViewContainer"] {{
         background-image: url('{background_image_url}');
         background-size: cover;
@@ -21,38 +21,63 @@ st.markdown(
         background-position: center;
     }}
 
-    /* 🎨 Text styling override */
-    html, body, .stApp {{
-        color: white !important;
+    /* 🌫️ Translucent cards/dabba style */
+    .stButton > button, 
+    .stFileUploader,
+    .stTextInput, 
+    .stSelectbox, 
+    .stSlider, 
+    .stDataFrame,
+    .stExpander,
+    .stAlert,
+    .stMarkdown,
+    .element-container,
+    .css-1cpxqw2,  /* input container */
+    .css-1kyxreq   /* chat boxes sometimes */
+    {{
+        background-color: rgba(0, 0, 0, 0.6) !important;  /* Translucent dark */
+        border-radius: 12px;
+        padding: 8px;
     }}
 
-    /* 📁 File uploader label fix */
-    [data-testid="stFileUploaderLabel"] > div {{
+    /* 📝 White text for everything */
+    html, body, .stApp, 
+    h1, h2, h3, h4, h5, h6, p, span, label, div, 
+    .stButton > button, 
+    .stTextInput > label,
+    .stSelectbox > label,
+    .stFileUploader > label,
+    .stMarkdown,
+    .stAlert p,
+    .css-q8sbsg, 
+    .css-10trblm, 
+    .css-1v0mbdj
+    {{
         color: white !important;
-        font-weight: 500;
+        font-weight: 400;
     }}
 
-    /* 🧱 Common headings and text */
-    h1, h2, h3, h4, h5, h6, p, span, label, div {{
-        color: white !important;
+    /* 🧼 File uploader tweaks */
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 10px;
     }}
 
-    /* 🧭 Sidebar style */
-    [data-testid="stSidebar"] {{
-        background-color: rgba(255,255,255,0.1);
-        color: white !important;
+    /* 🖋️ Optional text glow for readability */
+    h1, h2, h3, label, p {{
+        text-shadow: 1px 1px 2px #000000;
     }}
 
-    /* 📤 Button styling (optional) */
-    button {{
-        background-color: #ffffff11;
+    /* 🧠 Spinner & toast visibility */
+    .stToast, .stSpinner {{
         color: white !important;
-        border: 1px solid white;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # 📐 App layout and style
 st.set_page_config(page_title="📊 Datalicious", layout="wide")

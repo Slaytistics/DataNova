@@ -83,7 +83,7 @@ def apply_theme(theme):
 apply_theme(theme)
 
 # Title & Intro
-st.title("📊 Datalicious — AI Data Assistant")
+st.markdown('<h1 style="color: red; font-family: Arial, italic;">Datalicious — AI Data Assistant</h1>', unsafe_allow_html=True)
 st.markdown("""
 Upload structured data, generate insights, visualize trends, and export them professionally.  
 **Powered by Together AI + Figma**

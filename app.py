@@ -6,19 +6,17 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# 🌄 Add background image and custom fonts + styles
+# Custom styles with Arial Italic font, colored headings, styled button, background image
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto+Slab&display=swap');
-
     [data-testid="stAppViewContainer"] {
         background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-        font-family: 'Poppins', sans-serif;
+        font-family: Arial, italic;
     }
 
     .block-container {
@@ -26,6 +24,7 @@ st.markdown(
         max-width: 900px;
         margin: auto;
         background: transparent !important;
+        font-family: Arial, italic;
     }
 
     /* Remove background boxes */
@@ -47,6 +46,7 @@ st.markdown(
         border: none !important;
         box-shadow: none !important;
         padding: 12px;
+        font-family: Arial, italic;
     }
 
     input, textarea, select {
@@ -54,7 +54,8 @@ st.markdown(
         color: #222 !important;
         border: 1px solid #bbb !important;
         border-radius: 6px;
-        font-family: 'Poppins', sans-serif;
+        font-family: Arial, italic;
+        font-style: italic;
     }
 
     [data-testid="stFileUploader"] > div {
@@ -62,16 +63,52 @@ st.markdown(
         border-radius: 6px;
     }
 
+    /* Styled generate summary button */
+    .stButton > button {
+        background: linear-gradient(90deg, #ff69b4, #ff1493);
+        color: white !important;
+        font-weight: 700;
+        font-family: Arial, italic;
+        border-radius: 12px !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        box-shadow: 0 4px 10px rgba(255, 20, 147, 0.6);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #ff1493, #ff69b4);
+        box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
+    }
+
     button {
-        background-color: rgba(240,240,240,0.9) !important;
-        color: #222 !important;
-        border: 1px solid #bbb !important;
-        font-family: 'Poppins', sans-serif;
-        border-radius: 6px;
+        font-family: Arial, italic;
     }
 
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #222 !important;
+        font-family: Arial, italic !important;
+        font-style: italic !important;
+    }
+
+    /* Heading colors */
+    h1, .stTitle {
+        color: #FF69B4 !important; /* Hot Pink */
+    }
+    h2, .stHeader {
+        color: #FF0000 !important; /* Red */
+    }
+    h3 {
+        color: #0000FF !important; /* Blue */
+    }
+    h4 {
+        color: #FF00FF !important; /* Magenta */
+    }
+    h5 {
+        color: #800080 !important; /* Purple */
+    }
+    h6 {
+        color: #C71585 !important; /* Medium Violet Red */
     }
 
     .stSlider > div > div > div > div {
@@ -82,35 +119,25 @@ st.markdown(
         color: #222 !important;
     }
 
-    /* Titles and headings with different colors and fonts */
-    .css-1d391kg h1, .css-1d391kg .stTitle {
-        color: #1B4F72;  /* Deep Blue */
-        font-family: 'Roboto Slab', serif;
-        font-weight: 700;
+    /* Chat message boxes */
+    .chat-user {
+        background: #FADADD;
+        padding: 10px;
+        border-radius: 8px;
+        margin: 6px;
     }
-
-    .css-1d391kg h2, .css-1d391kg .stHeader {
-        color: #117A65; /* Teal */
-        font-family: 'Roboto Slab', serif;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    /* Box around Generate Summary */
-    .summary-box {
-        background-color: rgba(255, 255, 255, 0.95);
-        border: 2px solid #117A65;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 2rem;
+    .chat-ai {
+        background: #E6E6FA;
+        padding: 10px;
+        border-radius: 8px;
+        margin: 6px;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# 📐 App layout and style
+# Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.title("Datalicious — AI Data Assistant")
 st.markdown(
@@ -120,41 +147,33 @@ st.markdown(
 st.divider()
 st.header("Upload Your Dataset")
 
-# 🔼 File uploader
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
-        # 🧼 Read and clean dataset
         df = pd.read_csv(uploaded_file)
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # 👀 Dataset preview
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
         st.divider()
         st.header("Generate Summary")
 
-        # 🧠 AI summary inside box
         summary = None
-        with st.container():
-            st.markdown('<div class="summary-box">', unsafe_allow_html=True)
-            col1, col2 = st.columns([1, 3])
-            with col1:
-                if st.button("Generate Summary"):
-                    with st.spinner("Calling Together AI..."):
-                        summary = summarize_dataset(df.head(7))
-                        st.success("Summary Generated!")
-            with col2:
-                st.markdown(
-                    "The summary provides a GPT-style overview based on sample data."
-                )
-            if summary:
-                st.markdown(f"#### Summary Output:\n{summary}")
-            st.markdown("</div>", unsafe_allow_html=True)
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            if st.button("Generate Summary"):
+                with st.spinner("Calling Together AI..."):
+                    summary = summarize_dataset(df.head(7))
+                    st.success("Summary Generated!")
+        with col2:
+            st.markdown("The summary provides a GPT-style overview based on sample data.")
+
+        if summary:
+            st.markdown(f"#### Summary Output:\n{summary}")
 
         st.divider()
         st.header("Chart Generator")
@@ -184,7 +203,6 @@ if uploaded_file:
         st.divider()
         st.header("Ask About This Dataset")
 
-        # 🧠 Chat interface
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
@@ -197,14 +215,11 @@ if uploaded_file:
                 st.session_state.chat_history.append(("user", user_input))
                 st.session_state.chat_history.append(("ai", reply))
 
-        # 🗨️ Styled chat display without emojis
         for role, msg in st.session_state.chat_history:
-            bg = "#DFF2E1" if role == "user" else "#F0F0F0"
-            prefix = "You:" if role == "user" else "AI:"
-            st.markdown(
-                f"<div style='background:{bg};padding:10px;border-radius:8px;margin:6px'><strong>{prefix}</strong><br>{msg}</div>",
-                unsafe_allow_html=True,
-            )
+            if role == "user":
+                st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"Error processing file: {e}")

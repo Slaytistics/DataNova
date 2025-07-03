@@ -6,7 +6,20 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# Custom styles with Arial Italic font, colored headings, styled button, background image
+# Set page config FIRST
+st.set_page_config(page_title="Datalicious", layout="wide")
+
+# Full-width banner image
+st.markdown(
+    """
+    <div style="width: 100%; margin-top: -2rem;">
+        <img src="https://i.imgur.com/Sq8U7cY.png" style="width: 100%; height: auto; display: block; margin-bottom: -1rem;" />
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Custom styles
 st.markdown(
     """
     <style>
@@ -19,14 +32,12 @@ st.markdown(
         font-family: Arial, italic;
     }
     .block-container {
-    padding: 2rem 3rem;
-    max-width: 900px;
-    margin: auto;
-    background: transparent !important;
-    font-family: Arial, italic;
+        padding: 2rem 3rem;
+        max-width: 900px;
+        margin: auto;
+        background: transparent !important;
+        font-family: Arial, italic;
     }
-
-    /* Remove background boxes */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -47,7 +58,6 @@ st.markdown(
         padding: 12px;
         font-family: Arial, italic;
     }
-
     input, textarea, select {
         background-color: rgba(255,255,255,0.85) !important;
         color: #222 !important;
@@ -56,13 +66,10 @@ st.markdown(
         font-family: Arial, italic;
         font-style: italic;
     }
-
     [data-testid="stFileUploader"] > div {
         background-color: rgba(255,255,255,0.85) !important;
         border-radius: 6px;
     }
-
-    /* Styled generate summary button */
     .stButton > button {
         background: linear-gradient(90deg, #ff69b4, #ff1493);
         color: white !important;
@@ -79,46 +86,22 @@ st.markdown(
         background: linear-gradient(90deg, #ff1493, #ff69b4);
         box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
     }
-
     button {
         font-family: Arial, italic;
     }
-
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #222 !important;
         font-family: Arial, italic !important;
         font-style: italic !important;
     }
-
-    /* Heading colors */
-    h1, .stTitle {
-        color: #FF0000 !important; /* Red */
-    }
-    h2, .stHeader {
-        color: #FF0000 !important; /* Red */
-    }
-    h3 {
-        color: #0000FF !important; /* Blue */
-    }
-    h4 {
-        color: #FF00FF !important; /* Magenta */
-    }
-    h5 {
-        color: #800080 !important; /* Purple */
-    }
-    h6 {
-        color: #C71585 !important; /* Medium Violet Red */
-    }
-
-    .stSlider > div > div > div > div {
-        background-color: #666 !important;
-    }
-
-    .stDataFrame div {
-        color: #222 !important;
-    }
-
-    /* Chat message boxes */
+    h1, .stTitle { color: #FF0000 !important; }
+    h2, .stHeader { color: #FF0000 !important; }
+    h3 { color: #0000FF !important; }
+    h4 { color: #FF00FF !important; }
+    h5 { color: #800080 !important; }
+    h6 { color: #C71585 !important; }
+    .stSlider > div > div > div > div { background-color: #666 !important; }
+    .stDataFrame div { color: #222 !important; }
     .chat-user {
         background: #FADADD;
         padding: 10px;
@@ -135,20 +118,11 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.set_page_config(page_title="Datalicious", layout="wide")
 
-st.markdown(
-    """
-    <div style="width: 100%; margin-top: -2rem;">
-        <img src="https://i.imgur.com/Sq8U7cY.png" style="width: 100%; height: auto; display: block; margin-bottom: -1rem;" />
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-st.image("https://i.imgur.com/4Hqe6a0.png", use_container_width=True)
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )
+
 st.divider()
 st.header("Upload Your Dataset")
 

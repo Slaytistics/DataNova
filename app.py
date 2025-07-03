@@ -9,83 +9,83 @@ from qna import ask_dataset_question
 # Page configuration
 st.set_page_config(page_title="Datalicious — AI Data Assistant", layout="wide")
 
-# Custom Styling - Improved Color Contrast & Background
-st.markdown(
-    """
-    <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/KOnjfP2.png"); /* Subtle light gradient */
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center;
-        font-family: Arial, sans-serif;
-    }
+# Theme toggle
+theme = st.selectbox("🌓 Choose Theme", ["Light", "Dark"], index=0)
 
-    .block-container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 2rem 3rem;
-        border-radius: 16px;
-        max-width: 1000px;
-        margin: auto;
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    }
+# CSS Theme Styling
+def apply_theme(theme):
+    if theme == "Dark":
+        css = """
+        <style>
+        body, [data-testid="stAppViewContainer"] {
+            background: #1e1e1e !important;
+            color: #f0f0f0 !important;
+        }
+        .block-container {
+            background: rgba(30, 30, 30, 0.85) !important;
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+        }
+        .stButton > button {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: white !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #ff69b4 !important;
+        }
+        input, textarea, select, .stFileUploader > div {
+            background-color: #333 !important;
+            color: #fff !important;
+            border: 1px solid #888 !important;
+        }
+        .stDataFrame div {
+            color: #fff !important;
+        }
+        .chat-user { background: #2c2c2c; color: #fff; }
+        .chat-ai { background: #3a3a3a; color: #fff; }
+        </style>
+        """
+    else:
+        css = """
+        <style>
+        body, [data-testid="stAppViewContainer"] {
+            background: #f9f9f9 !important;
+            color: #111 !important;
+        }
+        .block-container {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+        .stButton > button {
+            background: linear-gradient(to right, #ff69b4, #ff1493);
+            color: white !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #cc0077 !important;
+        }
+        input, textarea, select, .stFileUploader > div {
+            background-color: #fff !important;
+            color: #111 !important;
+            border: 1px solid #bbb !important;
+        }
+        .stDataFrame div {
+            color: #111 !important;
+        }
+        .chat-user { background: #e0f7fa; }
+        .chat-ai { background: #fce4ec; }
+        </style>
+        """
+    st.markdown(css, unsafe_allow_html=True)
 
-    input, textarea, select, .stFileUploader > div {
-        background-color: rgba(245,245,245,0.95) !important;
-        border-radius: 10px;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-    }
+apply_theme(theme)
 
-    .stButton > button {
-        background: linear-gradient(90deg, #1f77b4, #2ca02c);
-        color: white !important;
-        font-weight: 700;
-        border-radius: 12px;
-        padding: 12px 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(90deg, #2ca02c, #1f77b4);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-    }
-
-    h1, .stTitle {
-        color: #1f77b4 !important;
-        font-weight: bold !important;
-        font-family: Arial, sans-serif !important;
-    }
-    h2, .stHeader {
-        color: #2ca02c !important;
-    }
-    h3, h4, h5, h6 {
-        color: #111 !important;
-    }
-
-    .chat-user, .chat-ai {
-        background: #f4f4f4;
-        border-radius: 10px;
-        padding: 10px 14px;
-        margin: 8px 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        font-style: italic;
-    }
-    .chat-user { background: #e0f7fa; }
-    .chat-ai { background: #fce4ec; }
-
-    p, label, span, div, .markdown-text-container {
-        color: #111 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# Title and Intro
+# Title & Intro
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("""
-Upload structured data, generate insights, visualize trends, and export them professionally. 
+Upload structured data, generate insights, visualize trends, and export them professionally.  
 **Powered by Together AI + Figma**
 """)
 st.divider()
@@ -169,5 +169,6 @@ if uploaded_file:
         st.error(f"🚫 Error processing file: {e}")
 else:
     st.info("Please upload a CSV file to get started.")
+
 
 

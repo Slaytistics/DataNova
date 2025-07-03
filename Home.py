@@ -1,24 +1,25 @@
 import streamlit as st
 import pandas as pd
-from qna import ask_dataset_question  # Ensure qna.py exists and is correct
+from qna import ask_dataset_question  # Ensure this function exists
 
-# 🖼️ Configure page layout
+# 🖼️ Configure layout
 st.set_page_config(page_title="📊 Datalicious", layout="centered")
 
-# 🌄 Background and styling
-avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"  # Avatar image
-bg_url = "https://i.imgur.com/xlx2V3C.jpeg"       # Background image
+# 🌄 Images
+avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
+background_url = "https://i.imgur.com/xlx2V3C.jpeg"
 
+# 🧠 Floating avatar CSS
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background-image: url('{bg_url}');
+        background-image: url('{background_url}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
     }}
     .transbox {{
-        background-color: rgba(255, 255, 255, 0.85);
+        background-color: rgba(255,255,255,0.85);
         padding: 30px;
         border-radius: 15px;
         box-shadow: 0px 2px 12px rgba(0,0,0,0.2);
@@ -36,29 +37,25 @@ st.markdown(f"""
         box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
         cursor: pointer;
         z-index: 9999;
-        transition: transform 0.2s ease;
-    }}
-    .chat-float:hover {{
-        transform: scale(1.05);
     }}
     </style>
-    <div class='chat-float'></div>
+    <div class="chat-float"></div>
 """, unsafe_allow_html=True)
 
-# 👇 Invisible button to toggle chat (linked to avatar)
-if st.button("💬 Chat with AI", key="chatbox_toggle"):
+# 🕹️ Invisible button (positioned where avatar is rendered)
+if st.button("💬 Click to Chat", key="chat_toggle"):
     st.session_state.chatbox_open = True
 
 if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 
-# 📦 Main content box
+# 📦 Translucent main content box
 st.markdown("<div class='transbox'>", unsafe_allow_html=True)
 
-st.image("https://i.imgur.com/gdSdfhT.png", width=120)  # Replace with logo if needed
+st.image("https://i.imgur.com/gdSdfhT.png", width=120)
 st.title("📊 Datalicious")
 st.subheader("Your AI-powered data design assistant")
-st.markdown("Turn raw CSVs into beautiful summaries, interactive charts, and export-ready designs — effortlessly.")
+st.markdown("Turn raw CSVs into summaries, visualizations, and export-ready designs — effortlessly.")
 
 st.markdown("---")
 
@@ -78,7 +75,7 @@ st.page_link("pages/1_Upload.py", label="🚀 Upload Your CSV", icon="📁")
 st.caption("Crafted by Sargam • Powered by Together AI + Streamlit + Figma")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# 💬 Inline chatbot panel
+# 💬 Inline Chat Assistant Panel
 if st.session_state.chatbox_open:
     st.markdown("### 🤖 AI Chat Assistant")
     df = st.session_state.get("df") or pd.DataFrame()

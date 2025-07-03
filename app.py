@@ -9,65 +9,74 @@ from qna import ask_dataset_question
 # Page configuration
 st.set_page_config(page_title="Datalicious — AI Data Assistant", layout="wide")
 
-# Custom Styling for Interactivity and Aesthetic Appeal
+# Custom Styling - Improved Color Contrast & Background
 st.markdown(
     """
     <style>
     [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+        background-image: url("https://i.imgur.com/KOnjfP2.png"); /* Subtle light gradient */
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
-        font-family: Arial, italic;
+        font-family: Arial, sans-serif;
     }
 
     .block-container {
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.95);
         padding: 2rem 3rem;
         border-radius: 16px;
         max-width: 1000px;
         margin: auto;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
     }
 
     input, textarea, select, .stFileUploader > div {
-        background-color: rgba(255,255,255,0.95) !important;
+        background-color: rgba(245,245,245,0.95) !important;
         border-radius: 10px;
         padding: 10px;
-        font-family: Arial, italic;
+        font-family: Arial, sans-serif;
     }
 
     .stButton > button {
-        background: linear-gradient(90deg, #ff69b4, #ff1493);
+        background: linear-gradient(90deg, #1f77b4, #2ca02c);
         color: white !important;
         font-weight: 700;
         border-radius: 12px;
         padding: 12px 30px;
-        box-shadow: 0 4px 10px rgba(255, 20, 147, 0.6);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
     }
     .stButton > button:hover {
-        background: linear-gradient(90deg, #ff1493, #ff69b4);
-        box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
+        background: linear-gradient(90deg, #2ca02c, #1f77b4);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     }
 
-    h1, .stTitle { color: #FF69B4; }
-    h2, .stHeader { color: #FF0000; }
-    h3 { color: #0000FF; }
-    h4 { color: #FF00FF; }
-    h5 { color: #800080; }
-    h6 { color: #C71585; }
+    h1, .stTitle {
+        color: #1f77b4 !important;
+        font-weight: bold !important;
+        font-family: Arial, sans-serif !important;
+    }
+    h2, .stHeader {
+        color: #2ca02c !important;
+    }
+    h3, h4, h5, h6 {
+        color: #111 !important;
+    }
 
     .chat-user, .chat-ai {
-        background: #fff;
+        background: #f4f4f4;
         border-radius: 10px;
         padding: 10px 14px;
         margin: 8px 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         font-style: italic;
     }
-    .chat-user { background: #FFE4E1; }
-    .chat-ai { background: #F0F8FF; }
+    .chat-user { background: #e0f7fa; }
+    .chat-ai { background: #fce4ec; }
+
+    p, label, span, div, .markdown-text-container {
+        color: #111 !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -76,11 +85,8 @@ st.markdown(
 # Title and Intro
 st.title("📊 Datalicious — AI Data Assistant")
 st.markdown("""
-Welcome to **Datalicious**! 🎉 Upload a CSV file to:
-- 🔍 Explore and summarize your data
-- 📈 Generate insightful charts
-- 💬 Ask AI questions about your dataset
-- 🎨 Export summaries to **Figma**
+Upload structured data, generate insights, visualize trends, and export them professionally. 
+**Powered by Together AI + Figma**
 """)
 st.divider()
 
@@ -163,4 +169,5 @@ if uploaded_file:
         st.error(f"🚫 Error processing file: {e}")
 else:
     st.info("Please upload a CSV file to get started.")
+
 

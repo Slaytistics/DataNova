@@ -446,28 +446,48 @@ if uploaded_file is not None:
         # Render floating chat widget when dataset is loaded
         render_floating_chat_widget()
 
-        # Handle chat messages (hidden from main interface)
-        if st.session_state.chatbox_open:
-            # Process any new messages
-            if "pending_question" in st.session_state and st.session_state.pending_question:
-                user_question = st.session_state.pending_question
-                st.session_state.pending_question = ""
+        # Listen for chat toggle and messages from the frontend
+        from streamlit.runtime.scriptrunner import add_script_run_ctx
+
+        # Use Streamlit event handler for incoming messages
+        def handle_js_events():
+            from streamlit.server.server import Server
+            session_info = Server.get_current()._get_session_info(st.session_state.session_id)
+            if session_info is None:
+                return
+            ws = session_info.ws
+            if ws is None:
+                return
+
+        # Receive messages from JS
+        message = st.experimental_get_query_params().get('message', [None])[0]
+        if message:
+            st.session_state.pending_question = message
+
+        # Handle new chat message posted via postMessage from JS
+        # In this example, we use the st.experimental_get_query_params as a workaround.
+        # You might need to use a proper websocket or other communication in production.
+
+        # Process any new question sent by user
+        if st.session_state.pending_question:
+            user_question = st.session_state.pending_question
+            st.session_state.pending_question = ""
+            
+            # Get AI response
+            with st.spinner("AI is thinking..."):
+                ai_response = ask_dataset_question(df, user_question, mode="Normal")
+                st.session_state.chat_history.append(("user", user_question))
+                st.session_state.chat_history.append(("ai", ai_response))
                 
-                # Get AI response
-                with st.spinner("AI is thinking..."):
-                    ai_response = ask_dataset_question(df, user_question, mode="Normal")
-                    st.session_state.chat_history.append(("user", user_question))
-                    st.session_state.chat_history.append(("ai", ai_response))
-                    
-                    # Send response back to chat widget
-                    st.components.v1.html(f"""
-                    <script>
-                        window.parent.postMessage({{
-                            type: 'ai-response',
-                            message: `{ai_response.replace('`', '\\`').replace('"', '\\"')}`
-                        }}, '*');
-                    </script>
-                    """, height=0)
+                # Send response back to chat widget
+                st.components.v1.html(f"""
+                <script>
+                    window.parent.postMessage({{
+                        type: 'ai-response',
+                        message: `{ai_response.replace('`', '\\`').replace('"', '\\"')}`
+                    }}, '*');
+                </script>
+                """, height=0)
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")

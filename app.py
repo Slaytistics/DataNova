@@ -136,6 +136,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.set_page_config(page_title="Datalicious", layout="wide")
+
+st.markdown(
+    """
+    <div style="width: 100%; margin-top: -2rem;">
+        <img src="https://i.imgur.com/Sq8U7cY.png" style="width: 100%; height: auto; display: block; margin-bottom: -1rem;" />
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 st.image("https://i.imgur.com/4Hqe6a0.png", use_container_width=True)
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"

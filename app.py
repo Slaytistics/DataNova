@@ -12,6 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
+    /* 🌌 Background */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
@@ -20,8 +21,7 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🔲 Make containers semi-transparent */
-    .stButton > button,
+    /* 🔲 Main UI components */
     .stFileUploader,
     .stTextInput, 
     .stSelectbox,
@@ -33,77 +33,94 @@ st.markdown(
     .stRadio,
     .element-container,
     .css-1kyxreq,
-    .css-1cpxqw2,
-    .block-container {{
+    .css-1cpxqw2 {{
         background-color: rgba(0, 0, 0, 0.35) !important;
-        border-radius: 12px;
-        padding: 10px;
+        border-radius: 12px !important;
+        padding: 16px !important;
         color: white !important;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.1) !important;
     }}
 
-    /* ✅ Inputs styling */
+    /* ✅ Input fields (clean + spaced) */
     input, textarea, select {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: rgba(255, 255, 255, 0.08) !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.2) !important;
+        padding: 12px 16px !important;
+        border-radius: 10px !important;
+        font-size: 16px !important;
     }}
 
-    /* 📂 File uploader box */
+    /* 📂 File uploader inner box */
     [data-testid="stFileUploader"] > div {{
         background-color: rgba(255, 255, 255, 0.08) !important;
         border-radius: 10px;
+        padding: 12px !important;
         border: 1px solid rgba(255,255,255,0.15);
     }}
 
-    /* 💬 Chat bubbles */
+    /* 💬 Chat-like messages */
     .chat-message {{
         background-color: rgba(255, 255, 255, 0.07);
         color: white;
-        padding: 10px;
+        padding: 12px 16px;
         border-radius: 10px;
         margin-bottom: 8px;
     }}
 
-    /* ✨ Text color everywhere */
+    /* ✨ Text color */
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
         color: white !important;
     }}
 
-    /* 🎛️ Slider handle */
+    /* 🎛️ Slider knob */
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
     }}
 
     /* 🧠 Buttons */
     button[kind="primary"], .stButton > button {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: rgba(255, 255, 255, 0.12) !important;
         color: white !important;
-        border: none;
+        border: none !important;
+        padding: 10px 16px !important;
+        border-radius: 10px !important;
     }}
 
-    /* 📈 Chart container */
+    /* 📈 Charts */
     .stPlotlyChart {{
-        background-color: rgba(0, 0, 0, 0.2) !important;
+        background-color: rgba(0, 0, 0, 0.25) !important;
         border-radius: 10px;
+        padding: 8px;
     }}
 
-    /* 🧭 Expander styling */
+    /* 🧭 Expander */
     details {{
         background-color: rgba(255, 255, 255, 0.07) !important;
         border-radius: 10px;
         color: white !important;
+        padding: 10px;
     }}
 
-    /* 🧊 Slight border on every card */
+    /* 🧊 General layout */
     .block-container {{
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }}
+
+    /* 🔄 Fix text cutoff on selectboxes & inputs */
+    .stTextInput > div > input,
+    .stSelectbox > div > div {{
+        padding: 12px 16px !important;
+        font-size: 16px !important;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 
 

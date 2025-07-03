@@ -6,69 +6,148 @@ from visualizer import plot_top_column
 from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
-# --- Page Setup ---
-st.set_page_config(page_title="Datalicious", page_icon="📊", layout="centered")
-
-# --- Custom Styling ---
-st.markdown("""
+# Custom styles with Arial Italic font, colored headings, styled button, background image
+st.markdown(
+    """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-    html, body, [data-testid="stAppViewContainer"] {
-        font-family: 'Inter', sans-serif;
-        background-color: #f6f9fc;
+    [data-testid="stAppViewContainer"] {
+        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: Arial, italic;
     }
 
-    h1 {
-        font-size: 2.4rem;
-        color: #1E2B3C;
+    .block-container {
+        padding: 2rem 3rem;
+        max-width: 900px;
+        margin: auto;
+        background: transparent !important;
+        font-family: Arial, italic;
     }
 
-    .stButton>button {
-        background-color: #0066cc;
-        color: white;
+    /* Remove background boxes */
+    .stButton > button,
+    .stFileUploader,
+    .stTextInput,
+    .stSelectbox,
+    .stSlider,
+    .stTextArea,
+    .stRadio,
+    .stExpander,
+    .stDataFrame,
+    .element-container,
+    .stPlotlyChart,
+    .chat-message,
+    details {
+        background-color: transparent !important;
+        color: #222 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 12px;
+        font-family: Arial, italic;
+    }
+
+    input, textarea, select {
+        background-color: rgba(255,255,255,0.85) !important;
+        color: #222 !important;
+        border: 1px solid #bbb !important;
+        border-radius: 6px;
+        font-family: Arial, italic;
+        font-style: italic;
+    }
+
+    [data-testid="stFileUploader"] > div {
+        background-color: rgba(255,255,255,0.85) !important;
+        border-radius: 6px;
+    }
+
+    /* Styled generate summary button */
+    .stButton > button {
+        background: linear-gradient(90deg, #ff69b4, #ff1493);
+        color: white !important;
+        font-weight: 700;
+        font-family: Arial, italic;
+        border-radius: 12px !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        box-shadow: 0 4px 10px rgba(255, 20, 147, 0.6);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #ff1493, #ff69b4);
+        box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
+    }
+
+    button {
+        font-family: Arial, italic;
+    }
+
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+        color: #222 !important;
+        font-family: Arial, italic !important;
+        font-style: italic !important;
+    }
+
+    /* Heading colors */
+    h1, .stTitle {
+        color: #FF69B4 !important; /* Hot Pink */
+    }
+    h2, .stHeader {
+        color: #FF0000 !important; /* Red */
+    }
+    h3 {
+        color: #0000FF !important; /* Blue */
+    }
+    h4 {
+        color: #FF00FF !important; /* Magenta */
+    }
+    h5 {
+        color: #800080 !important; /* Purple */
+    }
+    h6 {
+        color: #C71585 !important; /* Medium Violet Red */
+    }
+
+    .stSlider > div > div > div > div {
+        background-color: #666 !important;
+    }
+
+    .stDataFrame div {
+        color: #222 !important;
+    }
+
+    /* Chat message boxes */
+    .chat-user {
+        background: #FADADD;
+        padding: 10px;
         border-radius: 8px;
-        padding: 10px 20px;
-        font-weight: 600;
-        border: none;
-        transition: 0.3s ease;
+        margin: 6px;
     }
-
-    .stButton>button:hover {
-        background-color: #004999;
-        transform: scale(1.02);
-    }
-
-    .card {
-        background-color: white;
-        border-radius: 12px;
-        padding: 25px 30px;
-        margin-bottom: 30px;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .chat-user, .chat-ai {
-        background-color: #eef2f6;
-        padding: 10px 15px;
-        border-radius: 8px;
-        margin: 6px 0;
-        font-size: 15px;
-    }
-
     .chat-ai {
-        background-color: #fdf4f5;
+        background: #E6E6FA;
+        padding: 10px;
+        border-radius: 8px;
+        margin: 6px;
     }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
-# --- Title & Intro ---
-st.title("📊 Datalicious — AI Data Assistant")
-st.markdown("Smartly explore, summarize, and visualize CSV datasets — powered by GPT + Figma + Streamlit.")
+# Page setup
+st.set_page_config(page_title="Datalicious", layout="wide")
+st.title("Datalicious — AI Data Assistant")
+st.markdown(
+    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
+)
 
-# --- File Upload ---
-st.markdown("### 📁 Upload Your Dataset")
-uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+st.divider()
+st.header("Upload Your Dataset")
 
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -77,68 +156,72 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # --- Data Preview ---
-        st.markdown("### 🔍 Data Preview")
+        st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Section ---
-        st.markdown("### 🧠 Smart Summary")
+        st.divider()
+        st.header("Generate Summary")
+
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
             if st.button("Generate Summary"):
-                with st.spinner("Analyzing data with GPT..."):
+                with st.spinner("Calling Together AI..."):
                     summary = summarize_dataset(df.head(7))
-                    st.success("Summary generated successfully!")
+                    st.success("Summary Generated!")
         with col2:
-            st.markdown("The AI summarizes your dataset's first few rows.")
+            st.markdown("The summary provides a GPT-style overview based on sample data.")
 
         if summary:
-            st.markdown("#### 📌 Summary Output:")
-            st.markdown(summary)
-            st.code(summary, language="text")
+            st.markdown(f"#### Summary Output:\n{summary}")
 
-        # --- Chart Section ---
-        st.markdown("### 📊 Chart Generator")
-        numeric_columns = df.select_dtypes(include=["int", "float"]).columns.tolist()
+        st.divider()
+        st.header("Chart Generator")
+
+        numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
-            with st.expander("Chart Settings"):
-                selected_column = st.selectbox("Choose numeric column:", numeric_columns)
+            with st.expander("Chart Controls", expanded=True):
+                selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
+
                 fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
-            st.warning("No numeric columns found for charting.")
+            st.warning("No numeric columns found for charts.")
 
-        # --- Export Section ---
+        st.divider()
+        st.header("Export to Figma")
+
         if summary:
-            st.markdown("### 📤 Export Summary (Simulated)")
-            if st.button("Export to Figma (Simulated)"):
-                with st.spinner("Preparing downloadable summary..."):
-                    result = export_to_figma(summary)
-                    st.success("Summary ready for export!")
-                    st.markdown(result, unsafe_allow_html=True)
+            dataset_name = uploaded_file.name.split(".")[0]
+            if st.button("Export Summary to Figma"):
+                with st.spinner("Sending to Figma..."):
+                    result = export_to_figma(summary, dataset_name=dataset_name)
+                    st.toast("Exported to Figma!")
+                    st.success(result)
 
-        # --- Q&A Section ---
-        st.markdown("### ❓ Ask About This Dataset")
+        st.divider()
+        st.header("Ask About This Dataset")
+
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        mode = st.selectbox("Answer Style:", ["Normal", "Explain like I'm 5", "Detailed"])
-        user_input = st.text_input("Your Question:", placeholder="e.g. What's the most common value?")
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
         if user_input:
-            with st.spinner("Thinking..."):
-                reply = ask_dataset_question(df, user_input, mode)
+            with st.spinner("Thinking like a data analyst..."):
+                reply = ask_dataset_question(df, user_input, mode=mode)
                 st.session_state.chat_history.append(("user", user_input))
                 st.session_state.chat_history.append(("ai", reply))
 
         for role, msg in st.session_state.chat_history:
-            css_class = "chat-user" if role == "user" else "chat-ai"
-            st.markdown(f"<div class='{css_class}'><strong>{'You' if role == 'user' else 'AI'}:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            if role == "user":
+                st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"❌ Error reading file: {e}")
+        st.error(f"Error processing file: {e}")
 else:
-    st.info("📌 Please upload a CSV file to begin.")
-
+    st.info("Upload a CSV file to begin your Datalicious journey.")

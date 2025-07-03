@@ -90,39 +90,14 @@ html, body {{
 .floating-avatar:hover {{
     transform: scale(1.05);
 }}
-.chat-panel {{
-    position: fixed;
-    bottom: 120px;
-    right: 25px;
-    width: 400px;
-    max-height: 500px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 15px;
-    box-shadow: 0px 8px 24px rgba(0,0,0,0.3);
-    z-index: 9998;
-    padding: 20px;
-    overflow-y: auto;
-}}
-.close-chat {{
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #666;
-}}
 </style>
 """, unsafe_allow_html=True)
 
 # 💬 Floating Avatar (Simplified)
 def render_floating_avatar():
     components.html(f"""
-    <div class="floating-avatar" title="Click to toggle chat"></div>
+    <div class="floating-avatar" title="AI Assistant Available - Use Toggle Button Below"></div>
     """, height=0)
-
-# Chat interaction handled through session state
 
 # 📊 App Interface
 st.title("📊 Datalicious — AI Data Assistant")
@@ -131,9 +106,8 @@ st.divider()
 st.header("📁 Step 1: Upload Your Dataset")
 
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-df = None
 
-if uploaded_file:
+if uploaded_file is not None:
     try:
         # 🧼 Clean dataset
         df = pd.read_csv(uploaded_file)
@@ -185,26 +159,29 @@ if uploaded_file:
                     st.toast("📤 Exported to Figma!")
                     st.success(result)
 
-        # Render floating avatar only when dataset is loaded
+        # Render floating avatar when dataset is loaded
         render_floating_avatar()
 
-        # Chat toggle button (main interaction)
+        st.divider()
+        st.header("💬 Step 5: Q&A Chat Assistant")
+        
+        # Chat toggle button
         if st.button("💬 Toggle Chat Assistant", key="main_chat_toggle", help="Click to open/close the Q&A chat"):
             st.session_state.chatbox_open = not st.session_state.chatbox_open
             st.rerun()
 
-        # Handle chat messages when chat is open
+        # Show chat interface when open
         if st.session_state.chatbox_open:
-            st.divider()
-            st.header("💬 Dataset Q&A Chat")
+            st.subheader("🤖 Ask Questions About Your Dataset")
             
             # Input area
             col1, col2 = st.columns([3, 1])
             with col1:
                 user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="main_chat_input")
             with col2:
-                mode = st.selectbox("Style:", ["Normal", "ELI5", "Detailed"], key="answer_mode")
+                mode = st.selectbox("Answer Style:", ["Normal", "ELI5", "Detailed"], key="answer_mode")
             
+            # Process user input
             if user_input:
                 with st.spinner("Thinking like a data analyst..."):
                     reply = ask_dataset_question(df, user_input, mode=mode)
@@ -212,7 +189,7 @@ if uploaded_file:
                     st.session_state.chat_history.append(("ai", reply))
                     st.rerun()
             
-            # Chat history display
+            # Display chat history
             if st.session_state.chat_history:
                 st.subheader("Chat History")
                 for role, msg in st.session_state.chat_history:
@@ -226,9 +203,6 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
-else:
-    st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")
 
-# Info message when no file is uploaded
 else:
     st.info("⬆️ Upload a CSV file to begin your Datalicious journey.")

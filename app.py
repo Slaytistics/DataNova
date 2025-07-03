@@ -105,7 +105,19 @@ if uploaded_file:
         with col1:
             if st.button("✨ Generate Summary"):
                 with st.spinner("Calling Together AI..."):
-                    summary = summarize_dataset(df.head(7))
+                    try:
+                        # Defensive: handle missing 'choices' key
+                        response = summarize_dataset(df.head(7), return_raw=True)  # Assume your function can return raw
+                        if isinstance(response, dict) and 'choices' in response:
+                            summary = response['choices'][0]['text']
+                        elif isinstance(response, str):
+                            summary = response
+                        else:
+                            st.error("Unexpected API response: 'choices' key missing.")
+                            st.write("API raw response:", response)
+                    except Exception as api_e:
+                        st.error(f"API error: {api_e}")
+                if summary:
                     st.success("Summary Generated!")
         with col2:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
@@ -130,9 +142,12 @@ if uploaded_file:
             dataset_name = uploaded_file.name.split(".")[0]
             if st.button("🚀 Export Summary to Figma"):
                 with st.spinner("Sending to Figma..."):
-                    result = export_to_figma(summary, dataset_name=dataset_name)
-                    st.toast("Exported to Figma!")
-                    st.success(result)
+                    try:
+                        result = export_to_figma(summary, dataset_name=dataset_name)
+                        st.toast("Exported to Figma!")
+                        st.success(result)
+                    except Exception as figma_e:
+                        st.error(f"Figma export error: {figma_e}")
 
         # --- Q&A Section ---
         st.header("💬 Ask About This Dataset")
@@ -142,9 +157,12 @@ if uploaded_file:
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
         if user_input:
             with st.spinner("Thinking like a data analyst..."):
-                reply = ask_dataset_question(df, user_input, mode=mode)
-                st.session_state.chat_history.append(("user", user_input))
-                st.session_state.chat_history.append(("ai", reply))
+                try:
+                    reply = ask_dataset_question(df, user_input, mode=mode)
+                    st.session_state.chat_history.append(("user", user_input))
+                    st.session_state.chat_history.append(("ai", reply))
+                except Exception as qna_e:
+                    st.error(f"Q&A error: {qna_e}")
         for role, msg in st.session_state.chat_history:
             if role == "user":
                 st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
@@ -155,5 +173,6 @@ if uploaded_file:
         st.error(f"❌ Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 

@@ -12,6 +12,7 @@ background_image_url = "https://images.pexels.com/photos/2098427/pexels-photo-20
 st.markdown(
     f"""
     <style>
+    /* 🔲 Background Image */
     [data-testid="stAppViewContainer"] {{
         background-image: url("{background_image_url}");
         background-size: cover;
@@ -20,48 +21,57 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🔳 Universal dark background for all blocks */
-    .block-container, .stTextInput, .stTextArea, .stSelectbox, .stSlider, 
-    .stRadio, .stFileUploader, .stButton > button, .stDataFrame, 
-    .stExpander, .css-1cpxqw2 {{
-        background: rgba(20, 20, 20, 0.85) !important;
+    /* 🔳 Universal dark background + white text */
+    * {{
+        color: white !important;
+    }}
+
+    /* 🧱 Main blocks */
+    .block-container, .stMarkdown, .stText, .stCaption, .stHtml,
+    .stDataFrame, .stPlotlyChart, .stAltairChart, .element-container,
+    .stButton > button, .stTextInput, .stTextArea, .stSelectbox, 
+    .stSlider, .stRadio, .stExpander, .css-1cpxqw2 {{
+        background-color: rgba(15, 15, 15, 0.90) !important;
         color: white !important;
         border-radius: 10px;
         padding: 8px;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }}
 
-    /* 📋 Fix dropdown background and options */
-    .stSelectbox div[data-baseweb="select"] > div {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        color: white !important;
-    }}
-    .stSelectbox [role="listbox"],
-    .stSelectbox [role="option"] {{
-        background-color: rgba(30, 30, 30, 0.95) !important;
-        color: white !important;
-    }}
-
-    /* 📁 File uploader */
-    [data-testid="stFileUploader"] > div {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        color: white !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }}
-
     /* 🔘 Buttons */
     .stButton > button {{
-        background-color: rgba(40, 40, 40, 0.85) !important;
-        color: white !important;
+        background-color: rgba(30, 30, 30, 0.9) !important;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 8px;
     }}
 
-    /* ⬅️ Input fields */
-    input, textarea, select {{
-        background-color: rgba(25, 25, 25, 0.85) !important;
+    /* 🗂 File uploader full dark */
+    [data-testid="stFileUploader"] {{
+        background-color: rgba(25, 25, 25, 0.95) !important;
         color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px;
+    }}
+    [data-testid="stFileUploader"] section {{
+        background-color: rgba(25, 25, 25, 0.95) !important;
+        color: white !important;
+    }}
+
+    /* ⬇ Dropdown menu + options */
+    .stSelectbox div[data-baseweb="select"] {{
+        background-color: rgba(25, 25, 25, 0.95) !important;
+        color: white !important;
+    }}
+    [role="listbox"], [role="option"] {{
+        background-color: rgba(20, 20, 20, 1) !important;
+        color: white !important;
+    }}
+
+    /* 🧾 Inputs */
+    input, textarea, select {{
+        background-color: rgba(25, 25, 25, 0.9) !important;
+        color: white !important;
+        border: none;
     }}
 
     /* 🔼 Slider thumb */
@@ -69,22 +79,11 @@ st.markdown(
         background-color: white !important;
     }}
 
-    /* 📊 Plot container */
-    .stPlotlyChart, .stAltairChart {{
-        background-color: rgba(20, 20, 20, 0.85) !important;
-        border-radius: 10px;
-    }}
-
-    /* 🔳 Q&A / Preview Box styling (main fix here) */
-    .stMarkdown, .stText, .stCaption, .stHtml {{
-        background-color: rgba(25, 25, 25, 0.85) !important;
+    /* 💬 Preview / output markdown area */
+    .stMarkdown, .element-container p {{
+        background-color: rgba(20, 20, 20, 0.9) !important;
         padding: 12px;
         border-radius: 10px;
-        color: white !important;
-    }}
-
-    /* 🧾 General text */
-    html, body, label, div, p, span, h1, h2, h3, h4, h5, h6 {{
         color: white !important;
     }}
 
@@ -94,11 +93,11 @@ st.markdown(
         max-width: 900px;
         margin: auto;
     }}
+
     </style>
     """,
     unsafe_allow_html=True
 )
-
 
 
 

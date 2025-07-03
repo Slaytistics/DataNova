@@ -19,7 +19,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 🎨 Custom styles (corrected font properties!)
+# 🎨 Custom styles
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] {
@@ -112,17 +112,19 @@ if uploaded_file:
         # 🧠 Summary generator
         st.divider()
         st.header("Generate Summary")
-        summary = None
+        if "summary" not in st.session_state:
+            st.session_state.summary = None
+
         col1, col2 = st.columns([1, 3])
         with col1:
             if st.button("Generate Summary"):
                 with st.spinner("Calling Together AI..."):
-                    summary = summarize_dataset(df.head(7))
+                    st.session_state.summary = summarize_dataset(df.head(7))
                     st.success("Summary Generated!")
         with col2:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
-        if summary:
-            st.markdown(f"#### Summary Output:\n{summary}")
+        if st.session_state.summary:
+            st.markdown(f"#### Summary Output:\n{st.session_state.summary}")
 
         # 📊 Chart visualizer
         st.divider()
@@ -140,11 +142,11 @@ if uploaded_file:
         # 🎨 Figma export
         st.divider()
         st.header("Export to Figma")
-        if summary:
-            dataset_name = uploaded_file.name.split(".")[0]
+        if st.session_state.summary:
+            dataset_name = uploaded_file.name.rsplit(".", 1)[0]
             if st.button("Export Summary to Figma"):
                 with st.spinner("Sending to Figma..."):
-                    result = export_to_figma(summary, dataset_name=dataset_name)
+                    result = export_to_figma(st.session_state.summary, dataset_name=dataset_name)
                     st.toast("Exported to Figma!")
                     st.success(result)
 
@@ -156,6 +158,7 @@ if uploaded_file:
 
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
+
         if user_input:
             with st.spinner("Thinking like a data analyst..."):
                 reply = ask_dataset_question(df, user_input, mode=mode)
@@ -167,6 +170,6 @@ if uploaded_file:
             st.markdown(f"<div class='{div_class}'><strong>{role.capitalize()}:</strong><br>{msg}</div>", unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"Error processing file: {e}")
+        st.error(f"❌ Error processing file: {e}")
 else:
-    st.info("Upload a CSV file to begin your Datalicious journey.")
+    st.info("📂 Please upload a CSV file to start exploring your data with Datalicious.")

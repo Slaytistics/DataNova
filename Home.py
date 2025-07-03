@@ -1,18 +1,18 @@
 import streamlit as st
 import pandas as pd
-from qna import ask_dataset_question  # Make sure this is accessible
+from qna import ask_dataset_question  # Ensure qna.py exists and is correct
 
-# 🖼️ Configure layout
+# 🖼️ Configure page layout
 st.set_page_config(page_title="📊 Datalicious", layout="centered")
 
-# 🧠 Avatar image URL (replace with your own if preferred)
-avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"
+# 🌄 Background and styling
+avatar_url = "https://i.imgur.com/dVHOnO7.jpeg"  # Avatar image
+bg_url = "https://i.imgur.com/xlx2V3C.jpeg"       # Background image
 
-# 🌄 Inject background image and chatbot styling
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background-image: url('https://i.imgur.com/xlx2V3C.jpeg');
+        background-image: url('{bg_url}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -42,17 +42,20 @@ st.markdown(f"""
         transform: scale(1.05);
     }}
     </style>
-    <div class='chat-float' title="Ask me something!" onclick="document.getElementById('chatbox-toggle').click()"></div>
+    <div class='chat-float'></div>
 """, unsafe_allow_html=True)
 
-# 💬 Chat visibility toggle
+# 👇 Invisible button to toggle chat (linked to avatar)
+if st.button("💬 Chat with AI", key="chatbox_toggle"):
+    st.session_state.chatbox_open = True
+
 if "chatbox_open" not in st.session_state:
     st.session_state.chatbox_open = False
 
-# 💡 Main content box
+# 📦 Main content box
 st.markdown("<div class='transbox'>", unsafe_allow_html=True)
 
-st.image("https://i.imgur.com/gdSdfhT.png", width=120)
+st.image("https://i.imgur.com/gdSdfhT.png", width=120)  # Replace with logo if needed
 st.title("📊 Datalicious")
 st.subheader("Your AI-powered data design assistant")
 st.markdown("Turn raw CSVs into beautiful summaries, interactive charts, and export-ready designs — effortlessly.")
@@ -75,10 +78,7 @@ st.page_link("pages/1_Upload.py", label="🚀 Upload Your CSV", icon="📁")
 st.caption("Crafted by Sargam • Powered by Together AI + Streamlit + Figma")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# 🎯 Toggle button (hidden but clickable by avatar)
-st.button("💬 Open Chat Assistant", key="chatbox-toggle", on_click=lambda: st.session_state.update({"chatbox_open": True}))
-
-# 🧠 Inline chatbot panel
+# 💬 Inline chatbot panel
 if st.session_state.chatbox_open:
     st.markdown("### 🤖 AI Chat Assistant")
     df = st.session_state.get("df") or pd.DataFrame()

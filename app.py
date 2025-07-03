@@ -138,7 +138,7 @@ st.markdown(
 
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
-st.image("https://i.imgur.com/Sq8U7cY.png", use_container_width=True)
+st.image("https://i.imgur.com/4Hqe6a0.png", use_container_width=True)
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )

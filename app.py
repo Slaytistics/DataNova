@@ -146,10 +146,6 @@ st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )
 
-st.markdown(
-    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
-)
-
 st.divider()
 st.header("Upload Your Dataset")
 

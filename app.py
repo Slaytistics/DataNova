@@ -22,11 +22,11 @@ st.markdown(
 
     .block-container {{
         padding: 2rem 3rem;
-        max-width: 1000px;
+        max-width: 900px;
         margin: auto;
     }}
 
-    /* 🟤 General containers */
+    /* 🔲 All component boxes */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -38,57 +38,36 @@ st.markdown(
     .stDataFrame,
     .element-container,
     .stPlotlyChart,
-    .css-1kyxreq,
-    .css-1cpxqw2 {{
-        background-color: rgba(20, 20, 20, 0.9) !important;
+    .chat-message,
+    details {{
+        background-color: rgba(20, 20, 20, 0.75) !important;
         color: white !important;
         border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
         padding: 12px;
     }}
 
-    /* 📥 File uploader */
-    [data-testid="stFileUploader"] > div {{
+    /* 🔤 Input fields */
+    input, textarea, select {{
         background-color: rgba(30, 30, 30, 0.9) !important;
-    }}
-
-    /* 📄 DataFrame */
-    .stDataFrame div {{
-        color: white !important;
-    }}
-
-    /* 🔘 Dropdowns */
-    select, input, textarea {{
-        background-color: #222 !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.3) !important;
     }}
 
+    /* 📤 File Uploader inner */
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(30, 30, 30, 0.9) !important;
+    }}
+
     /* 🧠 Buttons */
     button {{
-        background-color: rgba(40, 40, 40, 1) !important;
+        background-color: rgba(40, 40, 40, 0.9) !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.2) !important;
     }}
 
-    /* 💬 Q&A bubbles */
-    .chat-message {{
-        background-color: rgba(40, 40, 40, 0.9);
-        color: white;
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }}
-
-    /* 📝 Text */
+    /* 🧾 Text color globally */
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
-        color: white !important;
-    }}
-
-    /* 🧭 Expander details */
-    details {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        border-radius: 10px;
         color: white !important;
     }}
 
@@ -96,10 +75,16 @@ st.markdown(
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
     }}
+
+    /* 📊 DataFrame (keep readable) */
+    .stDataFrame div {{
+        color: white !important;
+    }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 
 # 📐 App layout and style

@@ -20,74 +20,72 @@ st.markdown(
         background-repeat: no-repeat;
     }}
 
-    /* 🔳 Semi-transparent widgets */
-    .stSelectbox, .stTextInput, .stTextArea, .stSlider, .stRadio,
+    /* 🔳 Universal dark background for all components */
+    .stTextInput, .stTextArea, .stSelectbox, .stSlider, .stRadio,
     .stFileUploader, .stButton > button, .stDataFrame, .stExpander,
     .css-1cpxqw2, .block-container {{
-        background: rgba(0, 0, 0, 0.35) !important;
+        background: rgba(20, 20, 20, 0.8) !important;
         color: white !important;
         border-radius: 10px;
         padding: 8px;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }}
 
-    /* 🔳 Fix dropdown menu */
+    /* 📋 Fix dropdown list background */
     .stSelectbox div[data-baseweb="select"] > div {{
-        background-color: rgba(0, 0, 0, 0.75) !important;
+        background-color: rgba(20, 20, 20, 0.9) !important;
         color: white !important;
     }}
 
-    /* 🔽 Dropdown items */
-    .stSelectbox [role="listbox"] {{
-        background-color: rgba(0, 0, 0, 0.85) !important;
-        color: white !important;
-    }}
+    .stSelectbox [role="listbox"], 
     .stSelectbox [role="option"] {{
-        background-color: transparent !important;
+        background-color: rgba(20, 20, 20, 0.95) !important;
         color: white !important;
     }}
 
-    /* 🖊️ Inputs */
+    /* ⌨️ Input text fields */
     input, textarea, select {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
+        background-color: rgba(20, 20, 20, 0.85) !important;
         color: white !important;
     }}
 
-    /* ⬛ File uploader fix */
+    /* 📁 File uploader background fix */
     [data-testid="stFileUploader"] > div {{
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        border-radius: 10px;
+        background-color: rgba(20, 20, 20, 0.85) !important;
         color: white !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }}
 
-    /* ✨ Universal text color */
+    /* 🔘 Button background */
+    .stButton > button {{
+        background-color: rgba(20, 20, 20, 0.85) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+    }}
+
+    /* 🔼 Slider thumb color */
+    .stSlider > div > div > div > div {{
+        background-color: white !important;
+    }}
+
+    /* 📊 Chart container */
+    .stPlotlyChart, .stAltairChart {{
+        background-color: rgba(20, 20, 20, 0.8) !important;
+        border-radius: 10px;
+    }}
+
+    /* 🧾 General text color */
     html, body, label, div, p, span, h1, h2, h3, h4, h5, h6 {{
         color: white !important;
     }}
 
-    /* 🧭 Center & tighten layout */
+    /* 📐 Centered layout with max width */
     .block-container {{
         padding: 1.5rem 3rem !important;
         max-width: 900px;
         margin: auto;
-    }}
-
-    /* 🎛️ Slider handle color */
-    .stSlider > div > div > div > div {{
-        background-color: #ffffffaa !important;
-    }}
-
-    /* 🧠 Button styling */
-    .stButton > button {{
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-        border: none;
-    }}
-
-    /* 📈 Chart background fix */
-    .stPlotlyChart {{
-        background-color: rgba(0, 0, 0, 0.2) !important;
-        border-radius: 8px;
     }}
     </style>
     """,

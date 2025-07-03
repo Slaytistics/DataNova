@@ -10,23 +10,24 @@ from qna import ask_dataset_question
 background_image_url = "https://i.imgur.com/qo8IZvH.jpeg"
 
 st.markdown(
-    f"""
+    """
     <style>
-    [data-testid="stAppViewContainer"] {{
+    [data-testid="stAppViewContainer"] {
         background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-    }}
+    }
 
-    .block-container {{
+    .block-container {
         padding: 2rem 3rem;
         max-width: 900px;
         margin: auto;
-    }}
+        background: transparent !important;
+    }
 
-    /* 🔲 All component boxes */
+    /* Remove background boxes */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -39,53 +40,45 @@ st.markdown(
     .element-container,
     .stPlotlyChart,
     .chat-message,
-    details {{
-        background-color: rgba(20, 20, 20, 0.75) !important;
-        color: white !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.15);
+    details {
+        background-color: transparent !important;
+        color: black !important;
+        border: none !important;
+        box-shadow: none !important;
         padding: 12px;
-    }}
+    }
 
-    /* 🔤 Input fields */
-    input, textarea, select {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.3) !important;
-    }}
+    input, textarea, select {
+        background-color: rgba(255,255,255,0.8) !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
 
-    /* 📤 File Uploader inner */
-    [data-testid="stFileUploader"] > div {{
-        background-color: rgba(30, 30, 30, 0.9) !important;
-    }}
+    [data-testid="stFileUploader"] > div {
+        background-color: rgba(255,255,255,0.8) !important;
+    }
 
-    /* 🧠 Buttons */
-    button {{
-        background-color: rgba(40, 40, 40, 0.9) !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-    }}
+    button {
+        background-color: rgba(240,240,240,0.9) !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
 
-    /* 🧾 Text color globally */
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
-        color: white !important;
-    }}
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+        color: black !important;
+    }
 
-    /* 🎚️ Slider handle */
-    .stSlider > div > div > div > div {{
-        background-color: #ffffff88 !important;
-    }}
+    .stSlider > div > div > div > div {
+        background-color: #888 !important;
+    }
 
-    /* 📊 DataFrame (keep readable) */
-    .stDataFrame div {{
-        color: white !important;
-    }}
+    .stDataFrame div {
+        color: black !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
-
-
 
 # 📐 App layout and style
 st.set_page_config(page_title="📊 Datalicious", layout="wide")

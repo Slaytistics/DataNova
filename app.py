@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit.components.v1 as components
+
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Custom Styles including working selectbox styling ---
+# --- CUSTOM STYLE (NO selectbox hacks needed anymore) ---
 st.markdown(
     """
     <style>
@@ -26,12 +28,9 @@ st.markdown(
         margin: auto;
     }
 
-    .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
-        background-color: transparent !important;
-        padding: 4px 0px !important;
-        border: none !important;
-        margin-bottom: 0.6rem;
-        backdrop-filter: none !important;
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+        color: #f0f0f0 !important;
+        font-family: 'Inter', sans-serif;
     }
 
     .stButton > button,
@@ -54,115 +53,15 @@ st.markdown(
         backdrop-filter: blur(2px);
     }
 
-    input, textarea, select {
-        background-color: rgba(30, 30, 30, 0.9) !important;
+    .stDataFrame table {
+        background-color: rgba(15,15,15,0.6) !important;
         color: #f0f0f0 !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 6px;
-        padding: 6px !important;
-    }
-
-    button {
-        background-color: rgba(60, 60, 60, 0.85) !important;
-        color: #f0f0f0 !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: rgba(80, 80, 80, 1) !important;
-    }
-
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #f0f0f0 !important;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .element-container {
-        margin-bottom: 0.6rem !important;
     }
 
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.6) !important;
     }
 
-    .stDataFrame {
-        background-color: rgba(15,15,15,0.6) !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .stDataFrame table {
-        background-color: rgba(15,15,15,0.6) !important;
-        color: #f0f0f0 !important;
-    }
-
-    .stSlider > div > div > div > div {
-        background-color: #cccccc33 !important;
-    }
-
-    [data-testid="stActionMenuButton"] {
-        filter: invert(100%) brightness(180%) !important;
-    }
-
-    [data-testid="stActionMenu"] {
-        background-color: rgba(25, 25, 25, 0.95) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-    }
-
-    [data-testid="stActionMenu"] button {
-        color: white !important;
-        background-color: transparent !important;
-    }
-
-    [data-testid="stActionMenu"] button:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    /* === FINAL SELECTBOX FIX: WHITE BACKGROUND + BLACK TEXT === */
-    [data-baseweb="select"] {
-        background-color: #ffffff !important;
-        color: #111111 !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(0, 0, 0, 0.2) !important;
-        font-weight: 600 !important;
-    }
-
-    [data-baseweb="select"] * {
-        color: #111111 !important;
-        fill: #111111 !important;
-    }
-
-    [data-baseweb="select"] div[aria-disabled="true"] {
-        color: #555 !important;
-        opacity: 1 !important;
-    }
-
-    div[data-baseweb="popover"] {
-        background-color: #ffffff !important;
-        color: #111111 !important;
-        border: 1px solid #ccc !important;
-        border-radius: 6px !important;
-    }
-
-    div[role="option"] {
-        color: #111111 !important;
-        background-color: #ffffff !important;
-        font-weight: 500 !important;
-    }
-
-    div[role="option"]:hover,
-    div[role="option"][aria-selected="true"] {
-        background-color: #eeeeee !important;
-        color: #111111 !important;
-    }
-
-    [data-baseweb="select"] svg {
-        fill: #111111 !important;
-    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -178,9 +77,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown(
-    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
-)
+st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma")
 st.header("Upload Your Dataset")
 
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -215,11 +112,40 @@ if uploaded_file:
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
-                selected_column = st.selectbox("Choose column:", numeric_columns)
-                top_n = st.slider("Top N values:", 5, 20, 10)
+                st.markdown("#### Choose column:")
 
-                fig = plot_top_column(df, selected_column, top_n=top_n)
-                st.plotly_chart(fig, use_container_width=True)
+                dropdown_html = f"""
+                <script>
+                function updateSelection(value) {{
+                    const input = window.parent.document.querySelector('input[name="column_choice"]');
+                    if (input) {{
+                        input.value = value;
+                        const event = new Event('input', {{ bubbles: true }});
+                        input.dispatchEvent(event);
+                    }}
+                }}
+                </script>
+                <select onchange="updateSelection(this.value)" style="
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 16px;
+                    background-color: white;
+                    color: black;
+                    border-radius: 8px;
+                    border: 1px solid #ccc;
+                ">
+                    <option disabled selected>Select a column</option>
+                    {''.join(f'<option value="{col}">{col}</option>' for col in numeric_columns)}
+                </select>
+                """
+
+                components.html(dropdown_html, height=100)
+                selected_column = st.text_input("Selected Column", key="column_choice", label_visibility="collapsed")
+
+                if selected_column:
+                    top_n = st.slider("Top N values:", 5, 20, 10)
+                    fig = plot_top_column(df, selected_column, top_n=top_n)
+                    st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
 

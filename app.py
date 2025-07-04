@@ -13,17 +13,13 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
     [data-testid="stAppViewContainer"] {
-        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
+        background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080") center/cover fixed;
         font-family: 'Inter', sans-serif;
     }
 
     .block-container {
-        padding: 2rem 3rem;
-        max-width: 900px;
+        padding: 1.2rem 1.5rem !important;
+        max-width: 800px;
         margin: auto;
     }
 
@@ -36,61 +32,45 @@ st.markdown(
     .stRadio,
     .stExpander,
     .stDataFrame,
-    .element-container,
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(15, 15, 15, 0.85) !important;
+        background-color: rgba(15,15,15,0.85) !important;
         color: #e0e0e0 !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 12px;
-        margin-bottom: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 8px !important;
+        margin-bottom: 0.5rem !important;
         backdrop-filter: blur(4px);
-        font-family: 'Inter', sans-serif;
     }
 
     input, textarea, select {
-        background-color: rgba(30, 30, 30, 0.95) !important;
+        background-color: rgba(30,30,30,0.95) !important;
         color: #e0e0e0 !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        border-radius: 6px;
-    }
-
-    [data-testid="stFileUploader"] > div {
-        background-color: rgba(25, 25, 25, 0.85) !important;
-        border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 4px;
+        padding: 6px !important;
+        margin: 0 !important;
     }
 
     button {
-        background-color: rgba(60, 60, 60, 0.9) !important;
+        background-color: rgba(60,60,60,0.9) !important;
         color: #f2f2f2 !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        transition: 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 6px 12px !important;
+        margin: 0 !important;
+        transition: background-color 0.3s ease;
     }
 
     button:hover {
-        background-color: rgba(80, 80, 80, 0.95) !important;
-        color: white !important;
-        border: 1px solid white !important;
+        background-color: rgba(80,80,80,0.95) !important;
     }
 
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #e0e0e0 !important;
         font-family: 'Inter', sans-serif;
-    }
-
-    h1, h2, h3, h4, h5, h6, p {
-        margin-top: 0.25rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    section.main > div {
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
-        margin-top: 0px !important;
-        margin-bottom: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .element-container {
@@ -101,17 +81,13 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    .stDataFrame div {
-        color: #e0e0e0 !important;
-    }
-
     .chat-user, .chat-ai {
-        background: rgba(35, 35, 35, 0.85);
-        padding: 10px;
-        border-radius: 8px;
-        margin: 6px;
+        background: rgba(35,35,35,0.85);
+        padding: 8px !important;
+        border-radius: 6px;
+        margin: 4px 0 !important;
         color: #e0e0e0 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.08);
     }
     </style>
     """,

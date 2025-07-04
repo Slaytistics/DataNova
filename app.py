@@ -43,7 +43,6 @@ st.markdown(
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.1);
         padding: 12px;
-        margin-bottom: 0.5rem;
     }}
 
     input, textarea, select {{
@@ -68,16 +67,6 @@ st.markdown(
         color: white !important;
     }}
 
-    h1, h2, h3, h4, h5, h6, p {{
-        margin-top: 0.25rem !important;
-        margin-bottom: 0.5rem !important;
-    }}
-
-    section {{
-        padding-top: 0rem !important;
-        padding-bottom: 0rem !important;
-    }}
-
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
     }}
@@ -97,6 +86,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(
@@ -110,7 +100,6 @@ st.markdown(
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )
-st.divider()
 st.header("Upload Your Dataset")
 
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -125,7 +114,6 @@ if uploaded_file:
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
-        st.divider()
         st.header("Generate Summary")
 
         summary = None
@@ -141,7 +129,6 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
-        st.divider()
         st.header("Chart Generator")
 
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
@@ -155,7 +142,6 @@ if uploaded_file:
         else:
             st.warning("No numeric columns found for charts.")
 
-        st.divider()
         st.header("Export to Figma")
 
         if summary:
@@ -166,7 +152,6 @@ if uploaded_file:
                     st.toast("Exported to Figma!")
                     st.success(result)
 
-        st.divider()
         st.header("Ask About This Dataset")
 
         if "chat_history" not in st.session_state:
@@ -191,3 +176,4 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+

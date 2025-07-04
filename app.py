@@ -136,72 +136,61 @@ input, .stTextInput input, .stSelectbox div div {
     padding-right: 12px;
     margin-bottom: 1.5rem;
 }
-/* --- Fix dropdown options visibility --- */
-/* --- Dark-themed button (no muddy brown) --- */
-.stButton > button {
-    background: rgba(255, 255, 255, 0.07);
-    color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 25px;
-    padding: 0.6rem 2rem;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-.stButton > button:hover {
-    background: rgba(255, 255, 255, 0.12);
-    transform: scale(1.02);
-}
+/* --- Fix Dropdown Visibility, Width, Readonly, Styling --- */
 
-/* --- SELECTBOX (Dropdown) VISIBILITY FIX --- */
-/* --- Dropdown input box styling (selected item) --- */
-/* --- Wider and clearer dropdown container --- */
+/* Main dropdown container */
 div[data-baseweb="select"] {
     width: 100% !important;
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.6) !important;
     border-radius: 12px !important;
     color: #ffffff !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
-    min-height: 48px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* --- Selected item box (no typing) --- */
-div[data-baseweb="select"] div[role="combobox"] {
-    padding: 0.7rem 1.2rem !important;
-    overflow: visible !important;
+/* Selected value display (readable and aligned) */
+div[data-baseweb="select"] div[role="button"] {
+    padding: 0.8rem 1rem !important;
+    overflow: hidden;
     white-space: nowrap;
-    font-size: 1.1rem;
+    font-size: 1.05rem !important;
+    color: #ffffff !important;
 }
 
-/* --- Hides the input field, forces to use select only --- */
+/* Hide typing field but preserve dropdown click */
 div[data-baseweb="select"] input {
-    display: none !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    height: 0px !important;
 }
 
-/* --- Dropdown menu background --- */
+/* Dropdown menu styling */
 div[data-baseweb="menu"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
+    background-color: rgba(15, 15, 15, 0.95) !important;
     border-radius: 10px !important;
     color: #ffffff !important;
-    padding: 0.5rem 0;
+    max-width: 600px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.5);
+    z-index: 9999;
 }
 
-/* --- Option styles --- */
+/* Option styling */
 div[data-baseweb="menu"] div[role="option"] {
     padding: 12px 20px;
     font-size: 1rem;
     color: #ffffff !important;
     background: transparent !important;
+    font-weight: 500;
+    transition: background 0.2s ease;
 }
 
-/* --- Option hover --- */
+/* Option hover */
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     cursor: pointer;
 }
-
-
 
 </style>
 """

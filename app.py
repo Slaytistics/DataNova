@@ -10,7 +10,7 @@ st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-   
+
     [data-testid="stAppViewContainer"] {
         background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
         background-size: cover;
@@ -19,7 +19,6 @@ st.markdown(
         background-repeat: no-repeat;
         font-family: 'Inter', sans-serif;
     }
-    
 
     .block-container {
         padding: 1.5rem 2rem;
@@ -27,15 +26,16 @@ st.markdown(
         margin: auto;
     }
 
+    /* Transparent background for text containers */
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
-        background-color: rgba(20, 20, 20, 0.55);
-        padding: 10px 16px;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.05);
-        margin-bottom: 0.8rem;
-        backdrop-filter: blur(3px);
+        background-color: transparent !important;
+        padding: 4px 0px !important;
+        border: none !important;
+        margin-bottom: 0.6rem;
+        backdrop-filter: none !important;
     }
 
+    /* Other interactive elements */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -48,43 +48,25 @@ st.markdown(
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(15, 15, 15, 0.6) !important;
+        background-color: rgba(15, 15, 15, 0.3) !important;
         color: #f0f0f0 !important;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.08);
         padding: 10px !important;
         margin-bottom: 0.8rem !important;
-        backdrop-filter: blur(4px);
-        font-family: 'Inter', sans-serif;
+        backdrop-filter: blur(2px);
     }
 
     input, textarea, select {
-        background-color: rgba(30, 30, 30, 0.95) !important;
+        background-color: rgba(30, 30, 30, 0.9) !important;
         color: #f0f0f0 !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 6px;
         padding: 6px !important;
     }
 
-    [data-baseweb="select"] {
-        background-color: rgba(35, 35, 35, 0.95) !important;
-        color: #f0f0f0 !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-    }
-
-    [data-baseweb="select"] * {
-        color: #f0f0f0 !important;
-    }
-
-    [data-testid="stFileUploader"] > div {
-        background-color: rgba(30, 30, 30, 0.9) !important;
-        border-radius: 6px;
-        border: 1px solid rgba(255,255,255,0.08);
-    }
-
     button {
-        background-color: rgba(60, 60, 60, 0.9) !important;
+        background-color: rgba(60, 60, 60, 0.85) !important;
         color: #f0f0f0 !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         transition: background-color 0.3s ease;
@@ -104,17 +86,17 @@ st.markdown(
     }
 
     .js-plotly-plot .plotly {
-        background-color: rgba(15,15,15,0.85) !important;
+        background-color: rgba(15,15,15,0.6) !important;
     }
 
     .stDataFrame {
-        background-color: rgba(15,15,15,0.7) !important;
+        background-color: rgba(15,15,15,0.6) !important;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.08);
     }
 
     .stDataFrame table {
-        background-color: rgba(15,15,15,0.8) !important;
+        background-color: rgba(15,15,15,0.6) !important;
         color: #f0f0f0 !important;
     }
 
@@ -134,6 +116,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"

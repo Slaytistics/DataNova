@@ -7,7 +7,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- CUSTOM STYLE (NO selectbox hacks needed anymore) ---
+# --- Custom Dark Theme Styling ---
 st.markdown(
     """
     <style>
@@ -61,12 +61,12 @@ st.markdown(
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.6) !important;
     }
-
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+# --- Header ---
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
@@ -80,6 +80,7 @@ st.markdown(
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma")
 st.header("Upload Your Dataset")
 
+# --- Upload ---
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -89,9 +90,11 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
+        # --- Preview ---
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
+        # --- Summary Section ---
         st.header("Generate Summary")
 
         summary = None
@@ -107,6 +110,7 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
+        # --- Chart Generator ---
         st.header("Chart Generator")
 
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
@@ -114,33 +118,35 @@ if uploaded_file:
             with st.expander("Chart Controls", expanded=True):
                 st.markdown("#### Choose column:")
 
-                dropdown_html = f"""
+                # Custom HTML Dropdown with black text & white background
+                html_dropdown = f"""
                 <script>
-                function updateSelection(value) {{
-                    const input = window.parent.document.querySelector('input[name="column_choice"]');
+                function updateDropdown(value) {{
+                    const input = window.parent.document.querySelector('input[name="custom_dropdown_column"]');
                     if (input) {{
                         input.value = value;
-                        const event = new Event('input', {{ bubbles: true }});
-                        input.dispatchEvent(event);
+                        input.dispatchEvent(new Event('input', {{ bubbles: true }}));
                     }}
                 }}
                 </script>
-                <select onchange="updateSelection(this.value)" style="
+
+                <select onchange="updateDropdown(this.value)" style="
                     width: 100%;
-                    padding: 10px;
+                    padding: 12px;
                     font-size: 16px;
                     background-color: white;
                     color: black;
                     border-radius: 8px;
                     border: 1px solid #ccc;
+                    margin-bottom: 10px;
                 ">
                     <option disabled selected>Select a column</option>
                     {''.join(f'<option value="{col}">{col}</option>' for col in numeric_columns)}
                 </select>
                 """
 
-                components.html(dropdown_html, height=100)
-                selected_column = st.text_input("Selected Column", key="column_choice", label_visibility="collapsed")
+                components.html(html_dropdown, height=100)
+                selected_column = st.text_input("Selected Column", key="custom_dropdown_column", label_visibility="collapsed")
 
                 if selected_column:
                     top_n = st.slider("Top N values:", 5, 20, 10)
@@ -149,6 +155,7 @@ if uploaded_file:
         else:
             st.warning("No numeric columns found for charts.")
 
+        # --- Q&A Section ---
         st.header("Ask About This Dataset")
 
         if "chat_history" not in st.session_state:
@@ -173,6 +180,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

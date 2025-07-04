@@ -21,6 +21,8 @@ if "theme" not in st.session_state:
 
 def set_theme(theme_name):
     st.session_state.theme = theme_name
+    st.session_state.theme_selector = theme_name
+
 
 # --- CSS for Neon, Glassmorphism, and Layout ---
 dark_css = """

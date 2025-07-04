@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# Enhanced custom styles for dropdowns and dark theme
+# --- Custom Styles: Black Text Dropdowns, Non-Editable, Dark Theme ---
 st.markdown(
     """
     <style>
@@ -104,44 +104,30 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    /* ========== DROPDOWNS ========== */
-    /* Main selectbox container */
+    /* ========== DROPDOWNS: Black Text, White Background ========== */
     [data-baseweb="select"] {
-        background-color: rgba(25, 25, 25, 0.95) !important;
-        color: #f0f0f0 !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #111 !important;
         border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
+        border: 1px solid rgba(0,0,0,0.15) !important;
         min-height: 44px !important;
     }
-    [data-baseweb="select"] * {
-        color: #f0f0f0 !important;
-        font-size: 16px !important;
+    [data-baseweb="select"] span {
+        color: #111 !important;
     }
-    /* Dropdown menu */
     div[data-baseweb="popover"],
     div[role="listbox"] {
-        background-color: rgba(30, 30, 30, 0.98) !important;
-        color: #f0f0f0 !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+        background-color: #fff !important;
+        color: #111 !important;
     }
-    /* Dropdown options */
     div[data-baseweb="menu"] div[role="option"],
     div[role="option"] {
         background-color: transparent !important;
-        color: #f0f0f0 !important;
-        padding: 12px 16px !important;
-        font-size: 16px !important;
-        border-radius: 6px !important;
+        color: #111 !important;
     }
     div[role="option"]:hover, div[role="option"][aria-selected="true"] {
-        background-color: rgba(80, 80, 80, 0.7) !important;
-        color: #fff !important;
-    }
-    /* Fix for selected value in selectbox */
-    [data-baseweb="select"] span {
-        color: #f0f0f0 !important;
+        background-color: #e0e0e0 !important;
+        color: #111 !important;
     }
 
     /* ========== STREAMLIT 3-DOT MENU ========== */
@@ -214,6 +200,7 @@ if uploaded_file:
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
+                # Non-editable dropdown with black text
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
 
@@ -227,6 +214,7 @@ if uploaded_file:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
+        # Non-editable dropdown for answer style
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
@@ -246,6 +234,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

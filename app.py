@@ -26,12 +26,16 @@ st.markdown(
         margin: auto;
     }
 
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+        color: #f0f0f0 !important;
+        font-family: 'Inter', sans-serif;
+    }
+
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
         background-color: transparent !important;
         padding: 4px 0px !important;
         border: none !important;
         margin-bottom: 0.6rem;
-        backdrop-filter: none !important;
     }
 
     .stButton > button,
@@ -74,11 +78,6 @@ st.markdown(
         background-color: rgba(80, 80, 80, 1) !important;
     }
 
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #f0f0f0 !important;
-        font-family: 'Inter', sans-serif;
-    }
-
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.6) !important;
     }
@@ -98,7 +97,7 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    /* DROPDOWN - Black Text and Disable Editing */
+    /* DROPDOWN FIXES */
     [data-baseweb="select"] {
         background-color: rgba(255, 255, 255, 0.95) !important;
         color: #111 !important;
@@ -107,31 +106,14 @@ st.markdown(
         min-height: 44px !important;
     }
 
-    [data-baseweb="select"] span {
-        color: #111 !important;
-    }
-
-    div[data-baseweb="popover"],
-    div[role="listbox"],
-    div[role="option"] {
-        background-color: #fff !important;
-        color: #111 !important;
-    }
-
-    div[role="option"]:hover,
-    div[role="option"][aria-selected="true"] {
-        background-color: #e0e0e0 !important;
-        color: #111 !important;
-    }
-
-    /* Disable typing in dropdown */
+    /* Prevent typing */
     [data-baseweb="select"] input {
         pointer-events: none !important;
         caret-color: transparent !important;
-        color: #111 !important;
         border: none !important;
         background-color: transparent !important;
         outline: none !important;
+        color: #111 !important;
     }
 
     [data-baseweb="select"] input::selection {
@@ -139,6 +121,28 @@ st.markdown(
     }
 
     [data-baseweb="select"] input::placeholder {
+        color: #111 !important;
+    }
+
+    /* Selected value visible */
+    [data-baseweb="select"] > div {
+        color: #111 !important;
+    }
+
+    /* Dropdown options */
+    div[data-baseweb="popover"],
+    div[role="listbox"] {
+        background-color: #fff !important;
+        color: #111 !important;
+    }
+
+    div[role="option"] {
+        color: #111 !important;
+    }
+
+    div[role="option"]:hover,
+    div[role="option"][aria-selected="true"] {
+        background-color: #e0e0e0 !important;
         color: #111 !important;
     }
 
@@ -168,7 +172,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Header Section ---
+# --- Header ---
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
@@ -229,7 +233,7 @@ if uploaded_file:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], key="style_select")
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
         if user_input:
@@ -248,6 +252,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

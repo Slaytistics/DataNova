@@ -125,6 +125,47 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 }
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* Selectbox background and text */
+div[data-baseweb="select"] {
+    background-color: rgba(25, 25, 25, 0.95) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 6px !important;
+    color: white !important;
+}
+
+/* Selected text in closed selectbox */
+div[data-baseweb="select"] div {
+    color: white !important;
+}
+
+/* Dropdown arrow */
+div[data-baseweb="select"] svg {
+    filter: invert(1) brightness(2) !important;
+}
+
+/* Open dropdown list */
+div[data-baseweb="menu"] {
+    background-color: rgba(25, 25, 25, 0.95) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: white !important;
+    border-radius: 6px !important;
+}
+
+/* Dropdown items */
+div[data-baseweb="menu"] div[role="option"] {
+    color: white !important;
+    padding: 10px !important;
+}
+
+/* Hover on items */
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 
 # --- Title Section ---

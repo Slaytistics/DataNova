@@ -26,7 +26,6 @@ st.markdown(
         margin: auto;
     }
 
-    /* Text containers */
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
         background-color: transparent !important;
         padding: 4px 0px !important;
@@ -35,7 +34,6 @@ st.markdown(
         backdrop-filter: none !important;
     }
 
-    /* Inputs and buttons */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -104,36 +102,43 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    /* ========== DROPDOWNS: Black Text, White Background ========== */
+    /* === UPDATED SELECTBOX STYLE: BLACK TEXT === */
     [data-baseweb="select"] {
         background-color: rgba(255, 255, 255, 0.95) !important;
-        color: #111 !important;
         border-radius: 8px !important;
         border: 1px solid rgba(0,0,0,0.15) !important;
         min-height: 44px !important;
+        color: #111 !important;
+        font-weight: 500 !important;
     }
-    [data-baseweb="select"] span {
+
+    [data-baseweb="select"] * {
         color: #111 !important;
     }
+
     div[data-baseweb="popover"],
     div[role="listbox"] {
         background-color: #fff !important;
         color: #111 !important;
     }
+
     div[data-baseweb="menu"] div[role="option"],
     div[role="option"] {
         background-color: transparent !important;
         color: #111 !important;
+        font-weight: 500 !important;
     }
-    div[role="option"]:hover, div[role="option"][aria-selected="true"] {
+
+    div[role="option"]:hover,
+    div[role="option"][aria-selected="true"] {
         background-color: #e0e0e0 !important;
         color: #111 !important;
     }
 
-    /* ========== STREAMLIT 3-DOT MENU ========== */
     [data-testid="stActionMenuButton"] {
         filter: invert(100%) brightness(180%) !important;
     }
+
     [data-testid="stActionMenu"] {
         background-color: rgba(25, 25, 25, 0.95) !important;
         color: white !important;
@@ -141,10 +146,12 @@ st.markdown(
         border: 1px solid rgba(255,255,255,0.1) !important;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
     }
+
     [data-testid="stActionMenu"] button {
         color: white !important;
         background-color: transparent !important;
     }
+
     [data-testid="stActionMenu"] button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
@@ -200,7 +207,6 @@ if uploaded_file:
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
-                # Non-editable dropdown with black text
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
 
@@ -214,7 +220,6 @@ if uploaded_file:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        # Non-editable dropdown for answer style
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
@@ -234,6 +239,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

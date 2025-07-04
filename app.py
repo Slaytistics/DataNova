@@ -61,7 +61,7 @@ details {
     background-color: rgba(15,15,15,0.6) !important;
 }
 
-/* 3-dot menu + dropdown list */
+/* 3-dot menu dark styling */
 [data-testid="stActionMenuButton"] {
     filter: invert(100%) brightness(180%) !important;
 }
@@ -80,96 +80,30 @@ details {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Dropdown (selectbox) dark styling */
-div[data-baseweb="popover"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: #f0f0f0 !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-}
-div[data-baseweb="menu"] div[role="option"] {
-    background-color: transparent !important;
-    color: #f0f0f0 !important;
-    padding: 10px !important;
-}
-div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-/* Closed dropdown box styling */
-[data-baseweb="select"] {
-    background-color: rgba(25, 25, 25, 0.85) !important;
-    color: #f0f0f0 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-}
-
-/* Text inside the closed dropdown */
-[data-baseweb="select"] * {
-    color: #f0f0f0 !important;
-}
-/* 🔒 Closed selectbox styling */
-[data-baseweb="select"] {
-    background-color: rgba(25, 25, 25, 0.9) !important;
-    color: #f0f0f0 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Text inside closed selectbox */
-[data-baseweb="select"] div {
-    color: #f0f0f0 !important;
-}
-
-/* The actual selected item inside selectbox */
-[data-baseweb="select"] span {
-    color: #f0f0f0 !important;
-}
-
-/* Hover on dropdown arrow & borders */
-[data-baseweb="select"]:hover {
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Expanded dropdown list */
-div[data-baseweb="menu"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
-    border-radius: 6px !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-/* Each dropdown option */
-div[data-baseweb="menu"] div[role="option"] {
-    color: #f0f0f0 !important;
-    background-color: transparent !important;
-    padding: 10px !important;
-}
-
-/* Hover on dropdown options */
-div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-/* === Closed selectbox container === */
+/* === Closed selectbox styling === */
 [data-baseweb="select"] {
     background-color: rgba(30, 30, 30, 0.9) !important;
-    border-radius: 8px !important;
     color: #f0f0f0 !important;
+    border-radius: 8px !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
     transition: all 0.3s ease;
 }
 
-/* === Text inside closed selectbox === */
-[data-baseweb="select"] div {
+/* === Text and icon inside selectbox === */
+[data-baseweb="select"] div,
+[data-baseweb="select"] span {
     color: #f0f0f0 !important;
 }
-
-/* === Dropdown arrow icon === */
 [data-baseweb="select"] svg {
     filter: brightness(200%) invert(100%) !important;
 }
 
-/* === Open dropdown options list === */
+/* === Hover border on closed dropdown === */
+[data-baseweb="select"]:hover {
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* === Expanded dropdown panel === */
 div[data-baseweb="menu"] {
     background-color: rgba(20, 20, 20, 0.95) !important;
     color: #f0f0f0 !important;
@@ -178,21 +112,20 @@ div[data-baseweb="menu"] {
     box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
 }
 
-/* === Each option === */
+/* === Each dropdown option === */
 div[data-baseweb="menu"] div[role="option"] {
     background-color: transparent !important;
     color: #f0f0f0 !important;
     padding: 10px 14px !important;
 }
 
-/* === Hover effect on option === */
+/* === Hover effect on dropdown option === */
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255,255,255,0.1) !important;
 }
-
-
 </style>
 """, unsafe_allow_html=True)
+
 
 # --- Title Section ---
 st.markdown("""

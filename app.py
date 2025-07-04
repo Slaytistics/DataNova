@@ -103,6 +103,29 @@ st.markdown(
     .stSlider > div > div > div > div {
         background-color: #cccccc33 !important;
     }
+       /* --- Dark dropdowns (st.selectbox) --- */
+[data-baseweb="select"] {
+    background-color: rgba(25, 25, 25, 0.85) !important;
+    color: #f0f0f0 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+}
+
+[data-baseweb="select"] * {
+    color: #f0f0f0 !important;
+    background-color: rgba(25, 25, 25, 0.9) !important;
+}
+
+div[role="listbox"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+}
+
+div[role="option"]:hover {
+    background-color: rgba(50, 50, 50, 0.9) !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True,

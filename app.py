@@ -24,7 +24,6 @@ st.markdown(
         margin: auto;
     }}
 
-    /* All container elements */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -45,7 +44,6 @@ st.markdown(
         padding: 12px;
     }}
 
-    /* Inputs */
     input, textarea, select {{
         background-color: rgba(40, 40, 40, 0.95) !important;
         color: white !important;
@@ -58,7 +56,6 @@ st.markdown(
         border-radius: 6px;
     }}
 
-    /* Buttons */
     button {{
         background-color: rgba(50, 50, 50, 0.9) !important;
         color: white !important;
@@ -69,7 +66,6 @@ st.markdown(
         color: white !important;
     }}
 
-    /* Slider handle */
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
     }}
@@ -78,7 +74,6 @@ st.markdown(
         color: white !important;
     }}
 
-    /* Chat bubbles */
     .chat-user, .chat-ai {{
         background: rgba(40, 40, 40, 0.85);
         padding: 10px;
@@ -90,8 +85,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(

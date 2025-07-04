@@ -256,6 +256,24 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 /* Utility spacing */
 .mt-2 { margin-top: 1rem !important; }
 .mb-2 { margin-bottom: 1rem !important; }
+/* Fix selectbox and input placeholder color in dark mode */
+.stSelectbox div[data-baseweb="select"] input,
+.stSelectbox div[data-baseweb="select"] div[role="option"] {
+    color: #fff !important;
+    opacity: 1 !important;
+}
+
+.stSelectbox div[data-baseweb="select"] {
+    color: #fff !important;
+}
+
+/* Fix placeholder visibility */
+.stSelectbox input::placeholder,
+.stTextInput input::placeholder {
+    color: #ccc !important;
+    opacity: 0.8 !important;
+}
+
 </style>
 """
 

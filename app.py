@@ -13,7 +13,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Mode Toggle ---
+# --- Dark Mode Toggle State ---
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = True
 
@@ -295,8 +295,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Handle dark mode toggle via query param (hacky but works in Streamlit)
-import sys
+# Handle dark mode toggle via query param
 if "dark_mode_toggle" in st.experimental_get_query_params():
     toggle_dark_mode()
     st.experimental_set_query_params()  # clear params
@@ -340,7 +339,6 @@ if uploaded_file:
         with col2:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
         if summary:
-            # Show summary in a horizontal scroll card style
             st.markdown('<div class="horizontal-scroll">', unsafe_allow_html=True)
             st.markdown(f'<div>{summary}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
@@ -355,7 +353,16 @@ if uploaded_file:
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
                 fig = plot_top_column(df, selected_column, top_n=top_n)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    config={
+                        "displayModeBar": True,
+                        "scrollZoom": True,
+                        "displaylogo": False,
+                        "modeBarButtonsToRemove": ["sendDataToCloud"],
+                    }
+                )
         else:
             st.warning("No numeric columns found for charts.")
         st.markdown('</div>', unsafe_allow_html=True)
@@ -392,5 +399,6 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Error processing file: {e}")
+
 
 

@@ -19,7 +19,7 @@ soft_css = """
 
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
-    color: #fdfdfd !important;
+    color: #ffffff !important;
     background-color: transparent !important;
     margin: 0; padding: 0;
 }
@@ -32,7 +32,7 @@ body, html, div, span, label {
     position: relative;
 }
 
-/* Soft overlay */
+/* Soft dark overlay */
 body::before {
     content: "";
     position: fixed;
@@ -42,7 +42,7 @@ body::before {
     z-index: -1;
 }
 
-/* Content container */
+/* Container */
 .block-container {
     max-width: 900px;
     margin: auto;
@@ -53,7 +53,7 @@ body::before {
     padding: 2rem 2.5rem 3rem 2.5rem !important;
 }
 
-/* Title Styling */
+/* Title */
 .title-block {
     text-align: center;
     margin-bottom: 2.5rem;
@@ -61,40 +61,40 @@ body::before {
 .title-block h1 {
     font-size: 2.8rem;
     font-weight: 800;
-    color: #e5caa1;
+    color: #ffffff;
     margin-bottom: 0.3rem;
 }
 .title-block p {
     font-size: 1.1rem;
-    color: #d6c9b2;
+    color: #ffffff;
     font-weight: 500;
     letter-spacing: 2px;
 }
 
 /* Button */
 .stButton > button {
-    background: #8c6f4d;
+    background: #5c4433;
     color: white !important;
     font-weight: 600;
     border-radius: 25px;
     padding: 0.6rem 2rem;
-    box-shadow: 0 0 10px rgba(140, 111, 77, 0.4);
+    box-shadow: 0 0 10px rgba(90, 70, 50, 0.4);
     transition: all 0.3s ease;
     border: none !important;
     font-size: 1rem;
 }
 .stButton > button:hover {
-    background: #a0835f;
-    box-shadow: 0 0 12px rgba(120, 90, 60, 0.5);
+    background: #7a5a40;
+    box-shadow: 0 0 12px rgba(90, 70, 50, 0.6);
     transform: scale(1.03);
 }
 
-/* Inputs and dropdowns */
+/* Inputs */
 .stTextInput > div > input,
 .stSelectbox > div > div {
     background: rgba(255, 255, 255, 0.08) !important;
     border-radius: 18px !important;
-    border: 1px solid #c8b090 !important;
+    border: 1px solid #ffffff !important;
     color: #fff !important;
     padding: 0.5rem 1rem !important;
     font-size: 1rem !important;
@@ -104,7 +104,7 @@ body::before {
 .section-header {
     font-size: 1.6rem;
     font-weight: 700;
-    color: #e5caa1;
+    color: #ffffff;
     margin-bottom: 1.2rem;
     position: relative;
 }
@@ -115,30 +115,30 @@ body::before {
     bottom: -6px;
     width: 50px;
     height: 3px;
-    background: #c8b090;
+    background: #ffffff;
     border-radius: 2px;
 }
 
 /* Chat bubbles */
 .chat-user {
-    background: #f0e2d0;
-    color: #2e1d10;
+    background: #ffffff;
+    color: #1d1d1d;
     border-radius: 20px 20px 0 20px;
     padding: 12px 18px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 12px rgba(240, 226, 208, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
     font-weight: 600;
     margin-bottom: 10px;
 }
 .chat-ai {
-    background: #8c6f4d;
+    background: #5c4433;
     color: #fff;
     border-radius: 20px 20px 20px 0;
     padding: 12px 18px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 12px rgba(140, 111, 77, 0.3);
+    box-shadow: 0 4px 12px rgba(90, 70, 50, 0.3);
     font-weight: 600;
     margin-bottom: 10px;
 }
@@ -154,7 +154,7 @@ body::before {
 """
 st.markdown(soft_css, unsafe_allow_html=True)
 
-# --- Title ---
+# --- Title Block ---
 st.markdown("""
 <div class="title-block">
     <h1>DATALICIOUS</h1>
@@ -162,11 +162,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Upload Section ---
+# --- Upload Dataset ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-# --- Main App ---
+# --- Main Logic ---
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -175,11 +175,11 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # --- Data Preview ---
+        # --- Preview Section ---
         st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Generator ---
+        # --- Summary Section ---
         st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         if st.button("Generate Summary"):
             with st.spinner("Calling Together AI..."):
@@ -187,7 +187,7 @@ if uploaded_file:
                 st.success("Summary Generated!")
                 st.markdown(summary)
 
-        # --- Chart Generator ---
+        # --- Chart Section ---
         st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:

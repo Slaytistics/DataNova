@@ -470,29 +470,31 @@ st.markdown(themes[st.session_state.theme], unsafe_allow_html=True)
 
 # --- Top Bar with Theme Selector ---
 with st.container():
-    top_bar_col1, top_bar_col2 = st.columns([4, 1])
-    with top_bar_col1:
-        st.markdown(
-            """
-            <div id="top-bar">
+    st.markdown(
+        """
+        <div id="top-bar">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
                 <div style="display:flex; align-items:center; gap: 1rem;">
                     <i class="fa fa-database" style="font-size:1.8rem; color:#ff69b4;"></i>
-                    <span>DATALICIOUS</span>
+                    <span style="font-size:1.4rem; font-weight:700; color:#ff69b4;">DATALICIOUS</span>
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
-    with top_bar_col2:
-        selected_theme = st.selectbox(
-            "Theme",
-            options=list(themes.keys()),
-            index=list(themes.keys()).index(st.session_state.theme),
-            label_visibility="collapsed"
-        )
-        if selected_theme != st.session_state.theme:
-            set_theme(selected_theme)
-            st.experimental_rerun()
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)  # spacing for visibility
+
+    selected_theme = st.selectbox(
+        "🎨 Select Theme",
+        options=list(themes.keys()),
+        index=list(themes.keys()).index(st.session_state.theme),
+        key="theme_selector"
+    )
+    if selected_theme != st.session_state.theme:
+        set_theme(selected_theme)
+        st.experimental_rerun()
 
 
 # Handle theme change via query params

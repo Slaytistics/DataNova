@@ -129,7 +129,7 @@ st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin-bottom: 2rem;">
-        <img src="https://i.imgur.com/4Hqe6a0.png" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 0;" />
+        <img src="https://drive.google.com/file/d/1t1LN6dcrCUzo6k51xyhO0fFHBDuRnxto/view?usp=sharing" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 0;" />
     </div>
     """,
     unsafe_allow_html=True,

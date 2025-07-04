@@ -10,6 +10,14 @@ st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    <div style='text-align: center; padding: 80px 10px 30px 10px;'>
+        <h1 style='font-family: "Cooper Hewitt", sans-serif; font-size: 60px; margin-bottom: 8px;'>
+            DATALICIOUS
+        </h1>
+        <h3 style='font-family: "Cooper Hewitt", sans-serif; font-size: 22px; font-weight: 400; letter-spacing: 1px;'>
+            SLEEK. SMART. STREAMLINED.
+        </h3>
+    </div>
 
     [data-testid="stAppViewContainer"] {
         background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");

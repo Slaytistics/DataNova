@@ -127,17 +127,14 @@ st.markdown(
 )
 st.markdown(
     """
-    <div style='text-align: center; padding: 80px 10px 30px 10px;'>
-        <h1 style='font-family: Inter, sans-serif; font-size: 64px; font-weight: 800; letter-spacing: 1px; margin-bottom: 12px;'>
-            DATALICIOUS
-        </h1>
-        <h3 style='font-family: Inter, sans-serif; font-size: 22px; font-weight: 400; letter-spacing: 1.5px;'>
-            SLEEK. SMART. STREAMLINED.
-        </h3>
+    <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
+        <h1 style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">DATALICIOUS</h1>
+        <p style="font-size: 1.2rem; letter-spacing: 2px; color: white;">SLEEK. SMART. STREAMLINED.</p>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
+
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )

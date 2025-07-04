@@ -137,21 +137,50 @@ input, .stTextInput input, .stSelectbox div div {
     margin-bottom: 1.5rem;
 }
 /* --- Fix dropdown options visibility --- */
-div[data-baseweb="select"] > div {
-    background-color: rgba(0, 0, 0, 0.6) !important;
+/* --- Dark-themed button (no muddy brown) --- */
+.stButton > button {
+    background: rgba(255, 255, 255, 0.07);
     color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 0.6rem 2rem;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.stButton > button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(1.02);
+}
+
+/* --- Selectbox dropdown & options fix --- */
+div[data-baseweb="select"] {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 10px !important;
+    color: #fff !important;
+}
+
+div[data-baseweb="select"] * {
+    color: #fff !important;
 }
 
 div[data-baseweb="select"] div[role="option"] {
-    background-color: rgba(0, 0, 0, 0.9) !important;
+    background-color: rgba(30, 30, 30, 0.95) !important;
     color: #ffffff !important;
     font-weight: 500;
 }
-
 div[data-baseweb="select"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.12) !important;
     color: #ffffff !important;
 }
+
+/* --- Slider value labels (e.g., 5 and 20) fix --- */
+.css-1y4p8pa {
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
 
 </style>
 """

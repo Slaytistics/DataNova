@@ -1,38 +1,30 @@
 import plotly.express as px
-import pandas as pd
 
-def plot_top_column(df, column_name, top_n=10, label_column=None):
-    """
-    Plots a bar chart of the top N rows based on a numeric column.
-    """
-    if column_name not in df.columns:
-        raise ValueError(f"'{column_name}' is not in the DataFrame.")
+def plot_top_column(df, column, top_n=10):
+    top_values = df[column].value_counts().nlargest(top_n).reset_index()
+    top_values.columns = [column, 'Count']
 
-    df_sorted = df.sort_values(by=column_name, ascending=False).head(top_n)
-    x_col = label_column if label_column else df_sorted.columns[0]
-
-    fig = px.bar(
-        df_sorted,
-        x=x_col,
-        y=column_name,
-        text=column_name,
-        title=f"🔝 Top {top_n} {x_col} by {column_name}",
-        color_discrete_sequence=["#4B8BBE"]
-    )
-
-    fig.update_traces(
-        texttemplate="%{text}",
-        textposition="outside",
-        hovertemplate=f"{x_col}: %{{x}}<br>{column_name}: %{{y}}<extra></extra>"
-    )
+    fig = px.bar(top_values, x=column, y='Count')
 
     fig.update_layout(
-        xaxis_title=x_col,
-        yaxis_title=column_name,
-        uniformtext_minsize=8,
-        uniformtext_mode="hide",
-        height=500,
-        margin=dict(t=50, b=50)
+        plot_bgcolor='rgba(20,20,20,0.8)',
+        paper_bgcolor='rgba(10,10,10,0.7)',
+        font_color='#f0f0f0',
+        font_family='Inter',
+        title_font_size=20,
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            color='#f0f0f0'
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor='rgba(255,255,255,0.1)',
+            zeroline=False,
+            color='#f0f0f0'
+        ),
     )
+
+    fig.update_traces(marker_color='rgba(0, 180, 255, 0.9)')
 
     return fig

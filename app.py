@@ -7,6 +7,7 @@ from figma_exporter import export_to_figma
 from qna import ask_dataset_question
 
 # Custom styles with Arial Italic font, colored headings, styled button, background image
+
 st.markdown(
     f"""
     <style>
@@ -85,6 +86,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(

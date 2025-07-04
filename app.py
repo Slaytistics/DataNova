@@ -20,23 +20,12 @@ st.markdown(
         font-family: 'Inter', sans-serif;
     }
 
-    /* Remove dark block container effect from image */
     .block-container {
         padding: 1.5rem 2rem;
-        max-width: 100%;
-        background: transparent !important;
+        max-width: 800px;
+        margin: auto;
     }
 
-    /* Header Image cleanup */
-    .stImage > img {
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        border: none;
-        box-shadow: none;
-    }
-
-    /* Transparent containers behind text */
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
         background-color: rgba(20, 20, 20, 0.55);
         padding: 10px 16px;
@@ -136,16 +125,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Page setup
-st.set_page_config(page_title="Datalicious", layout="wide")
-st.markdown(
-    """
-    <div style="width: 100%; text-align: center; margin-bottom: 2rem;">
-        <img src="https://i.ibb.co/PZVhkKM2/header.png" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 0;" />
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
 )

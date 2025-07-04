@@ -16,6 +16,8 @@ st.markdown(
 # --- Initialize session state for theme ---
 if "theme" not in st.session_state:
     st.session_state.theme = "Dark"
+    st.session_state.theme_selector = "Dark"
+
 
 def set_theme(theme_name):
     st.session_state.theme = theme_name

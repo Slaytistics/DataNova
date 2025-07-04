@@ -24,129 +24,13 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
+    background: url("https://i.imgur.com/w7CLLax.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;
     position: relative;
 }
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.75);  /* Light overlay */
-    z-index: -1;
-}
-
-.block-container {
-    max-width: 900px;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 24px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 20px 2px #aaa;
-    padding: 2rem 3rem 3rem 3rem !important;
-    color: #222 !important;
-}
-
-.title-block {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-.title-block h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #ff69b4;
-    letter-spacing: 2px;
-    margin-bottom: 0.5rem;
-}
-.title-block p {
-    font-size: 1.2rem;
-    color: #333;
-    letter-spacing: 2px;
-    font-weight: 500;
-    font-style: italic;
-}
-
-.stButton > button {
-    background: #222 !important;
-    color: white !important;
-    font-weight: 700;
-    border-radius: 30px;
-    padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #666;
-    transition: all 0.3s ease;
-    border: none !important;
-    font-size: 1.1rem;
-    font-style: italic;
-    font-family: Arial, sans-serif;
-}
-.stButton > button:hover {
-    box-shadow: 0 0 12px #444;
-    transform: scale(1.05);
-}
-
-.stTextInput > div > input,
-.stSelectbox > div > div,
-textarea, input, select {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    color: #222 !important;
-    font-family: Arial, sans-serif !important;
-    font-style: italic !important;
-    border-radius: 12px;
-    padding: 0.6rem 1rem;
-    border: 1px solid #ccc;
-}
-
-.css-3vnyiq-option,
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: #f0f0f0 !important;
-    color: #222 !important;
-    font-style: italic;
-}
-
-.section-header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ff69b4;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-style: italic;
-}
-
-.chat-user {
-    background: linear-gradient(135deg, #e0ffff, #98fb98);
-    color: #222;
-    border-radius: 24px 24px 0 24px;
-    padding: 14px 20px;
-    max-width: 75%;
-    margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.4);
-    font-weight: 600;
-    font-style: italic;
-    margin-bottom: 12px;
-}
-.chat-ai {
-    background: linear-gradient(135deg, #ffb6c1, #dda0dd);
-    color: #222;
-    border-radius: 24px 24px 24px 0;
-    padding: 14px 20px;
-    max-width: 75%;
-    margin-right: auto;
-    box-shadow: 0 4px 16px rgba(255, 182, 193, 0.4);
-    font-weight: 600;
-    font-style: italic;
-    margin-bottom: 12px;
-}
-
-#chat-window {
-    max-height: 360px;
-    overflow-y: auto;
-    padding-right: 12px;
-    margin-bottom: 1.5rem;
-}
+...
 </style>
 """
 

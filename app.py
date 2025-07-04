@@ -21,9 +21,9 @@ st.markdown(
     }
 
     .block-container {
-        padding: 1.5rem 2rem;
-        max-width: 800px;
-        margin: auto;
+    padding: 0rem 2rem 1.5rem 2rem !important;
+    max-width: 800px;
+    margin: auto;
     }
 
     /* Transparent background for text containers */

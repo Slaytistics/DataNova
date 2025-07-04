@@ -7,80 +7,109 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Dark Theme CSS (works with white dropdown) ---
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+# --- Dark Theme CSS ---
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        font-family: 'Inter', sans-serif;
-    }
+[data-testid="stAppViewContainer"] {
+    background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Inter', sans-serif;
+}
 
-    .block-container {
-        padding: 0rem 2rem 1.5rem 2rem !important;
-        max-width: 800px;
-        margin: auto;
-    }
+.block-container {
+    padding: 0rem 2rem 1.5rem 2rem !important;
+    max-width: 800px;
+    margin: auto;
+}
 
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #f0f0f0 !important;
-        font-family: 'Inter', sans-serif;
-    }
+html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: #f0f0f0 !important;
+    font-family: 'Inter', sans-serif;
+}
 
-    .stButton > button,
-    .stFileUploader,
-    .stTextInput,
-    .stSlider,
-    .stTextArea,
-    .stRadio,
-    .stExpander,
-    .element-container,
-    .stPlotlyChart,
-    .chat-message,
-    details {
-        background-color: rgba(15, 15, 15, 0.3) !important;
-        color: #f0f0f0 !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 10px !important;
-        margin-bottom: 0.8rem !important;
-        backdrop-filter: blur(2px);
-    }
+.stButton > button,
+.stFileUploader,
+.stTextInput,
+.stSlider,
+.stTextArea,
+.stRadio,
+.stExpander,
+.element-container,
+.stPlotlyChart,
+.chat-message,
+details {
+    background-color: rgba(15, 15, 15, 0.3) !important;
+    color: #f0f0f0 !important;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px !important;
+    margin-bottom: 0.8rem !important;
+    backdrop-filter: blur(2px);
+}
 
-    .stDataFrame table {
-        background-color: rgba(15,15,15,0.6) !important;
-        color: #f0f0f0 !important;
-    }
+.stDataFrame table {
+    background-color: rgba(15,15,15,0.6) !important;
+    color: #f0f0f0 !important;
+}
 
-    .js-plotly-plot .plotly {
-        background-color: rgba(15,15,15,0.6) !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+.js-plotly-plot .plotly {
+    background-color: rgba(15,15,15,0.6) !important;
+}
+
+/* 3-dot menu + dropdown list */
+[data-testid="stActionMenuButton"] {
+    filter: invert(100%) brightness(180%) !important;
+}
+[data-testid="stActionMenu"] {
+    background-color: rgba(25, 25, 25, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+}
+[data-testid="stActionMenu"] button {
+    color: white !important;
+    background-color: transparent !important;
+}
+[data-testid="stActionMenu"] button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Dropdown (selectbox) dark styling */
+div[data-baseweb="popover"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: #f0f0f0 !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: transparent !important;
+    color: #f0f0f0 !important;
+    padding: 10px !important;
+}
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # --- Title Section ---
-st.markdown(
-    """
-    <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
-        <h1 style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">DATALICIOUS</h1>
-        <p style="font-size: 1.2rem; letter-spacing: 2px; color: white;">SLEEK. SMART. STREAMLINED.</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
+    <h1 style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">DATALICIOUS</h1>
+    <p style="font-size: 1.2rem; letter-spacing: 2px; color: white;">SLEEK. SMART. STREAMLINED.</p>
+</div>
+""", unsafe_allow_html=True)
 
+# --- App Description & Upload ---
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma")
 st.header("Upload Your Dataset")
 
-# --- Upload File ---
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -90,13 +119,12 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # --- Preview Section ---
+        # Preview
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Section ---
+        # Summary
         st.header("Generate Summary")
-
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
@@ -110,54 +138,21 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
-        # --- Chart Generator Section ---
+        # Chart Generator
         st.header("Chart Generator")
-
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
+
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
-                st.markdown("#### Choose column:")
-
-                # ✅ Fixed custom dropdown with black text
-                html_dropdown = f"""
-                <script>
-                function updateDropdown(value) {{
-                    const input = window.parent.document.querySelector('input[name="custom_dropdown_column"]');
-                    if (input) {{
-                        input.value = value;
-                        input.dispatchEvent(new Event('input', {{ bubbles: true }}));
-                    }}
-                }}
-                </script>
-
-                <select onchange="updateDropdown(this.value)" style="
-                    width: 100%;
-                    padding: 12px;
-                    font-size: 16px;
-                    background-color: white;
-                    color: black;
-                    border-radius: 8px;
-                    border: 1px solid #ccc;
-                    margin-bottom: 10px;
-                ">
-                    <option disabled selected>Select a column</option>
-                    {''.join(f'<option value="{col}">{col}</option>' for col in numeric_columns)}
-                </select>
-                """
-
-                components.html(html_dropdown, height=100)
-                selected_column = st.text_input("Selected Column", key="custom_dropdown_column", label_visibility="collapsed")
-
-                if selected_column:
-                    top_n = st.slider("Top N values:", 5, 20, 10)
-                    fig = plot_top_column(df, selected_column, top_n=top_n)
-                    st.plotly_chart(fig, use_container_width=True)
+                selected_column = st.selectbox("Choose column:", numeric_columns)
+                top_n = st.slider("Top N values:", 5, 20, 10)
+                fig = plot_top_column(df, selected_column, top_n=top_n)
+                st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
 
-        # --- Dataset Q&A Section ---
+        # Ask Dataset
         st.header("Ask About This Dataset")
-
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 

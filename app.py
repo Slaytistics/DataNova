@@ -107,6 +107,50 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 [data-baseweb="select"] * {
     color: #f0f0f0 !important;
 }
+/* 🔒 Closed selectbox styling */
+[data-baseweb="select"] {
+    background-color: rgba(25, 25, 25, 0.9) !important;
+    color: #f0f0f0 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Text inside closed selectbox */
+[data-baseweb="select"] div {
+    color: #f0f0f0 !important;
+}
+
+/* The actual selected item inside selectbox */
+[data-baseweb="select"] span {
+    color: #f0f0f0 !important;
+}
+
+/* Hover on dropdown arrow & borders */
+[data-baseweb="select"]:hover {
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Expanded dropdown list */
+div[data-baseweb="menu"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Each dropdown option */
+div[data-baseweb="menu"] div[role="option"] {
+    color: #f0f0f0 !important;
+    background-color: transparent !important;
+    padding: 10px !important;
+}
+
+/* Hover on dropdown options */
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 
 </style>
 """, unsafe_allow_html=True)

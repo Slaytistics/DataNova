@@ -15,11 +15,10 @@ st.markdown(
 # --- Apply Dark Theme with Background Image ---
 dark_css = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-
 body, html, div, span, label {
-    font-family: 'Poppins', sans-serif !important;
-    color: #FFFFFF !important;
+    font-family: Arial, sans-serif !important;
+    font-style: italic !important;
+    color: #222 !important;
     background-color: transparent !important;
     margin: 0; padding: 0;
 }
@@ -37,18 +36,19 @@ body::before {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(15, 15, 21, 0.85);
+    background: rgba(255, 255, 255, 0.75);  /* Light overlay */
     z-index: -1;
 }
 
 .block-container {
     max-width: 900px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 24px;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 0 20px 2px #444;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 20px 2px #aaa;
     padding: 2rem 3rem 3rem 3rem !important;
+    color: #222 !important;
 }
 
 .title-block {
@@ -57,93 +57,87 @@ body::before {
 }
 .title-block h1 {
     font-size: 3rem;
-    font-weight: 900;
+    font-weight: bold;
     color: #ff69b4;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
 }
 .title-block p {
     font-size: 1.2rem;
-    color: #eee;
-    letter-spacing: 3px;
+    color: #333;
+    letter-spacing: 2px;
     font-weight: 500;
+    font-style: italic;
 }
 
 .stButton > button {
-    background: #111 !important;
+    background: #222 !important;
     color: white !important;
     font-weight: 700;
     border-radius: 30px;
     padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #222;
+    box-shadow: 0 0 8px #666;
     transition: all 0.3s ease;
     border: none !important;
     font-size: 1.1rem;
+    font-style: italic;
+    font-family: Arial, sans-serif;
 }
 .stButton > button:hover {
     box-shadow: 0 0 12px #444;
     transform: scale(1.05);
 }
 
-/* Input fields and dropdowns */
 .stTextInput > div > input,
-.css-1xc3v61 edgvbvh3,
 .stSelectbox > div > div,
-.css-1wa3eu0-placeholder {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
-    border-radius: 12px !important;
-    padding: 0.6rem 1rem !important;
+textarea, input, select {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #222 !important;
+    font-family: Arial, sans-serif !important;
+    font-style: italic !important;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
 }
 
-/* Dropdown options */
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue, .css-1okebmr-indicatorSeparator {
-    background-color: #222 !important;
-    color: white !important;
+.css-3vnyiq-option,
+.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
+    background-color: #f0f0f0 !important;
+    color: #222 !important;
+    font-style: italic;
 }
 
-/* Dropdown menu list */
-.css-3vnyiq-option {
-    background-color: #222 !important;
-    color: white !important;
-    font-weight: 500;
-    font-size: 1rem;
-}
-.css-3vnyiq-option:hover {
-    background-color: #444 !important;
-    color: white !important;
-}
-
-/* Section headers */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
     color: #ff69b4;
     margin-top: 2rem;
     margin-bottom: 1rem;
+    font-style: italic;
 }
 
-/* Chat bubbles */
 .chat-user {
-    background: linear-gradient(135deg, #00ffff, #32cd32);
-    color: #000;
+    background: linear-gradient(135deg, #e0ffff, #98fb98);
+    color: #222;
     border-radius: 24px 24px 0 24px;
     padding: 14px 20px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.4);
     font-weight: 600;
+    font-style: italic;
     margin-bottom: 12px;
 }
 .chat-ai {
-    background: linear-gradient(135deg, #ff69b4, #9b30ff);
-    color: #fff;
+    background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+    color: #222;
     border-radius: 24px 24px 24px 0;
     padding: 14px 20px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
+    box-shadow: 0 4px 16px rgba(255, 182, 193, 0.4);
     font-weight: 600;
+    font-style: italic;
     margin-bottom: 12px;
 }
 
@@ -155,6 +149,7 @@ body::before {
 }
 </style>
 """
+
 st.markdown(dark_css, unsafe_allow_html=True)
 
 # --- Main Title ---

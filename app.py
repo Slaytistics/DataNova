@@ -136,6 +136,23 @@ input, .stTextInput input, .stSelectbox div div {
     padding-right: 12px;
     margin-bottom: 1.5rem;
 }
+/* --- Fix dropdown options visibility --- */
+div[data-baseweb="select"] > div {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    color: #ffffff !important;
+}
+
+div[data-baseweb="select"] div[role="option"] {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+div[data-baseweb="select"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
 </style>
 """
 st.markdown(soft_css, unsafe_allow_html=True)

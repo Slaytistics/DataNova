@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Custom Styles: Black Text Dropdowns, Non-Editable, Dark Theme ---
+# --- Custom Styles ---
 st.markdown(
     """
     <style>
@@ -26,7 +26,6 @@ st.markdown(
         margin: auto;
     }
 
-    /* Text containers */
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
         background-color: transparent !important;
         padding: 4px 0px !important;
@@ -35,7 +34,6 @@ st.markdown(
         backdrop-filter: none !important;
     }
 
-    /* Inputs and buttons */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -81,10 +79,6 @@ st.markdown(
         font-family: 'Inter', sans-serif;
     }
 
-    .element-container {
-        margin-bottom: 0.6rem !important;
-    }
-
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.6) !important;
     }
@@ -104,7 +98,7 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    /* ========== DROPDOWNS: Black Text, White Background ========== */
+    /* DROPDOWN - Black Text and Disable Editing */
     [data-baseweb="select"] {
         background-color: rgba(255, 255, 255, 0.95) !important;
         color: #111 !important;
@@ -112,28 +106,47 @@ st.markdown(
         border: 1px solid rgba(0,0,0,0.15) !important;
         min-height: 44px !important;
     }
+
     [data-baseweb="select"] span {
         color: #111 !important;
     }
+
     div[data-baseweb="popover"],
-    div[role="listbox"] {
+    div[role="listbox"],
+    div[role="option"] {
         background-color: #fff !important;
         color: #111 !important;
     }
-    div[data-baseweb="menu"] div[role="option"],
-    div[role="option"] {
-        background-color: transparent !important;
-        color: #111 !important;
-    }
-    div[role="option"]:hover, div[role="option"][aria-selected="true"] {
+
+    div[role="option"]:hover,
+    div[role="option"][aria-selected="true"] {
         background-color: #e0e0e0 !important;
         color: #111 !important;
     }
 
-    /* ========== STREAMLIT 3-DOT MENU ========== */
+    /* Disable typing in dropdown */
+    [data-baseweb="select"] input {
+        pointer-events: none !important;
+        caret-color: transparent !important;
+        color: #111 !important;
+        border: none !important;
+        background-color: transparent !important;
+        outline: none !important;
+    }
+
+    [data-baseweb="select"] input::selection {
+        background: transparent !important;
+    }
+
+    [data-baseweb="select"] input::placeholder {
+        color: #111 !important;
+    }
+
+    /* 3-dot menu */
     [data-testid="stActionMenuButton"] {
         filter: invert(100%) brightness(180%) !important;
     }
+
     [data-testid="stActionMenu"] {
         background-color: rgba(25, 25, 25, 0.95) !important;
         color: white !important;
@@ -141,10 +154,12 @@ st.markdown(
         border: 1px solid rgba(255,255,255,0.1) !important;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
     }
+
     [data-testid="stActionMenu"] button {
         color: white !important;
         background-color: transparent !important;
     }
+
     [data-testid="stActionMenu"] button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
@@ -153,6 +168,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# --- Header Section ---
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
@@ -168,6 +184,7 @@ st.markdown(
 )
 st.header("Upload Your Dataset")
 
+# --- File Upload ---
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -180,8 +197,8 @@ if uploaded_file:
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
+        # --- Summary Section ---
         st.header("Generate Summary")
-
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
@@ -195,26 +212,23 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
+        # --- Chart Generator ---
         st.header("Chart Generator")
-
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
-                # Non-editable dropdown with black text
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
-
                 fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
 
+        # --- QnA Section ---
         st.header("Ask About This Dataset")
-
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        # Non-editable dropdown for answer style
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
@@ -234,6 +248,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

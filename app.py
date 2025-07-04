@@ -22,7 +22,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://i.imgur.com/6lk7kKP.jpeg") no-repeat center center fixed;
+    background: url("https://i.imgur.com/IGvbANo.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;

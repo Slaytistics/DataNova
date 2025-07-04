@@ -469,44 +469,31 @@ themes = {
 st.markdown(themes[st.session_state.theme], unsafe_allow_html=True)
 
 # --- Top Bar with Theme Selector ---
-st.markdown(
-    f"""
-    <div id="top-bar">
-        <div style="display:flex; align-items:center; gap: 1rem;">
-            <i class="fa fa-database" style="font-size:1.8rem; color:#ff69b4;"></i>
-            <span>DATALICIOUS</span>
-        </div>
-        <div style="display:flex; align-items:center; gap: 1rem;">
-            <form action="" method="get" id="theme-form">
-                <select name="theme" id="theme-select" style="
-                    background: transparent;
-                    border-radius: 20px;
-                    border: 1.5px solid #ff69b4;
-                    color: #ff69b4;
-                    padding: 0.3rem 0.8rem;
-                    font-weight: 700;
-                    font-family: 'Poppins', sans-serif;
-                    cursor: pointer;
-                ">
-                    <option value="Dark" {"selected" if st.session_state.theme == "Dark" else ""}>Dark</option>
-                    <option value="Light" {"selected" if st.session_state.theme == "Light" else ""}>Light</option>
-                </select>
-            </form>
-        </div>
-    </div>
+with st.container():
+    top_bar_col1, top_bar_col2 = st.columns([4, 1])
+    with top_bar_col1:
+        st.markdown(
+            """
+            <div id="top-bar">
+                <div style="display:flex; align-items:center; gap: 1rem;">
+                    <i class="fa fa-database" style="font-size:1.8rem; color:#ff69b4;"></i>
+                    <span>DATALICIOUS</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    with top_bar_col2:
+        selected_theme = st.selectbox(
+            "Theme",
+            options=list(themes.keys()),
+            index=list(themes.keys()).index(st.session_state.theme),
+            label_visibility="collapsed"
+        )
+        if selected_theme != st.session_state.theme:
+            set_theme(selected_theme)
+            st.experimental_rerun()
 
-    <script>
-    const themeSelect = document.getElementById('theme-select');
-    themeSelect.addEventListener('change', function() {{
-        const selectedTheme = this.value;
-        const url = new URL(window.location);
-        url.searchParams.set('theme', selectedTheme);
-        window.location = url.toString();
-    }});
-    </script>
-    """,
-    unsafe_allow_html=True,
-)
 
 # Handle theme change via query params
 query_params = st.experimental_get_query_params()

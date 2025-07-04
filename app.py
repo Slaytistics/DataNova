@@ -95,6 +95,19 @@ div[data-baseweb="menu"] div[role="option"] {
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
+/* Closed dropdown box styling */
+[data-baseweb="select"] {
+    background-color: rgba(25, 25, 25, 0.85) !important;
+    color: #f0f0f0 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* Text inside the closed dropdown */
+[data-baseweb="select"] * {
+    color: #f0f0f0 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 

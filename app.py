@@ -25,7 +25,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
+    background: url("https://i.imgur.com/w7CLLax.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;
@@ -85,33 +85,38 @@ body::before {
     transform: scale(1.05);
 }
 
-/* Input fields and dropdowns */
+/* --- Input fields and dropdowns --- */
 .stTextInput > div > input,
-.css-1xc3v61 edgvbvh3,
 .stSelectbox > div > div,
-.css-1wa3eu0-placeholder {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
+textarea,
+input,
+select {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #000 !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
+    font-weight: 500;
 }
 
-/* Dropdown options */
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue, .css-1okebmr-indicatorSeparator {
-    background-color: #222 !important;
-    color: white !important;
+/* Dropdown selected value and separator */
+.css-1n76uvr,
+.css-1jqq78o,
+.css-1dimb5e-singleValue,
+.css-1okebmr-indicatorSeparator {
+    background-color: #fff !important;
+    color: #000 !important;
 }
 
-/* Dropdown menu list */
+/* Dropdown option list */
 .css-3vnyiq-option {
-    background-color: #222 !important;
-    color: white !important;
+    background-color: #fff !important;
+    color: #000 !important;
     font-weight: 500;
     font-size: 1rem;
 }
 .css-3vnyiq-option:hover {
-    background-color: #444 !important;
-    color: white !important;
+    background-color: #eee !important;
+    color: #000 !important;
 }
 
 /* Section headers */

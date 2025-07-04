@@ -150,6 +150,45 @@ div[data-baseweb="menu"] div[role="option"] {
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
+/* === Closed selectbox container === */
+[data-baseweb="select"] {
+    background-color: rgba(30, 30, 30, 0.9) !important;
+    border-radius: 8px !important;
+    color: #f0f0f0 !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    transition: all 0.3s ease;
+}
+
+/* === Text inside closed selectbox === */
+[data-baseweb="select"] div {
+    color: #f0f0f0 !important;
+}
+
+/* === Dropdown arrow icon === */
+[data-baseweb="select"] svg {
+    filter: brightness(200%) invert(100%) !important;
+}
+
+/* === Open dropdown options list === */
+div[data-baseweb="menu"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: #f0f0f0 !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
+}
+
+/* === Each option === */
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: transparent !important;
+    color: #f0f0f0 !important;
+    padding: 10px 14px !important;
+}
+
+/* === Hover effect on option === */
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
 
 
 </style>

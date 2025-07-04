@@ -5,8 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# Custom styles with Arial Italic font, colored headings, styled button, background image
-
+# Custom styles with Inter font, dark theme, and background image
 st.markdown(
     """
     <style>
@@ -66,15 +65,22 @@ st.markdown(
         padding: 6px !important;
     }
 
-    /* Override dropdown color */
-    [data-baseweb="select"] {
+    /* Dropdown dark theme fix */
+    .stSelectbox, .stSelectbox > div, .stSelectbox label, .stSelectbox div[data-baseweb="select"] {
         background-color: rgba(35, 35, 35, 0.95) !important;
         color: #f0f0f0 !important;
         border-radius: 8px !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
+        font-family: 'Inter', sans-serif !important;
     }
-
-    [data-baseweb="select"] * {
+    [data-baseweb="select"] .css-1n76uvr-option, 
+    [data-baseweb="select"] .css-1n6sfyn-MenuList, 
+    [data-baseweb="select"] .css-1n6sfyn-MenuList * {
+        background-color: rgba(35, 35, 35, 0.98) !important;
+        color: #f0f0f0 !important;
+    }
+    .stSelectbox .css-1wa3eu0-placeholder, 
+    .stSelectbox .css-1uccc91-singleValue {
         color: #f0f0f0 !important;
     }
 
@@ -128,7 +134,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
@@ -209,5 +214,6 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 

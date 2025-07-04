@@ -19,7 +19,7 @@ dark_css = """
 
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
-    color: #ffffff !important;
+    color: #FFFFFF !important;
     background-color: transparent !important;
     margin: 0; padding: 0;
 }
@@ -47,7 +47,7 @@ body::before {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 24px;
     backdrop-filter: blur(16px);
-    box-shadow: 0 0 20px 2px #888, 0 0 40px 6px #222;
+    box-shadow: 0 0 20px 2px #444;
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
@@ -58,7 +58,7 @@ body::before {
 .title-block h1 {
     font-size: 3rem;
     font-weight: 900;
-    color: #ffffff;
+    color: #ff69b4;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
 }
@@ -70,53 +70,60 @@ body::before {
 }
 
 .stButton > button {
-    background: #111;
+    background: #111 !important;
     color: white !important;
     font-weight: 700;
     border-radius: 30px;
     padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #333;
+    box-shadow: 0 0 8px #222;
     transition: all 0.3s ease;
     border: none !important;
     font-size: 1.1rem;
 }
 .stButton > button:hover {
-    background: #222;
+    box-shadow: 0 0 12px #444;
     transform: scale(1.05);
 }
 
+/* Input fields and dropdowns */
 .stTextInput > div > input,
-.stSelectbox > div > div {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
-    border: 1.5px solid transparent !important;
+.css-1xc3v61 edgvbvh3,
+.stSelectbox > div > div,
+.css-1wa3eu0-placeholder {
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: #fff !important;
+    border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
-    font-size: 1rem !important;
 }
 
-/* Dropdown menu styling */
-.css-1dimb5e, .stSelectbox ul {
-    background: #222 !important;
-    color: #fff !important;
-    font-size: 1rem !important;
-    padding: 1rem;
-    max-width: 600px;
+/* Dropdown options */
+.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue, .css-1okebmr-indicatorSeparator {
+    background-color: #222 !important;
+    color: white !important;
 }
 
-/* Remove section line below headings */
-.section-header::after {
-    display: none;
+/* Dropdown menu list */
+.css-3vnyiq-option {
+    background-color: #222 !important;
+    color: white !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.css-3vnyiq-option:hover {
+    background-color: #444 !important;
+    color: white !important;
 }
 
+/* Section headers */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 1.5rem;
-    position: relative;
+    color: #ff69b4;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
+/* Chat bubbles */
 .chat-user {
     background: linear-gradient(135deg, #00ffff, #32cd32);
     color: #000;
@@ -183,7 +190,7 @@ if uploaded_file:
         st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
-            selected_column = st.selectbox("Choose column:", options=numeric_columns, key="column_select")
+            selected_column = st.selectbox("Choose column:", numeric_columns, label_visibility="visible", disabled=False)
             top_n = st.slider("Top N values:", 5, 20, 10)
             fig = plot_top_column(df, selected_column, top_n=top_n)
             st.plotly_chart(fig, use_container_width=True)
@@ -194,7 +201,7 @@ if uploaded_file:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], key="answer_mode")
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], label_visibility="visible", disabled=False)
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
 
         if user_input:

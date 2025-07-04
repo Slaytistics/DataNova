@@ -21,12 +21,12 @@ st.markdown(
     }
 
     .block-container {
-    padding: 0rem 2rem 1.5rem 2rem !important;
-    max-width: 800px;
-    margin: auto;
+        padding: 0rem 2rem 1.5rem 2rem !important;
+        max-width: 800px;
+        margin: auto;
     }
 
-    /* Transparent background for text containers */
+    /* Text containers */
     .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
         background-color: transparent !important;
         padding: 4px 0px !important;
@@ -35,7 +35,7 @@ st.markdown(
         backdrop-filter: none !important;
     }
 
-    /* Other interactive elements */
+    /* Inputs and buttons */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -103,160 +103,67 @@ st.markdown(
     .stSlider > div > div > div > div {
         background-color: #cccccc33 !important;
     }
-       /* --- Dark dropdowns (st.selectbox) --- */
-[data-baseweb="select"] {
-    background-color: rgba(25, 25, 25, 0.85) !important;
-    color: #f0f0f0 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-}
 
-[data-baseweb="select"] * {
-    color: #f0f0f0 !important;
-    background-color: rgba(25, 25, 25, 0.9) !important;
-}
+    /* ========== DROPDOWNS ========== */
+    [data-baseweb="select"] {
+        background-color: rgba(25, 25, 25, 0.85) !important;
+        color: #f0f0f0 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+    }
 
-div[role="listbox"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: white !important;
-    border-radius: 8px !important;
-}
+    [data-baseweb="select"] * {
+        color: #f0f0f0 !important;
+    }
 
-div[role="option"]:hover {
-    background-color: rgba(50, 50, 50, 0.9) !important;
-}
-/* Dark dropdown list when expanded */
-div[role="listbox"] {
-    background-color: rgba(15, 15, 15, 0.95) !important;
-    color: #f0f0f0 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
-}
+    div[data-baseweb="popover"],
+    div[role="listbox"] {
+        background-color: rgba(20, 20, 20, 0.95) !important;
+        color: #f0f0f0 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+    }
 
-/* Individual dropdown option */
-div[role="option"] {
-    background-color: transparent !important;
-    padding: 10px !important;
-    color: #f0f0f0 !important;
-    font-size: 14px !important;
-}
+    div[data-baseweb="menu"] div[role="option"],
+    div[role="option"] {
+        background-color: transparent !important;
+        color: #f0f0f0 !important;
+        padding: 10px !important;
+        font-size: 14px !important;
+    }
 
-/* Hover effect for dropdown options */
-div[role="option"]:hover {
-    background-color: rgba(60, 60, 60, 0.7) !important;
-}
+    div[role="option"]:hover {
+        background-color: rgba(60, 60, 60, 0.7) !important;
+    }
 
-/* 3-dot top-right menu icon (white) */
-[data-testid="stActionMenuButton"] {
-    filter: invert(100%) !important;
-}
+    /* ========== STREAMLIT 3-DOT MENU ========== */
+    [data-testid="stActionMenuButton"] {
+        filter: invert(100%) brightness(180%) !important;
+    }
 
-/* Dropdown panel inside 3-dot menu */
-[data-testid="stActionMenu"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
+    [data-testid="stActionMenu"] {
+        background-color: rgba(25, 25, 25, 0.95) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+    }
 
-/* Buttons inside 3-dot menu */
-[data-testid="stActionMenu"] button {
-    color: white !important;
-}
+    [data-testid="stActionMenu"] button {
+        color: white !important;
+        background-color: transparent !important;
+    }
 
-[data-testid="stActionMenu"] button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-/* DARK MODE FOR DROPDOWN OPTIONS PANEL */
-div[data-baseweb="popover"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important;
-}
-
-div[data-baseweb="menu"] div[role="option"] {
-    background-color: transparent !important;
-    color: white !important;
-}
-
-div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* DARK MODE FOR STREAMLIT 3-DOT MENU */
-[data-testid="stActionMenuButton"] {
-    filter: invert(100%) brightness(200%) !important; /* Makes 3-dot icon white */
-}
-
-[data-testid="stActionMenu"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-}
-
-[data-testid="stActionMenu"] button {
-    color: white !important;
-    background-color: transparent !important;
-}
-
-[data-testid="stActionMenu"] button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-/* ========== SELECTBOX DROPDOWN LIST DARK MODE ========== */
-div[data-baseweb="popover"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: #f0f0f0 !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5) !important;
-    z-index: 9999 !important;
-}
-
-div[data-baseweb="menu"] div[role="option"] {
-    background-color: transparent !important;
-    color: #f0f0f0 !important;
-    padding: 10px !important;
-    font-size: 14px !important;
-}
-
-div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* ========== STREAMLIT 3-DOT MENU DARK MODE ========== */
-[data-testid="stActionMenuButton"] {
-    filter: invert(100%) brightness(180%) !important;  /* white 3-dots */
-}
-
-[data-testid="stActionMenu"] {
-    background-color: rgba(25, 25, 25, 0.95) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-}
-
-[data-testid="stActionMenu"] button {
-    color: white !important;
-    background-color: transparent !important;
-}
-
-[data-testid="stActionMenu"] button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-
+    [data-testid="stActionMenu"] button:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
 
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">

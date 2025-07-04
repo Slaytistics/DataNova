@@ -125,6 +125,50 @@ div[role="listbox"] {
 div[role="option"]:hover {
     background-color: rgba(50, 50, 50, 0.9) !important;
 }
+/* Dark dropdown list when expanded */
+div[role="listbox"] {
+    background-color: rgba(15, 15, 15, 0.95) !important;
+    color: #f0f0f0 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+
+/* Individual dropdown option */
+div[role="option"] {
+    background-color: transparent !important;
+    padding: 10px !important;
+    color: #f0f0f0 !important;
+    font-size: 14px !important;
+}
+
+/* Hover effect for dropdown options */
+div[role="option"]:hover {
+    background-color: rgba(60, 60, 60, 0.7) !important;
+}
+
+/* 3-dot top-right menu icon (white) */
+[data-testid="stActionMenuButton"] {
+    filter: invert(100%) !important;
+}
+
+/* Dropdown panel inside 3-dot menu */
+[data-testid="stActionMenu"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Buttons inside 3-dot menu */
+[data-testid="stActionMenu"] button {
+    color: white !important;
+}
+
+[data-testid="stActionMenu"] button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
 
     </style>
     """,

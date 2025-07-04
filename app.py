@@ -155,43 +155,52 @@ input, .stTextInput input, .stSelectbox div div {
 
 /* --- SELECTBOX (Dropdown) VISIBILITY FIX --- */
 /* --- Dropdown input box styling (selected item) --- */
+/* --- Wider and clearer dropdown container --- */
 div[data-baseweb="select"] {
-    background-color: rgba(0, 0, 0, 0.6) !important;
+    width: 100% !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     border-radius: 12px !important;
     color: #ffffff !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
     min-height: 48px !important;
-    display: flex;
-    align-items: center;
 }
 
-/* Selected text visibility fix */
-div[data-baseweb="select"] div[role="button"] {
-    padding: 0.6rem 1rem !important;
-    color: #ffffff !important;
-    font-size: 1rem !important;
+/* --- Selected item box (no typing) --- */
+div[data-baseweb="select"] div[role="combobox"] {
+    padding: 0.7rem 1.2rem !important;
     overflow: visible !important;
+    white-space: nowrap;
+    font-size: 1.1rem;
 }
 
-/* Open dropdown menu background and option text */
+/* --- Hides the input field, forces to use select only --- */
+div[data-baseweb="select"] input {
+    display: none !important;
+}
+
+/* --- Dropdown menu background --- */
 div[data-baseweb="menu"] {
-    background-color: rgba(15, 15, 15, 0.95) !important;
-    color: #fff !important;
+    background-color: rgba(20, 20, 20, 0.95) !important;
     border-radius: 10px !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    color: #ffffff !important;
+    padding: 0.5rem 0;
 }
 
+/* --- Option styles --- */
 div[data-baseweb="menu"] div[role="option"] {
-    padding: 10px 16px;
-    font-weight: 500;
-    color: #fff !important;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #ffffff !important;
     background: transparent !important;
 }
 
+/* --- Option hover --- */
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
+    cursor: pointer;
 }
+
 
 
 </style>

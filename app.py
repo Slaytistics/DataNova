@@ -61,76 +61,6 @@ st.markdown(
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.6) !important;
     }
-    <style>
-/* Base background and font */
-html, body, [data-testid="stAppViewContainer"], .block-container {
-    background-color: #0e0e0e !important;
-    color: #f0f0f0 !important;
-    font-family: 'Inter', sans-serif;
-}
-
-/* Ensure text stays white in inputs, labels, etc */
-label, div, span, p, h1, h2, h3, h4, h5, h6 {
-    color: #f0f0f0 !important;
-}
-
-/* File uploader area */
-[data-testid="stFileUploader"] {
-    background-color: rgba(30,30,30,0.6) !important;
-    color: #f0f0f0 !important;
-    border: 1px solid #444 !important;
-}
-
-/* Buttons */
-.stButton > button {
-    background-color: #222 !important;
-    color: #f0f0f0 !important;
-    border: 1px solid #888 !important;
-}
-
-/* Dropdown & selectbox */
-.css-1wa3eu0-placeholder, .css-1okebmr-indicatorSeparator, .css-1uccc91-singleValue, .css-qc6sy-singleValue {
-    color: #f0f0f0 !important;
-    background-color: #1a1a1a !important;
-}
-
-/* Selectbox and multiselect dropdown menu */
-.css-26l3qy-menu {
-    background-color: #1a1a1a !important;
-    color: #f0f0f0 !important;
-}
-
-/* Text input and slider */
-input, textarea {
-    background-color: #1a1a1a !important;
-    color: #f0f0f0 !important;
-    border: 1px solid #555 !important;
-}
-
-/* Slider text */
-.css-14xtw13 {
-    color: #f0f0f0 !important;
-}
-
-/* Expander */
-.stExpander {
-    background-color: rgba(30, 30, 30, 0.5) !important;
-}
-
-/* Popup modal-like menus (e.g., top-right menu) */
-.css-15zrgzn, .css-1cpxqw2 {
-    background-color: #1a1a1a !important;
-    color: #f0f0f0 !important;
-    border: none !important;
-}
-
-/* Select dropdown options */
-.css-1n76uvr-option {
-    background-color: #333 !important;
-    color: white !important;
-}
-</style>
-
     </style>
     """,
     unsafe_allow_html=True,
@@ -250,15 +180,3 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
-
-
-
-
-
-
-
-
-
-
-
-

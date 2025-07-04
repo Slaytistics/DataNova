@@ -8,25 +8,23 @@ from qna import ask_dataset_question
 
 # Custom styles with Arial Italic font, colored headings, styled button, background image
 st.markdown(
-    """
+    f"""
     <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://i.imgur.com/qo8IZvH.jpeg");
+    [data-testid="stAppViewContainer"] {{
+        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-        font-family: Arial, italic;
-    }
-    .block-container {
-    padding: 2rem 3rem;
-    max-width: 900px;
-    margin: auto;
-    background: transparent !important;
-    font-family: Arial, italic;
-    }
+    }}
 
-    /* Remove background boxes */
+    .block-container {{
+        padding: 2rem 3rem;
+        max-width: 900px;
+        margin: auto;
+    }}
+
+    /* All container elements */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -39,102 +37,60 @@ st.markdown(
     .element-container,
     .stPlotlyChart,
     .chat-message,
-    details {
-        background-color: transparent !important;
-        color: #222 !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 12px;
-        font-family: Arial, italic;
-    }
-
-    input, textarea, select {
-        background-color: rgba(255,255,255,0.85) !important;
-        color: #222 !important;
-        border: 1px solid #bbb !important;
-        border-radius: 6px;
-        font-family: Arial, italic;
-        font-style: italic;
-    }
-
-    [data-testid="stFileUploader"] > div {
-        background-color: rgba(255,255,255,0.85) !important;
-        border-radius: 6px;
-    }
-
-    /* Styled generate summary button */
-    .stButton > button {
-        background: linear-gradient(90deg, #ff69b4, #ff1493);
+    details {{
+        background-color: rgba(15, 15, 15, 0.75) !important;
         color: white !important;
-        font-weight: 700;
-        font-family: Arial, italic;
-        border-radius: 12px !important;
-        border: none !important;
-        padding: 12px 30px !important;
-        box-shadow: 0 4px 10px rgba(255, 20, 147, 0.6);
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(90deg, #ff1493, #ff69b4);
-        box-shadow: 0 6px 14px rgba(255, 20, 147, 0.8);
-    }
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 12px;
+    }}
 
-    button {
-        font-family: Arial, italic;
-    }
+    /* Inputs */
+    input, textarea, select {{
+        background-color: rgba(40, 40, 40, 0.95) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        border-radius: 6px;
+    }}
 
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #222 !important;
-        font-family: Arial, italic !important;
-        font-style: italic !important;
-    }
+    [data-testid="stFileUploader"] > div {{
+        background-color: rgba(30, 30, 30, 0.85) !important;
+        border-radius: 6px;
+    }}
 
-    /* Heading colors */
-    h1, .stTitle {
-        color: #FF0000 !important; /* Red */
-    }
-    h2, .stHeader {
-        color: #FF0000 !important; /* Red */
-    }
-    h3 {
-        color: #0000FF !important; /* Blue */
-    }
-    h4 {
-        color: #FF00FF !important; /* Magenta */
-    }
-    h5 {
-        color: #800080 !important; /* Purple */
-    }
-    h6 {
-        color: #C71585 !important; /* Medium Violet Red */
-    }
+    /* Buttons */
+    button {{
+        background-color: rgba(50, 50, 50, 0.9) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+    }}
 
-    .stSlider > div > div > div > div {
-        background-color: #666 !important;
-    }
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+        color: white !important;
+    }}
 
-    .stDataFrame div {
-        color: #222 !important;
-    }
+    /* Slider handle */
+    .stSlider > div > div > div > div {{
+        background-color: #ffffff88 !important;
+    }}
 
-    /* Chat message boxes */
-    .chat-user {
-        background: #FADADD;
+    .stDataFrame div {{
+        color: white !important;
+    }}
+
+    /* Chat bubbles */
+    .chat-user, .chat-ai {{
+        background: rgba(40, 40, 40, 0.85);
         padding: 10px;
         border-radius: 8px;
         margin: 6px;
-    }
-    .chat-ai {
-        background: #E6E6FA;
-        padding: 10px;
-        border-radius: 8px;
-        margin: 6px;
-    }
+        color: white !important;
+    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")

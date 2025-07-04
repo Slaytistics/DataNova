@@ -13,14 +13,32 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
     [data-testid="stAppViewContainer"] {
-        background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080") center/cover fixed;
+        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
         font-family: 'Inter', sans-serif;
     }
 
     .block-container {
-        padding: 1.2rem 1.5rem !important;
+        padding: 1.5rem 2rem;
         max-width: 800px;
         margin: auto;
+    }
+
+    /* Wrap text blocks inside a box */
+    .stMarkdown,
+    .stText,
+    .stHeading,
+    .stSubheader,
+    .stCaption,
+    .stCodeBlock {
+        background-color: rgba(20, 20, 20, 0.7);
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 0.8rem;
     }
 
     .stButton > button,
@@ -32,67 +50,80 @@ st.markdown(
     .stRadio,
     .stExpander,
     .stDataFrame,
+    .element-container,
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(15,15,15,0.85) !important;
-        color: #e0e0e0 !important;
-        border-radius: 8px;
+        background-color: rgba(15, 15, 15, 0.85) !important;
+        color: #f0f0f0 !important;
+        border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.08);
-        padding: 8px !important;
-        margin-bottom: 0.5rem !important;
+        padding: 10px !important;
+        margin-bottom: 0.8rem !important;
         backdrop-filter: blur(4px);
+        font-family: 'Inter', sans-serif;
     }
 
     input, textarea, select {
-        background-color: rgba(30,30,30,0.95) !important;
-        color: #e0e0e0 !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        border-radius: 4px;
+        background-color: rgba(40, 40, 40, 0.95) !important;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 6px;
         padding: 6px !important;
-        margin: 0 !important;
+    }
+
+    [data-testid="stFileUploader"] > div {
+        background-color: rgba(30, 30, 30, 0.9) !important;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.08);
     }
 
     button {
-        background-color: rgba(60,60,60,0.9) !important;
-        color: #f2f2f2 !important;
+        background-color: rgba(60, 60, 60, 0.9) !important;
+        color: #f0f0f0 !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
-        padding: 6px 12px !important;
-        margin: 0 !important;
         transition: background-color 0.3s ease;
     }
 
     button:hover {
-        background-color: rgba(80,80,80,0.95) !important;
+        background-color: rgba(80, 80, 80, 1) !important;
     }
 
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #e0e0e0 !important;
+        color: #f0f0f0 !important;
         font-family: 'Inter', sans-serif;
-        margin: 0 !important;
-        padding: 0 !important;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.5rem !important;
     }
 
     .element-container {
-        margin-bottom: 0.5rem !important;
+        margin-bottom: 0.6rem !important;
     }
 
     .stSlider > div > div > div > div {
         background-color: #cccccc33 !important;
     }
 
+    .stDataFrame div {
+        color: #f0f0f0 !important;
+    }
+
     .chat-user, .chat-ai {
-        background: rgba(35,35,35,0.85);
+        background: rgba(35, 35, 35, 0.85);
         padding: 8px !important;
-        border-radius: 6px;
-        margin: 4px 0 !important;
-        color: #e0e0e0 !important;
-        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        margin: 6px 0;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 
 # Page setup

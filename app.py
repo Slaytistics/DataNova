@@ -40,44 +40,44 @@ st.markdown(
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #f0f0f0 !important;
+        background-color: rgba(15, 15, 15, 0.85) !important;
+        color: #e0e0e0 !important;
         border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 12px;
         margin-bottom: 0.75rem;
-        backdrop-filter: blur(6px);
+        backdrop-filter: blur(4px);
         font-family: 'Inter', sans-serif;
     }
 
     input, textarea, select {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        color: #f0f0f0 !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(30, 30, 30, 0.95) !important;
+        color: #e0e0e0 !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
         border-radius: 6px;
     }
 
     [data-testid="stFileUploader"] > div {
-        background-color: rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(25, 25, 25, 0.85) !important;
         border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     button {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: #f0f0f0 !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(60, 60, 60, 0.9) !important;
+        color: #f2f2f2 !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         transition: 0.3s ease;
     }
 
     button:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(80, 80, 80, 0.95) !important;
         color: white !important;
         border: 1px solid white !important;
     }
 
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #f0f0f0 !important;
+        color: #e0e0e0 !important;
         font-family: 'Inter', sans-serif;
     }
 
@@ -98,19 +98,19 @@ st.markdown(
     }
 
     .stSlider > div > div > div > div {
-        background-color: #cccccc88 !important;
+        background-color: #cccccc33 !important;
     }
 
     .stDataFrame div {
-        color: #f0f0f0 !important;
+        color: #e0e0e0 !important;
     }
 
     .chat-user, .chat-ai {
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(35, 35, 35, 0.85);
         padding: 10px;
         border-radius: 8px;
         margin: 6px;
-        color: #f0f0f0 !important;
+        color: #e0e0e0 !important;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     </style>

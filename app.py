@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Custom Styles ---
+# --- Custom Styles: Black Text Dropdowns, Non-Editable, Dark Theme ---
 st.markdown(
     """
     <style>
@@ -26,50 +26,133 @@ st.markdown(
         margin: auto;
     }
 
+    /* Text containers */
+    .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
+        background-color: transparent !important;
+        padding: 4px 0px !important;
+        border: none !important;
+        margin-bottom: 0.6rem;
+        backdrop-filter: none !important;
+    }
+
+    /* Inputs and buttons */
+    .stButton > button,
+    .stFileUploader,
+    .stTextInput,
+    .stSelectbox,
+    .stSlider,
+    .stTextArea,
+    .stRadio,
+    .stExpander,
+    .element-container,
+    .stPlotlyChart,
+    .chat-message,
+    details {
+        background-color: rgba(15, 15, 15, 0.3) !important;
+        color: #f0f0f0 !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 10px !important;
+        margin-bottom: 0.8rem !important;
+        backdrop-filter: blur(2px);
+    }
+
+    input, textarea, select {
+        background-color: rgba(30, 30, 30, 0.9) !important;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 6px;
+        padding: 6px !important;
+    }
+
+    button {
+        background-color: rgba(60, 60, 60, 0.85) !important;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: rgba(80, 80, 80, 1) !important;
+    }
+
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #f0f0f0 !important;
         font-family: 'Inter', sans-serif;
     }
 
-    /* Dropdown and selectbox fixes */
+    .element-container {
+        margin-bottom: 0.6rem !important;
+    }
+
+    .js-plotly-plot .plotly {
+        background-color: rgba(15,15,15,0.6) !important;
+    }
+
+    .stDataFrame {
+        background-color: rgba(15,15,15,0.6) !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stDataFrame table {
+        background-color: rgba(15,15,15,0.6) !important;
+        color: #f0f0f0 !important;
+    }
+
+    .stSlider > div > div > div > div {
+        background-color: #cccccc33 !important;
+    }
+
+    /* ========== DROPDOWNS: Black Text, White Background ========== */
     [data-baseweb="select"] {
-        background-color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #111 !important;
         border-radius: 8px !important;
-        border: 1px solid rgba(0,0,0,0.2) !important;
-        color: #000 !important;
+        border: 1px solid rgba(0,0,0,0.15) !important;
+        min-height: 44px !important;
     }
-
-    [data-baseweb="select"] * {
-        color: #000 !important;
+    [data-baseweb="select"] span {
+        color: #111 !important;
     }
-
-    [data-baseweb="select"] input {
-        color: #000 !important;
+    div[data-baseweb="popover"],
+    div[role="listbox"] {
+        background-color: #fff !important;
+        color: #111 !important;
+    }
+    div[data-baseweb="menu"] div[role="option"],
+    div[role="option"] {
         background-color: transparent !important;
-        pointer-events: none;
-        caret-color: transparent;
+        color: #111 !important;
+    }
+    div[role="option"]:hover, div[role="option"][aria-selected="true"] {
+        background-color: #e0e0e0 !important;
+        color: #111 !important;
     }
 
-    [role="option"] {
-        color: #000 !important;
-        background-color: #fff !important;
+    /* ========== STREAMLIT 3-DOT MENU ========== */
+    [data-testid="stActionMenuButton"] {
+        filter: invert(100%) brightness(180%) !important;
     }
-
-    [role="option"][aria-selected="true"] {
-        background-color: #eee !important;
+    [data-testid="stActionMenu"] {
+        background-color: rgba(25, 25, 25, 0.95) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
     }
-
-    div[data-baseweb="popover"] {
-        background-color: #fff !important;
-        color: #000 !important;
-        border: 1px solid #ccc !important;
+    [data-testid="stActionMenu"] button {
+        color: white !important;
+        background-color: transparent !important;
+    }
+    [data-testid="stActionMenu"] button:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
-# --- Header ---
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
@@ -77,13 +160,14 @@ st.markdown(
         <p style="font-size: 1.2rem; letter-spacing: 2px; color: white;">SLEEK. SMART. STREAMLINED.</p>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
-st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma")
+st.markdown(
+    "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
+)
 st.header("Upload Your Dataset")
 
-# --- File Upload ---
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -96,8 +180,8 @@ if uploaded_file:
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Section ---
         st.header("Generate Summary")
+
         summary = None
         col1, col2 = st.columns([1, 3])
         with col1:
@@ -111,24 +195,27 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
-        # --- Chart Generator ---
         st.header("Chart Generator")
+
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
+                # Non-editable dropdown with black text
                 selected_column = st.selectbox("Choose column:", numeric_columns)
                 top_n = st.slider("Top N values:", 5, 20, 10)
+
                 fig = plot_top_column(df, selected_column, top_n=top_n)
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
 
-        # --- QnA Section ---
         st.header("Ask About This Dataset")
+
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], key="style_select")
+        # Non-editable dropdown for answer style
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
 
         if user_input:

@@ -103,58 +103,43 @@ st.markdown(
     }
 
     /* === UPDATED SELECTBOX STYLE: BLACK TEXT === */
-    [data-baseweb="select"] {
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(0,0,0,0.15) !important;
-        min-height: 44px !important;
-        color: #111 !important;
-        font-weight: 500 !important;
-    }
+   /* === FINAL SELECTBOX STYLE FIX: BLACK TEXT & WHITE BACKGROUND === */
+[data-baseweb="select"] {
+    background-color: #fff !important;
+    color: #111 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(0,0,0,0.15) !important;
+    font-weight: 600 !important;
+}
 
-    [data-baseweb="select"] * {
-        color: #111 !important;
-    }
+/* Ensures selected text is black */
+[data-baseweb="select"] div,
+[data-baseweb="select"] svg,
+[data-baseweb="select"] * {
+    color: #111 !important;
+    fill: #111 !important;
+}
 
-    div[data-baseweb="popover"],
-    div[role="listbox"] {
-        background-color: #fff !important;
-        color: #111 !important;
-    }
+/* Dropdown panel */
+div[data-baseweb="popover"],
+div[role="listbox"] {
+    background-color: #fff !important;
+    color: #111 !important;
+    font-weight: 500 !important;
+}
 
-    div[data-baseweb="menu"] div[role="option"],
-    div[role="option"] {
-        background-color: transparent !important;
-        color: #111 !important;
-        font-weight: 500 !important;
-    }
+/* Options */
+div[role="option"] {
+    background-color: transparent !important;
+    color: #111 !important;
+}
 
-    div[role="option"]:hover,
-    div[role="option"][aria-selected="true"] {
-        background-color: #e0e0e0 !important;
-        color: #111 !important;
-    }
+div[role="option"]:hover,
+div[role="option"][aria-selected="true"] {
+    background-color: #f0f0f0 !important;
+    color: #111 !important;
+}
 
-    [data-testid="stActionMenuButton"] {
-        filter: invert(100%) brightness(180%) !important;
-    }
-
-    [data-testid="stActionMenu"] {
-        background-color: rgba(25, 25, 25, 0.95) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-    }
-
-    [data-testid="stActionMenu"] button {
-        color: white !important;
-        background-color: transparent !important;
-    }
-
-    [data-testid="stActionMenu"] button:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-    }
     </style>
     """,
     unsafe_allow_html=True,

@@ -43,6 +43,7 @@ st.markdown(
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.1);
         padding: 12px;
+        margin-bottom: 0.5rem;
     }}
 
     input, textarea, select {{
@@ -67,6 +68,16 @@ st.markdown(
         color: white !important;
     }}
 
+    h1, h2, h3, h4, h5, h6, p {{
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+    }}
+
+    section {{
+        padding-top: 0rem !important;
+        padding-bottom: 0rem !important;
+    }}
+
     .stSlider > div > div > div > div {{
         background-color: #ffffff88 !important;
     }}
@@ -86,7 +97,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(

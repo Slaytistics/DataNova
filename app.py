@@ -12,14 +12,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Apply Dark Theme with Background Image ---
-dark_css = """
+# --- Apply Soft Elegant Theme with Background Image ---
+soft_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
-    color: #FFFFFF !important;
+    color: #fdfdfd !important;
     background-color: transparent !important;
     margin: 0; padding: 0;
 }
@@ -32,13 +32,13 @@ body, html, div, span, label {
     position: relative;
 }
 
-/* Dark overlay for readability */
+/* Soft overlay */
 body::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(15, 15, 21, 0.85);
+    background: rgba(20, 15, 10, 0.7);
     z-index: -1;
 }
 
@@ -47,65 +47,65 @@ body::before {
     max-width: 900px;
     margin: auto;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 24px;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 0 20px 2px #ff69b4, 0 0 40px 6px #9b30ff;
-    padding: 2rem 3rem 3rem 3rem !important;
+    border-radius: 18px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 0 15px rgba(50, 30, 10, 0.4);
+    padding: 2rem 2.5rem 3rem 2.5rem !important;
 }
 
-/* Main Title */
+/* Title Styling */
 .title-block {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 .title-block h1 {
-    font-size: 3rem;
-    font-weight: 900;
-    color: #ff69b4;
-    letter-spacing: 2px;
-    margin-bottom: 0.5rem;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #e5caa1;
+    margin-bottom: 0.3rem;
 }
 .title-block p {
-    font-size: 1.2rem;
-    color: #ccc;
-    letter-spacing: 3px;
+    font-size: 1.1rem;
+    color: #d6c9b2;
     font-weight: 500;
+    letter-spacing: 2px;
 }
 
-/* Neon Button */
+/* Button */
 .stButton > button {
-    background: linear-gradient(45deg, #9B30FF, #FF69B4);
+    background: #8c6f4d;
     color: white !important;
-    font-weight: 700;
-    border-radius: 30px;
-    padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #FF69B4, 0 0 20px #9B30FF;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 0.6rem 2rem;
+    box-shadow: 0 0 10px rgba(140, 111, 77, 0.4);
     transition: all 0.3s ease;
     border: none !important;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 .stButton > button:hover {
-    box-shadow: 0 0 12px #FF69B4, 0 0 30px #9B30FF;
-    transform: scale(1.05);
+    background: #a0835f;
+    box-shadow: 0 0 12px rgba(120, 90, 60, 0.5);
+    transform: scale(1.03);
 }
 
-/* Input fields */
+/* Inputs and dropdowns */
 .stTextInput > div > input,
 .stSelectbox > div > div {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
-    border: 1.5px solid transparent !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 18px !important;
+    border: 1px solid #c8b090 !important;
     color: #fff !important;
-    padding: 0.6rem 1rem !important;
+    padding: 0.5rem 1rem !important;
     font-size: 1rem !important;
 }
 
-/* Section headers */
+/* Section Header */
 .section-header {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: #ff69b4;
-    margin-bottom: 1rem;
+    color: #e5caa1;
+    margin-bottom: 1.2rem;
     position: relative;
 }
 .section-header::after {
@@ -113,37 +113,37 @@ body::before {
     position: absolute;
     left: 0;
     bottom: -6px;
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, #9b30ff, #ff69b4);
-    border-radius: 4px;
+    width: 50px;
+    height: 3px;
+    background: #c8b090;
+    border-radius: 2px;
 }
 
 /* Chat bubbles */
 .chat-user {
-    background: linear-gradient(135deg, #00ffff, #32cd32);
-    color: #000;
-    border-radius: 24px 24px 0 24px;
-    padding: 14px 20px;
+    background: #f0e2d0;
+    color: #2e1d10;
+    border-radius: 20px 20px 0 20px;
+    padding: 12px 18px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 4px 12px rgba(240, 226, 208, 0.3);
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 .chat-ai {
-    background: linear-gradient(135deg, #ff69b4, #9b30ff);
+    background: #8c6f4d;
     color: #fff;
-    border-radius: 24px 24px 24px 0;
-    padding: 14px 20px;
+    border-radius: 20px 20px 20px 0;
+    padding: 12px 18px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
+    box-shadow: 0 4px 12px rgba(140, 111, 77, 0.3);
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-/* Chat scroll container */
+/* Chat scroll */
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
@@ -152,9 +152,9 @@ body::before {
 }
 </style>
 """
-st.markdown(dark_css, unsafe_allow_html=True)
+st.markdown(soft_css, unsafe_allow_html=True)
 
-# --- Main Title ---
+# --- Title ---
 st.markdown("""
 <div class="title-block">
     <h1>DATALICIOUS</h1>
@@ -162,10 +162,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- File Upload ---
+# --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
+# --- Main App ---
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)

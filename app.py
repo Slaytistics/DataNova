@@ -12,24 +12,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Apply Dark Theme with Background Image ---
 dark_css = """
 <style>
+/* General app styles */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-body, html, div, span, label {
+html, body, [class*="st-"] {
     font-family: 'Poppins', sans-serif !important;
-    color: #FFFFFF !important;
-    background-color: transparent !important;
-    margin: 0; padding: 0;
+    color: #fff;
 }
 
+/* App background image */
 [data-testid="stAppViewContainer"] {
-    background: url("https://i.imgur.com/w7CLLax.jpeg") no-repeat center center fixed;
+    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;
-    position: relative;
 }
 
 body::before {
@@ -41,6 +39,7 @@ body::before {
     z-index: -1;
 }
 
+/* Container styling */
 .block-container {
     max-width: 900px;
     margin: auto;
@@ -51,6 +50,7 @@ body::before {
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
+/* Title block */
 .title-block {
     text-align: center;
     margin-bottom: 3rem;
@@ -60,66 +60,31 @@ body::before {
     font-weight: 900;
     color: #ff69b4;
     letter-spacing: 2px;
-    margin-bottom: 0.5rem;
 }
 .title-block p {
     font-size: 1.2rem;
     color: #eee;
     letter-spacing: 3px;
-    font-weight: 500;
 }
 
+/* Buttons */
 .stButton > button {
     background: #111 !important;
     color: white !important;
     font-weight: 700;
     border-radius: 30px;
     padding: 0.7rem 2.5rem;
+    font-size: 1.1rem;
     box-shadow: 0 0 8px #222;
     transition: all 0.3s ease;
     border: none !important;
-    font-size: 1.1rem;
 }
 .stButton > button:hover {
     box-shadow: 0 0 12px #444;
     transform: scale(1.05);
 }
 
-/* --- Input fields and dropdowns --- */
-.stTextInput > div > input,
-.stSelectbox > div > div,
-textarea,
-input,
-select {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    color: #000 !important;
-    border-radius: 12px !important;
-    padding: 0.6rem 1rem !important;
-    font-weight: 500;
-}
-
-/* Dropdown selected value and separator */
-.css-1n76uvr,
-.css-1jqq78o,
-.css-1dimb5e-singleValue,
-.css-1okebmr-indicatorSeparator {
-    background-color: #fff !important;
-    color: #000 !important;
-}
-
-/* Dropdown option list */
-.css-3vnyiq-option {
-    background-color: #fff !important;
-    color: #000 !important;
-    font-weight: 500;
-    font-size: 1rem;
-}
-.css-3vnyiq-option:hover {
-    background-color: #eee !important;
-    color: #000 !important;
-}
-
-/* Section headers */
+/* SECTION HEADERS */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -128,7 +93,35 @@ select {
     margin-bottom: 1rem;
 }
 
-/* Chat bubbles */
+/* Slider label text */
+[data-testid="stSlider"] label {
+    color: #000 !important;
+    font-weight: 600;
+}
+
+/* Selectbox and text input fields */
+div[data-baseweb="select"] > div,
+input[type="text"],
+textarea {
+    background-color: #fff !important;
+    color: #000 !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 8px 12px !important;
+}
+
+/* Dropdown options */
+[data-testid="stSelectbox"] div[role="listbox"] > div {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+/* Dropdown single value */
+div[data-baseweb="select"] span {
+    color: #000 !important;
+}
+
+/* Chat Bubbles */
 .chat-user {
     background: linear-gradient(135deg, #00ffff, #32cd32);
     color: #000;
@@ -230,4 +223,4 @@ if uploaded_file:
     except Exception as e:
         st.error(f"Error processing file: {e}")
 else:
-    st.info("Upload a CSV file to begin your Datalicious journey.") 
+    st.info("Upload a CSV file to begin your Datalicious journey.")

@@ -7,7 +7,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Custom Dark Theme Styling ---
+# --- Dark Theme CSS (works with white dropdown) ---
 st.markdown(
     """
     <style>
@@ -66,7 +66,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Header ---
+# --- Title Section ---
 st.markdown(
     """
     <div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
@@ -80,7 +80,7 @@ st.markdown(
 st.markdown("Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma")
 st.header("Upload Your Dataset")
 
-# --- Upload ---
+# --- Upload File ---
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
     try:
@@ -90,7 +90,7 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # --- Preview ---
+        # --- Preview Section ---
         st.subheader("Preview")
         st.dataframe(df.head(), use_container_width=True)
 
@@ -110,7 +110,7 @@ if uploaded_file:
         if summary:
             st.markdown(f"#### Summary Output:\n{summary}")
 
-        # --- Chart Generator ---
+        # --- Chart Generator Section ---
         st.header("Chart Generator")
 
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
@@ -118,7 +118,7 @@ if uploaded_file:
             with st.expander("Chart Controls", expanded=True):
                 st.markdown("#### Choose column:")
 
-                # Custom HTML Dropdown with black text & white background
+                # ✅ Fixed custom dropdown with black text
                 html_dropdown = f"""
                 <script>
                 function updateDropdown(value) {{
@@ -155,7 +155,7 @@ if uploaded_file:
         else:
             st.warning("No numeric columns found for charts.")
 
-        # --- Q&A Section ---
+        # --- Dataset Q&A Section ---
         st.header("Ask About This Dataset")
 
         if "chat_history" not in st.session_state:
@@ -180,6 +180,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

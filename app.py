@@ -7,204 +7,312 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Enhanced Dark Theme & UI CSS ---
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-/* Background image with overlay */
-[data-testid="stAppViewContainer"] {
-    background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    font-family: 'Inter', sans-serif;
-    position: relative;
-}
-[data-testid="stAppViewContainer"]::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: -1;
-}
-
-/* Main container styling */
-.block-container {
-    padding: 2rem 2rem 1.5rem 2rem !important;
-    max-width: 800px;
-    margin: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    border-radius: 16px;
-    background-color: rgba(20, 20, 20, 0.85);
-}
-
-/* Typography */
-html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-    color: #f0f0f0 !important;
-    font-family: 'Inter', sans-serif;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-
-/* Accent color for buttons */
-.stButton > button {
-    background-color: #1abc9c !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding: 0.6rem 1.5rem;
-    margin-bottom: 0.8rem !important;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 2px 8px rgba(26,188,156,0.15);
-}
-.stButton > button:hover {
-    background-color: #16a085 !important;
-    transform: scale(1.04);
-}
-
-/* Input focus and selectbox */
-.stTextInput > div > input:focus,
-.stSelectbox > div > div:focus {
-    border-color: #1abc9c !important;
-    box-shadow: 0 0 8px #1abc9c !important;
-}
-[data-baseweb="select"] {
-    background-color: rgba(30, 30, 30, 0.95) !important;
-    color: #f0f0f0 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
-    transition: all 0.3s ease;
-    padding: 8px !important;
-}
-[data-baseweb="select"]:hover {
-    border: 1.5px solid #1abc9c !important;
-}
-[data-baseweb="select"] div,
-[data-baseweb="select"] span {
-    color: #f0f0f0 !important;
-}
-[data-baseweb="select"] svg {
-    filter: brightness(200%) invert(100%) !important;
-}
-div[data-baseweb="menu"] {
-    background-color: rgba(20, 20, 20, 0.95) !important;
-    color: #f0f0f0 !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
-}
-div[data-baseweb="menu"] div[role="option"] {
-    background-color: transparent !important;
-    color: #f0f0f0 !important;
-    padding: 10px 14px !important;
-}
-div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(26,188,156,0.15) !important;
-}
-
-/* DataFrame and Plotly chart backgrounds */
-.stDataFrame table {
-    background-color: rgba(15,15,15,0.6) !important;
-    color: #f0f0f0 !important;
-}
-.js-plotly-plot .plotly {
-    background-color: rgba(15,15,15,0.6) !important;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-/* Chat bubbles */
-.chat-user {
-    background-color: #1abc9c;
-    padding: 12px 18px;
-    border-radius: 18px 18px 4px 18px;
-    margin-bottom: 8px;
-    max-width: 80%;
-    color: white;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(26,188,156,0.15);
-    margin-left: auto;
-}
-.chat-ai {
-    background-color: #34495e;
-    padding: 12px 18px;
-    border-radius: 18px 18px 18px 4px;
-    margin-bottom: 8px;
-    max-width: 80%;
-    color: white;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(52,73,94,0.15);
-    margin-right: auto;
-}
-
-/* Chat window scroll */
-#chat-window {
-    max-height: 320px;
-    overflow-y: auto;
-    margin-bottom: 1rem;
-    padding-right: 8px;
-}
-
-/* Section headers with icons */
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: #1abc9c;
-    letter-spacing: 1px;
-}
-.section-header i {
-    font-size: 1.5rem;
-    color: #1abc9c;
-}
-
-/* Subtle section separation */
-hr {
-    border: none;
-    border-top: 1.5px solid rgba(255,255,255,0.08);
-    margin: 2rem 0;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# --- Title Section with Animation ---
-st.markdown("""
-<div style="width: 100%; text-align: center; margin: 2rem 0 1rem 0;">
-    <h1 style="font-size: 4rem; font-weight: 800; color: white; margin-bottom: 0.5rem; letter-spacing: 2px; text-shadow: 0 4px 24px #1abc9c66;">
-        <span style="animation: fadeIn 1.2s;">DATALICIOUS</span>
-    </h1>
-    <p style="font-size: 1.2rem; letter-spacing: 2px; color: #1abc9c; font-weight: 600; margin-bottom: 0;">
-        SLEEK. SMART. STREAMLINED.
-    </p>
-</div>
-<style>
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-30px);}
-    to { opacity: 1; transform: translateY(0);}
-}
-</style>
-""", unsafe_allow_html=True)
-
-# --- App Description & Upload ---
+# --- Load Font Awesome for icons ---
 st.markdown(
-    '<div style="font-size:1.1rem; color:#f0f0f0; margin-bottom:1.5rem;">'
-    '<i class="fa fa-upload" style="color:#1abc9c; margin-right:8px;"></i>'
-    'Upload structured data, generate insights, visualize trends, and export them professionally. '
-    '<span style="color:#1abc9c;">Powered by Together AI + Figma</span>'
-    '</div>',
-    unsafe_allow_html=True
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
+    unsafe_allow_html=True,
 )
 
-st.markdown('<div class="section-header"><i class="fa fa-file-upload"></i>Upload Your Dataset</div>', unsafe_allow_html=True)
+# --- Dark Mode Toggle ---
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = True
 
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+def toggle_dark_mode():
+    st.session_state.dark_mode = not st.session_state.dark_mode
+
+# --- CSS for Neon, Glassmorphism, and Layout ---
+dark_css = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body, html, div, span, label {
+    font-family: 'Poppins', sans-serif !important;
+    color: #FFFFFF !important;
+    background-color: #0f0f15 !important;
+    margin: 0; padding: 0;
+}
+
+/* Background gradient */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    min-height: 100vh;
+    padding-top: 4rem;
+    position: relative;
+}
+
+/* Neon glow container */
+.block-container {
+    max-width: 900px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 20px 2px #ff69b4, 0 0 40px 6px #9b30ff;
+    padding: 2rem 3rem 3rem 3rem !important;
+}
+
+/* Sticky top bar */
+#top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3.5rem;
+    background: #12121f;
+    box-shadow: 0 0 12px #ff69b4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 9999;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #ff69b4;
+    letter-spacing: 2px;
+    user-select: none;
+}
+
+/* Neon button */
+.stButton > button {
+    background: linear-gradient(45deg, #9B30FF, #FF69B4);
+    color: white !important;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.7rem 2.5rem;
+    box-shadow: 0 0 8px #FF69B4, 0 0 20px #9B30FF;
+    transition: all 0.3s ease;
+    border: none !important;
+    font-size: 1.1rem;
+}
+.stButton > button:hover {
+    box-shadow: 0 0 12px #FF69B4, 0 0 30px #9B30FF;
+    transform: scale(1.05);
+}
+
+/* Input and select styling */
+.stTextInput > div > input,
+.stSelectbox > div > div {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    border: 1.5px solid transparent !important;
+    color: #fff !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 1rem !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.stTextInput > div > input:focus,
+.stSelectbox > div > div:focus {
+    border-color: #ff69b4 !important;
+    box-shadow: 0 0 12px #ff69b4 !important;
+    outline: none !important;
+}
+
+/* Select dropdown menu */
+div[data-baseweb="menu"] {
+    background: rgba(40, 20, 40, 0.95) !important;
+    border-radius: 20px !important;
+    border: 1px solid #ff69b4 !important;
+    box-shadow: 0 0 20px #ff69b4 !important;
+}
+div[data-baseweb="menu"] div[role="option"] {
+    color: #fff !important;
+    padding: 12px 16px !important;
+}
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background: #ff69b4 !important;
+    color: #0f0f15 !important;
+}
+
+/* Dataframe styling */
+.stDataFrame table {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border-radius: 16px;
+    box-shadow: 0 0 12px #9b30ff;
+}
+
+/* Plotly chart container */
+.js-plotly-plot .plotly {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 20px;
+    box-shadow: 0 0 20px #ff69b4;
+}
+
+/* Card style for sections */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.37);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255, 105, 180, 0.3);
+}
+
+/* Section headers with neon underline */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff69b4;
+    margin-bottom: 1rem;
+    position: relative;
+    letter-spacing: 1.5px;
+}
+.section-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #9b30ff, #ff69b4);
+    border-radius: 4px;
+}
+
+/* Chat bubbles with gradient and shadows */
+.chat-user {
+    background: linear-gradient(135deg, #00ffff, #32cd32);
+    color: #000;
+    border-radius: 24px 24px 0 24px;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-left: auto;
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+.chat-ai {
+    background: linear-gradient(135deg, #ff69b4, #9b30ff);
+    color: #fff;
+    border-radius: 24px 24px 24px 0;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+
+/* Chat container with scroll */
+#chat-window {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-bottom: 1.5rem;
+}
+
+/* Horizontal scroll container for charts or summaries */
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+}
+.horizontal-scroll > div {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 320px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 0 20px #ff69b4;
+}
+
+/* Dark mode toggle switch */
+.toggle-switch {
+    cursor: pointer;
+    background: #222;
+    border-radius: 30px;
+    width: 50px;
+    height: 26px;
+    position: relative;
+    box-shadow: 0 0 8px #ff69b4;
+    transition: background 0.3s ease;
+}
+.toggle-switch::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: #ff69b4;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 12px #ff69b4;
+}
+.toggle-switch.active {
+    background: #ff69b4;
+}
+.toggle-switch.active::before {
+    transform: translateX(24px);
+}
+
+/* Utility spacing */
+.mt-2 { margin-top: 1rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }
+</style>
+"""
+
+light_css = """
+<style>
+/* Light mode styles can be added here if needed */
+</style>
+"""
+
+# Apply CSS based on dark_mode state
+if st.session_state.dark_mode:
+    st.markdown(dark_css, unsafe_allow_html=True)
+else:
+    st.markdown(light_css, unsafe_allow_html=True)
+
+# --- Top Bar with Dark Mode Toggle and Navigation ---
+st.markdown(
+    """
+    <div id="top-bar">
+        <div style="display:flex; align-items:center; gap: 1rem;">
+            <i class="fa fa-database" style="font-size:1.8rem; color:#ff69b4;"></i>
+            <span>DATALICIOUS</span>
+        </div>
+        <div style="display:flex; align-items:center; gap: 1rem;">
+            <div id="toggle" class="toggle-switch {active_class}" onclick="toggleDarkMode()"></div>
+            <span style="font-size:0.9rem; color:#ff69b4;">{mode_text}</span>
+        </div>
+    </div>
+    <script>
+    const toggle = document.getElementById('toggle');
+    function toggleDarkMode() {{
+        fetch('/?dark_mode_toggle=1').then(() => {{
+            location.reload();
+        }});
+    }}
+    </script>
+    """.format(
+        active_class="active" if st.session_state.dark_mode else "",
+        mode_text="Dark Mode" if st.session_state.dark_mode else "Light Mode",
+    ),
+    unsafe_allow_html=True,
+)
+
+# Handle dark mode toggle via query param (hacky but works in Streamlit)
+import sys
+if "dark_mode_toggle" in st.experimental_get_query_params():
+    toggle_dark_mode()
+    st.experimental_set_query_params()  # clear params
+    st.experimental_rerun()
+
+# --- Main Content Container ---
+with st.container():
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    # Upload Section
+    st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+    if not uploaded_file:
+        st.info("Upload a CSV file to begin your Datalicious journey.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -213,14 +321,17 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # Preview
-        st.markdown('<div class="section-header"><i class="fa fa-table"></i>Preview</div>', unsafe_allow_html=True)
+        # Preview Section
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        # Summary
-        st.markdown('<div class="section-header"><i class="fa fa-lightbulb"></i>Generate Summary</div>', unsafe_allow_html=True)
-        summary = None
+        # Summary Section with horizontal scroll
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         col1, col2 = st.columns([1, 3])
+        summary = None
         with col1:
             if st.button("Generate Summary"):
                 with st.spinner("Calling Together AI..."):
@@ -228,14 +339,17 @@ if uploaded_file:
                     st.success("Summary Generated! 🎉")
         with col2:
             st.markdown("The summary provides a GPT-style overview based on sample data.")
-
         if summary:
-            st.markdown(f"#### Summary Output:\n{summary}")
+            # Show summary in a horizontal scroll card style
+            st.markdown('<div class="horizontal-scroll">', unsafe_allow_html=True)
+            st.markdown(f'<div>{summary}</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        # Chart Generator
-        st.markdown('<div class="section-header"><i class="fa fa-chart-bar"></i>Chart Generator</div>', unsafe_allow_html=True)
+        # Chart Generator Section
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
-
         if numeric_columns:
             with st.expander("Chart Controls", expanded=True):
                 selected_column = st.selectbox("Choose column:", numeric_columns)
@@ -244,9 +358,11 @@ if uploaded_file:
                 st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        # Ask Dataset
-        st.markdown('<div class="section-header"><i class="fa fa-comments"></i>Ask About This Dataset</div>', unsafe_allow_html=True)
+        # Q&A Chat Section
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
@@ -267,8 +383,14 @@ if uploaded_file:
                 st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
+        # Clear chat button
+        if st.button("Clear Chat"):
+            st.session_state.chat_history = []
+            st.experimental_rerun()
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
     except Exception as e:
         st.error(f"Error processing file: {e}")
-else:
-    st.info("Upload a CSV file to begin your Datalicious journey.")
+
 

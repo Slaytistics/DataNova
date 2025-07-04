@@ -127,45 +127,60 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 """, unsafe_allow_html=True)
 st.markdown("""
 <style>
-/* Selectbox background and text */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Core font and layout */
+body, html, div, span, label {
+    font-family: 'Inter', sans-serif !important;
+    color: #f0f0f0 !important;
+}
+
+/* Selectbox closed */
 div[data-baseweb="select"] {
-    background-color: rgba(25, 25, 25, 0.95) !important;
+    background-color: rgba(30, 30, 30, 0.95) !important;
+    color: #f0f0f0 !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+}
+
+/* Text inside the closed box */
+div[data-baseweb="select"] div {
+    color: #f0f0f0 !important;
+}
+
+/* Selected item */
+div[data-baseweb="select"] span {
+    color: #f0f0f0 !important;
+}
+
+/* Dropdown arrow icon */
+div[data-baseweb="select"] svg {
+    filter: invert(100%) brightness(200%) !important;
+}
+
+/* Expanded dropdown menu */
+div[data-baseweb="menu"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
     border: 1px solid rgba(255,255,255,0.2) !important;
     border-radius: 6px !important;
-    color: white !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
-/* Selected text in closed selectbox */
-div[data-baseweb="select"] div {
-    color: white !important;
-}
-
-/* Dropdown arrow */
-div[data-baseweb="select"] svg {
-    filter: invert(1) brightness(2) !important;
-}
-
-/* Open dropdown list */
-div[data-baseweb="menu"] {
-    background-color: rgba(25, 25, 25, 0.95) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
-    color: white !important;
-    border-radius: 6px !important;
-}
-
-/* Dropdown items */
+/* Options in the dropdown */
 div[data-baseweb="menu"] div[role="option"] {
     color: white !important;
-    padding: 10px !important;
+    padding: 10px 14px !important;
+    background-color: transparent !important;
 }
 
-/* Hover on items */
+/* Hover effect */
 div[data-baseweb="menu"] div[role="option"]:hover {
-    background-color: rgba(255,255,255,0.1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 # --- Title Section ---

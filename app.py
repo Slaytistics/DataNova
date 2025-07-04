@@ -27,18 +27,13 @@ st.markdown(
         margin: auto;
     }
 
-    /* Wrap text blocks inside a box */
-    .stMarkdown,
-    .stText,
-    .stHeading,
-    .stSubheader,
-    .stCaption,
-    .stCodeBlock {
-        background-color: rgba(20, 20, 20, 0.7);
+    .stMarkdown, .stText, .stHeading, .stSubheader, .stCaption, .stCodeBlock {
+        background-color: rgba(20, 20, 20, 0.55);
         padding: 10px 16px;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.05);
         margin-bottom: 0.8rem;
+        backdrop-filter: blur(3px);
     }
 
     .stButton > button,
@@ -49,12 +44,11 @@ st.markdown(
     .stTextArea,
     .stRadio,
     .stExpander,
-    .stDataFrame,
     .element-container,
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(15, 15, 15, 0.85) !important;
+        background-color: rgba(15, 15, 15, 0.6) !important;
         color: #f0f0f0 !important;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.08);
@@ -65,11 +59,23 @@ st.markdown(
     }
 
     input, textarea, select {
-        background-color: rgba(40, 40, 40, 0.95) !important;
+        background-color: rgba(30, 30, 30, 0.95) !important;
         color: #f0f0f0 !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
         border-radius: 6px;
         padding: 6px !important;
+    }
+
+    /* Override dropdown color */
+    [data-baseweb="select"] {
+        background-color: rgba(35, 35, 35, 0.95) !important;
+        color: #f0f0f0 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    [data-baseweb="select"] * {
+        color: #f0f0f0 !important;
     }
 
     [data-testid="stFileUploader"] > div {
@@ -94,36 +100,34 @@ st.markdown(
         font-family: 'Inter', sans-serif;
     }
 
-    h1, h2, h3, h4, h5, h6, p {
-        margin-top: 0.2rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
     .element-container {
         margin-bottom: 0.6rem !important;
+    }
+
+    /* Graph background dark */
+    .js-plotly-plot .plotly {
+        background-color: rgba(15,15,15,0.85) !important;
+    }
+
+    /* Dataframe (preview table) styling */
+    .stDataFrame {
+        background-color: rgba(15,15,15,0.7) !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stDataFrame table {
+        background-color: rgba(15,15,15,0.8) !important;
+        color: #f0f0f0 !important;
     }
 
     .stSlider > div > div > div > div {
         background-color: #cccccc33 !important;
     }
-
-    .stDataFrame div {
-        color: #f0f0f0 !important;
-    }
-
-    .chat-user, .chat-ai {
-        background: rgba(35, 35, 35, 0.85);
-        padding: 8px !important;
-        border-radius: 8px;
-        margin: 6px 0;
-        color: #f0f0f0 !important;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
     </style>
     """,
     unsafe_allow_html=True,
 )
-
 
 
 # Page setup

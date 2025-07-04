@@ -6,13 +6,13 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Load Google Fonts and Material Icons ---
+# --- Google Fonts and Material Icons ---
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --- Custom CSS for Pastel, Minimal, Card-based UI ---
+# --- Custom CSS for Modern Pastel UI ---
 st.markdown("""
 <style>
 body, html, div, span, label {
@@ -136,24 +136,48 @@ body, html, div, span, label {
 </style>
 """, unsafe_allow_html=True)
 
-# --- Side Navigation Bar ---
-st.markdown("""
-<div id="side-nav">
-    <div class="nav-item selected"><span class="material-icons">cloud_upload</span>Upload</div>
-    <div class="nav-item"><span class="material-icons">table_chart</span>Preview</div>
-    <div class="nav-item"><span class="material-icons">insights</span>Summary</div>
-    <div class="nav-item"><span class="material-icons">bar_chart</span>Charts</div>
-    <div class="nav-item"><span class="material-icons">chat</span>Q&A</div>
-</div>
-""", unsafe_allow_html=True)
+# --- Sidebar Navigation ---
+nav_options = [
+    ("Upload", "cloud_upload"),
+    ("Preview", "table_chart"),
+    ("Summary", "insights"),
+    ("Charts", "bar_chart"),
+    ("Q&A", "chat"),
+]
+if "nav" not in st.session_state:
+    st.session_state.nav = "Upload"
 
-# --- Main Content ---
-st.markdown('<div class="card">', unsafe_allow_html=True)
-st.markdown('<div class="section-title"><span class="material-icons">cloud_upload</span>Upload Your Dataset</div>', unsafe_allow_html=True)
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-if not uploaded_file:
-    st.info("Upload a CSV file to begin your Datalicious journey.")
-st.markdown('</div>', unsafe_allow_html=True)
+def nav_click(label):
+    st.session_state.nav = label
+
+# Render sidebar
+side_nav_html = '<div id="side-nav">'
+for label, icon in nav_options:
+    selected = "selected" if st.session_state.nav == label else ""
+    side_nav_html += f'''
+    <div class="nav-item {selected}" onclick="window.location.search='?nav={label}'">
+        <span class="material-icons">{icon}</span>{label}
+    </div>
+    '''
+side_nav_html += '</div>'
+st.markdown(side_nav_html, unsafe_allow_html=True)
+
+# Handle navigation via query param (simulate tab switch)
+import urllib.parse
+params = st.experimental_get_query_params()
+if "nav" in params and params["nav"][0] in [x[0] for x in nav_options]:
+    st.session_state.nav = params["nav"][0]
+    st.experimental_set_query_params()  # clear params
+
+# --- Main Content Area ---
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"], key="fileuploader", label_visibility="collapsed")
+
+if st.session_state.nav == "Upload":
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title"><span class="material-icons">cloud_upload</span>Upload Your Dataset</div>', unsafe_allow_html=True)
+    if not uploaded_file:
+        st.info("Upload a CSV file to begin your Datalicious journey.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file:
     try:
@@ -163,82 +187,83 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # Preview Section
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title"><span class="material-icons">table_chart</span>Preview</div>', unsafe_allow_html=True)
-        st.dataframe(df.head(), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        if st.session_state.nav == "Preview":
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span class="material-icons">table_chart</span>Preview</div>', unsafe_allow_html=True)
+            st.dataframe(df.head(), use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        # Summary Section
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title"><span class="material-icons">insights</span>Generate Summary</div>', unsafe_allow_html=True)
-        summary = None
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if st.button("Generate Summary"):
-                with st.spinner("Calling Together AI..."):
-                    summary = summarize_dataset(df.head(7))
-                    st.success("Summary Generated! 🎉")
-        with col2:
-            st.markdown("The summary provides a GPT-style overview based on sample data.")
-        if summary:
-            st.markdown(f'<div style="background:#eef2ff;border-radius:12px;padding:1.2rem 1rem;margin-top:1rem;">{summary}</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        if st.session_state.nav == "Summary":
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span class="material-icons">insights</span>Generate Summary</div>', unsafe_allow_html=True)
+            summary = None
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                if st.button("Generate Summary"):
+                    with st.spinner("Calling Together AI..."):
+                        summary = summarize_dataset(df.head(7))
+                        st.success("Summary Generated! 🎉")
+            with col2:
+                st.markdown("The summary provides a GPT-style overview based on sample data.")
+            if summary:
+                st.markdown(f'<div style="background:#eef2ff;border-radius:12px;padding:1.2rem 1rem;margin-top:1rem;">{summary}</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        # Chart Generator Section
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title"><span class="material-icons">bar_chart</span>Chart Generator</div>', unsafe_allow_html=True)
-        numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
-        if numeric_columns:
-            with st.expander("Chart Controls", expanded=True):
-                selected_column = st.selectbox("Choose column:", numeric_columns)
-                top_n = st.slider("Top N values:", 5, 20, 10)
-                fig = plot_top_column(df, selected_column, top_n=top_n)
-                st.plotly_chart(
-                    fig,
-                    use_container_width=True,
-                    config={
-                        "displayModeBar": True,
-                        "scrollZoom": True,
-                        "displaylogo": False,
-                        "modeBarButtonsToRemove": ["sendDataToCloud"],
-                    }
-                )
-        else:
-            st.warning("No numeric columns found for charts.")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Q&A Chat Section
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title"><span class="material-icons">chat</span>Ask About This Dataset</div>', unsafe_allow_html=True)
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = []
-
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
-
-        if user_input:
-            with st.spinner("Thinking like a data analyst..."):
-                reply = ask_dataset_question(df, user_input, mode=mode)
-                st.session_state.chat_history.append(("user", user_input))
-                st.session_state.chat_history.append(("ai", reply))
-
-        st.markdown('<div id="chat-window">', unsafe_allow_html=True)
-        for role, msg in st.session_state.chat_history:
-            if role == "user":
-                st.markdown(f"<div class='chat-bubble-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+        if st.session_state.nav == "Charts":
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span class="material-icons">bar_chart</span>Chart Generator</div>', unsafe_allow_html=True)
+            numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
+            if numeric_columns:
+                with st.expander("Chart Controls", expanded=True):
+                    selected_column = st.selectbox("Choose column:", numeric_columns)
+                    top_n = st.slider("Top N values:", 5, 20, 10)
+                    fig = plot_top_column(df, selected_column, top_n=top_n)
+                    st.plotly_chart(
+                        fig,
+                        use_container_width=True,
+                        config={
+                            "displayModeBar": True,
+                            "scrollZoom": True,
+                            "displaylogo": False,
+                            "modeBarButtonsToRemove": ["sendDataToCloud"],
+                        }
+                    )
             else:
-                st.markdown(f"<div class='chat-bubble-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+                st.warning("No numeric columns found for charts.")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        if st.button("Clear Chat"):
-            st.session_state.chat_history = []
-            st.experimental_rerun()
+        if st.session_state.nav == "Q&A":
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span class="material-icons">chat</span>Ask About This Dataset</div>', unsafe_allow_html=True)
+            if "chat_history" not in st.session_state:
+                st.session_state.chat_history = []
 
-        st.markdown('</div>', unsafe_allow_html=True)
+            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+            user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?", key="qna_input")
+
+            if user_input:
+                with st.spinner("Thinking like a data analyst..."):
+                    reply = ask_dataset_question(df, user_input, mode=mode)
+                    st.session_state.chat_history.append(("user", user_input))
+                    st.session_state.chat_history.append(("ai", reply))
+
+            st.markdown('<div id="chat-window">', unsafe_allow_html=True)
+            for role, msg in st.session_state.chat_history:
+                if role == "user":
+                    st.markdown(f"<div class='chat-bubble-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<div class='chat-bubble-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            if st.button("Clear Chat"):
+                st.session_state.chat_history = []
+                st.experimental_rerun()
+
+            st.markdown('</div>', unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"Error processing file: {e}")
+
 
 
 

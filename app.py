@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- Custom Styles: Black Text Dropdowns, Non-Editable, Dark Theme ---
+# --- Custom Styles including working selectbox styling ---
 st.markdown(
     """
     <style>
@@ -37,7 +37,6 @@ st.markdown(
     .stButton > button,
     .stFileUploader,
     .stTextInput,
-    .stSelectbox,
     .stSlider,
     .stTextArea,
     .stRadio,
@@ -102,44 +101,68 @@ st.markdown(
         background-color: #cccccc33 !important;
     }
 
-    /* === UPDATED SELECTBOX STYLE: BLACK TEXT === */
-   /* === FINAL SELECTBOX STYLE FIX: BLACK TEXT & WHITE BACKGROUND === */
-[data-baseweb="select"] {
-    background-color: #fff !important;
-    color: #111 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(0,0,0,0.15) !important;
-    font-weight: 600 !important;
-}
+    [data-testid="stActionMenuButton"] {
+        filter: invert(100%) brightness(180%) !important;
+    }
 
-/* Ensures selected text is black */
-[data-baseweb="select"] div,
-[data-baseweb="select"] svg,
-[data-baseweb="select"] * {
-    color: #111 !important;
-    fill: #111 !important;
-}
+    [data-testid="stActionMenu"] {
+        background-color: rgba(25, 25, 25, 0.95) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+    }
 
-/* Dropdown panel */
-div[data-baseweb="popover"],
-div[role="listbox"] {
-    background-color: #fff !important;
-    color: #111 !important;
-    font-weight: 500 !important;
-}
+    [data-testid="stActionMenu"] button {
+        color: white !important;
+        background-color: transparent !important;
+    }
 
-/* Options */
-div[role="option"] {
-    background-color: transparent !important;
-    color: #111 !important;
-}
+    [data-testid="stActionMenu"] button:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
 
-div[role="option"]:hover,
-div[role="option"][aria-selected="true"] {
-    background-color: #f0f0f0 !important;
-    color: #111 !important;
-}
+    /* === FINAL SELECTBOX FIX: WHITE BACKGROUND + BLACK TEXT === */
+    [data-baseweb="select"] {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        font-weight: 600 !important;
+    }
 
+    [data-baseweb="select"] * {
+        color: #111111 !important;
+        fill: #111111 !important;
+    }
+
+    [data-baseweb="select"] div[aria-disabled="true"] {
+        color: #555 !important;
+        opacity: 1 !important;
+    }
+
+    div[data-baseweb="popover"] {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        border: 1px solid #ccc !important;
+        border-radius: 6px !important;
+    }
+
+    div[role="option"] {
+        color: #111111 !important;
+        background-color: #ffffff !important;
+        font-weight: 500 !important;
+    }
+
+    div[role="option"]:hover,
+    div[role="option"][aria-selected="true"] {
+        background-color: #eeeeee !important;
+        color: #111111 !important;
+    }
+
+    [data-baseweb="select"] svg {
+        fill: #111111 !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -224,6 +247,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

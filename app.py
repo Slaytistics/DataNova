@@ -65,22 +65,14 @@ st.markdown(
         padding: 6px !important;
     }
 
-    /* Dropdown dark theme fix */
-    .stSelectbox, .stSelectbox > div, .stSelectbox label, .stSelectbox div[data-baseweb="select"] {
+    [data-baseweb="select"] {
         background-color: rgba(35, 35, 35, 0.95) !important;
         color: #f0f0f0 !important;
         border-radius: 8px !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
-        font-family: 'Inter', sans-serif !important;
     }
-    [data-baseweb="select"] .css-1n76uvr-option, 
-    [data-baseweb="select"] .css-1n6sfyn-MenuList, 
-    [data-baseweb="select"] .css-1n6sfyn-MenuList * {
-        background-color: rgba(35, 35, 35, 0.98) !important;
-        color: #f0f0f0 !important;
-    }
-    .stSelectbox .css-1wa3eu0-placeholder, 
-    .stSelectbox .css-1uccc91-singleValue {
+
+    [data-baseweb="select"] * {
         color: #f0f0f0 !important;
     }
 
@@ -110,12 +102,10 @@ st.markdown(
         margin-bottom: 0.6rem !important;
     }
 
-    /* Graph background dark */
     .js-plotly-plot .plotly {
         background-color: rgba(15,15,15,0.85) !important;
     }
 
-    /* Dataframe (preview table) styling */
     .stDataFrame {
         background-color: rgba(15,15,15,0.7) !important;
         border-radius: 10px;
@@ -134,7 +124,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 # Page setup
 st.set_page_config(page_title="Datalicious", layout="wide")
 st.markdown(

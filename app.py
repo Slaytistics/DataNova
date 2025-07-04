@@ -5,7 +5,7 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# Custom styles with Inter font, dark theme, and background image
+# Enhanced custom styles for dropdowns and dark theme
 st.markdown(
     """
     <style>
@@ -105,43 +105,49 @@ st.markdown(
     }
 
     /* ========== DROPDOWNS ========== */
+    /* Main selectbox container */
     [data-baseweb="select"] {
-        background-color: rgba(25, 25, 25, 0.85) !important;
+        background-color: rgba(25, 25, 25, 0.95) !important;
         color: #f0f0f0 !important;
         border-radius: 8px !important;
         border: 1px solid rgba(255,255,255,0.15) !important;
+        min-height: 44px !important;
     }
-
     [data-baseweb="select"] * {
         color: #f0f0f0 !important;
+        font-size: 16px !important;
     }
-
+    /* Dropdown menu */
     div[data-baseweb="popover"],
     div[role="listbox"] {
-        background-color: rgba(20, 20, 20, 0.95) !important;
+        background-color: rgba(30, 30, 30, 0.98) !important;
         color: #f0f0f0 !important;
         border-radius: 8px !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
     }
-
+    /* Dropdown options */
     div[data-baseweb="menu"] div[role="option"],
     div[role="option"] {
         background-color: transparent !important;
         color: #f0f0f0 !important;
-        padding: 10px !important;
-        font-size: 14px !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+        border-radius: 6px !important;
     }
-
-    div[role="option"]:hover {
-        background-color: rgba(60, 60, 60, 0.7) !important;
+    div[role="option"]:hover, div[role="option"][aria-selected="true"] {
+        background-color: rgba(80, 80, 80, 0.7) !important;
+        color: #fff !important;
+    }
+    /* Fix for selected value in selectbox */
+    [data-baseweb="select"] span {
+        color: #f0f0f0 !important;
     }
 
     /* ========== STREAMLIT 3-DOT MENU ========== */
     [data-testid="stActionMenuButton"] {
         filter: invert(100%) brightness(180%) !important;
     }
-
     [data-testid="stActionMenu"] {
         background-color: rgba(25, 25, 25, 0.95) !important;
         color: white !important;
@@ -149,16 +155,13 @@ st.markdown(
         border: 1px solid rgba(255,255,255,0.1) !important;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
     }
-
     [data-testid="stActionMenu"] button {
         color: white !important;
         background-color: transparent !important;
     }
-
     [data-testid="stActionMenu"] button:hover {
         background-color: rgba(255, 255, 255, 0.1) !important;
     }
-
     </style>
     """,
     unsafe_allow_html=True,
@@ -173,7 +176,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 
 st.markdown(
     "Upload structured data, generate insights, visualize trends, and export them professionally. Powered by Together AI + Figma"
@@ -244,6 +246,7 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 
 

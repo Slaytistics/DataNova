@@ -10,15 +10,15 @@ from qna import ask_dataset_question
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
     [data-testid="stAppViewContainer"] {
-        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg");
+        background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-        font-family: 'Share Tech Mono', monospace;
+        font-family: 'Inter', sans-serif;
     }
 
     .block-container {
@@ -40,45 +40,45 @@ st.markdown(
     .stPlotlyChart,
     .chat-message,
     details {
-        background-color: rgba(10, 10, 10, 0.8) !important;
-        color: #00FFAB !important;
-        border-radius: 12px;
-        border: 1px solid #00ffab55;
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #f0f0f0 !important;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 12px;
         margin-bottom: 0.75rem;
-        font-family: 'Share Tech Mono', monospace;
-        box-shadow: 0 0 8px #00ffab44;
+        backdrop-filter: blur(6px);
+        font-family: 'Inter', sans-serif;
     }
 
     input, textarea, select {
-        background-color: rgba(30, 30, 30, 0.95) !important;
-        color: #00FFAB !important;
-        border: 1px solid #00ffab88 !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 6px;
     }
 
     [data-testid="stFileUploader"] > div {
-        background-color: rgba(20, 20, 20, 0.85) !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
         border-radius: 6px;
-        border: 1px solid #00ffab55;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     button {
-        background-color: rgba(0, 255, 171, 0.15) !important;
-        color: #00FFAB !important;
-        border: 1px solid #00ffab55 !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         transition: 0.3s ease;
     }
 
     button:hover {
-        background-color: #00FFAB !important;
-        color: black !important;
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
         border: 1px solid white !important;
     }
 
     html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
-        color: #00FFAB !important;
-        font-family: 'Share Tech Mono', monospace;
+        color: #f0f0f0 !important;
+        font-family: 'Inter', sans-serif;
     }
 
     h1, h2, h3, h4, h5, h6, p {
@@ -98,20 +98,20 @@ st.markdown(
     }
 
     .stSlider > div > div > div > div {
-        background-color: #00FFAB88 !important;
+        background-color: #cccccc88 !important;
     }
 
     .stDataFrame div {
-        color: #00FFAB !important;
+        color: #f0f0f0 !important;
     }
 
     .chat-user, .chat-ai {
-        background: rgba(30, 30, 30, 0.85);
+        background: rgba(255, 255, 255, 0.06);
         padding: 10px;
         border-radius: 8px;
         margin: 6px;
-        color: #00FFAB !important;
-        border: 1px solid #00ffab55;
+        color: #f0f0f0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     </style>
     """,

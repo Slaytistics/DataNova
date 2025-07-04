@@ -12,7 +12,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Apply Soft Elegant Theme with Background Image ---
+# --- Custom Styling ---
 soft_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -32,7 +32,6 @@ body, html, div, span, label {
     position: relative;
 }
 
-/* Soft dark overlay */
 body::before {
     content: "";
     position: fixed;
@@ -66,60 +65,48 @@ body::before {
 }
 .title-block p {
     font-size: 1.1rem;
-    color: #ffffff;
+    color: #dddddd;
     font-weight: 500;
     letter-spacing: 2px;
 }
 
+/* Section Header (no underline) */
+.section-header {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 1.5rem 0 1rem 0;
+}
+
 /* Button */
 .stButton > button {
-    background: #5c4433;
-    color: white !important;
+    background: #2a1e14;
+    color: #f5f5f5 !important;
     font-weight: 600;
     border-radius: 25px;
     padding: 0.6rem 2rem;
-    box-shadow: 0 0 10px rgba(90, 70, 50, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
     border: none !important;
     font-size: 1rem;
 }
 .stButton > button:hover {
-    background: #7a5a40;
-    box-shadow: 0 0 12px rgba(90, 70, 50, 0.6);
-    transform: scale(1.03);
+    background: #3b2a1c;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.02);
 }
 
-/* Inputs */
-.stTextInput > div > input,
-.stSelectbox > div > div {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-radius: 18px !important;
-    border: 1px solid #ffffff !important;
-    color: #fff !important;
-    padding: 0.5rem 1rem !important;
+/* Inputs & Dropdowns */
+input, .stTextInput input, .stSelectbox div div {
+    background-color: rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+    border-radius: 14px !important;
+    border: 1px solid #ffffff44 !important;
+    padding: 0.6rem 1rem !important;
     font-size: 1rem !important;
 }
 
-/* Section Header */
-.section-header {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 1.2rem;
-    position: relative;
-}
-.section-header::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 50px;
-    height: 3px;
-    background: #ffffff;
-    border-radius: 2px;
-}
-
-/* Chat bubbles */
+/* Chat Bubbles */
 .chat-user {
     background: #ffffff;
     color: #1d1d1d;
@@ -132,18 +119,17 @@ body::before {
     margin-bottom: 10px;
 }
 .chat-ai {
-    background: #5c4433;
-    color: #fff;
+    background: #2a1e14;
+    color: #ffffff;
     border-radius: 20px 20px 20px 0;
     padding: 12px 18px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 12px rgba(90, 70, 50, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     font-weight: 600;
     margin-bottom: 10px;
 }
 
-/* Chat scroll */
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
@@ -166,7 +152,6 @@ st.markdown("""
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-# --- Main Logic ---
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -179,7 +164,7 @@ if uploaded_file:
         st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Section ---
+        # --- Summary Generator ---
         st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         if st.button("Generate Summary"):
             with st.spinner("Calling Together AI..."):
@@ -187,7 +172,7 @@ if uploaded_file:
                 st.success("Summary Generated!")
                 st.markdown(summary)
 
-        # --- Chart Section ---
+        # --- Chart Generator ---
         st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:

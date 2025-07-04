@@ -208,6 +208,49 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 [data-testid="stActionMenu"] button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
+/* ========== SELECTBOX DROPDOWN LIST DARK MODE ========== */
+div[data-baseweb="popover"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: #f0f0f0 !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5) !important;
+    z-index: 9999 !important;
+}
+
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: transparent !important;
+    color: #f0f0f0 !important;
+    padding: 10px !important;
+    font-size: 14px !important;
+}
+
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ========== STREAMLIT 3-DOT MENU DARK MODE ========== */
+[data-testid="stActionMenuButton"] {
+    filter: invert(100%) brightness(180%) !important;  /* white 3-dots */
+}
+
+[data-testid="stActionMenu"] {
+    background-color: rgba(25, 25, 25, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+}
+
+[data-testid="stActionMenu"] button {
+    color: white !important;
+    background-color: transparent !important;
+}
+
+[data-testid="stActionMenu"] button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 
 
     </style>

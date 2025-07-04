@@ -6,13 +6,11 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- FontAwesome for icons ---
 st.markdown(
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
     unsafe_allow_html=True,
 )
 
-# --- Apply Dark Theme with Background Image ---
 dark_css = """
 <style>
 body, html, div, span, label {
@@ -36,7 +34,6 @@ body, html, div, span, label {
 
 st.markdown(dark_css, unsafe_allow_html=True)
 
-# --- Main Title ---
 st.markdown("""
 <div class="title-block">
     <h1>DATALICIOUS</h1>
@@ -44,7 +41,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- File Upload ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 

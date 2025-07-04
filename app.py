@@ -8,23 +8,25 @@ from qna import ask_dataset_question
 
 # Custom styles with Arial Italic font, colored headings, styled button, background image
 
+
 st.markdown(
-    f"""
+    """
     <style>
-    [data-testid="stAppViewContainer"] {{
+    [data-testid="stAppViewContainer"] {
         background-image: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg");
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
         background-repeat: no-repeat;
-    }}
+    }
 
-    .block-container {{
+    .block-container {
         padding: 2rem 3rem;
         max-width: 900px;
         margin: auto;
-    }}
+    }
 
+    /* Card-like styling */
     .stButton > button,
     .stFileUploader,
     .stTextInput,
@@ -37,51 +39,69 @@ st.markdown(
     .element-container,
     .stPlotlyChart,
     .chat-message,
-    details {{
+    details {
         background-color: rgba(15, 15, 15, 0.75) !important;
         color: white !important;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.1);
         padding: 12px;
-    }}
+        margin-bottom: 0.5rem;
+    }
 
-    input, textarea, select {{
+    input, textarea, select {
         background-color: rgba(40, 40, 40, 0.95) !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.2) !important;
         border-radius: 6px;
-    }}
+    }
 
-    [data-testid="stFileUploader"] > div {{
+    [data-testid="stFileUploader"] > div {
         background-color: rgba(30, 30, 30, 0.85) !important;
         border-radius: 6px;
-    }}
+    }
 
-    button {{
+    button {
         background-color: rgba(50, 50, 50, 0.9) !important;
         color: white !important;
         border: 1px solid rgba(255,255,255,0.15) !important;
-    }}
+    }
 
-    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {{
+    html, body, h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: white !important;
-    }}
+    }
 
-    .stSlider > div > div > div > div {{
+    /* Spacing fix */
+    h1, h2, h3, h4, h5, h6, p {
+        margin-top: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    section.main > div {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .element-container {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .stSlider > div > div > div > div {
         background-color: #ffffff88 !important;
-    }}
+    }
 
-    .stDataFrame div {{
+    .stDataFrame div {
         color: white !important;
-    }}
+    }
 
-    .chat-user, .chat-ai {{
+    .chat-user, .chat-ai {
         background: rgba(40, 40, 40, 0.85);
         padding: 10px;
         border-radius: 8px;
         margin: 6px;
         color: white !important;
-    }}
+    }
     </style>
     """,
     unsafe_allow_html=True,

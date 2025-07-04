@@ -13,12 +13,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Mode Toggle State ---
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = True
+# --- Initialize session state for theme ---
+if "theme" not in st.session_state:
+    st.session_state.theme = "Dark"
 
-def toggle_dark_mode():
-    st.session_state.dark_mode = not st.session_state.dark_mode
+def set_theme(theme_name):
+    st.session_state.theme = theme_name
 
 # --- CSS for Neon, Glassmorphism, and Layout ---
 dark_css = """
@@ -257,49 +257,265 @@ div[data-baseweb="menu"] div[role="option"]:hover {
 
 light_css = """
 <style>
-/* Light mode styles can be added here if needed */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body, html, div, span, label {
+    font-family: 'Poppins', sans-serif !important;
+    color: #222 !important;
+    background-color: #f9f9f9 !important;
+    margin: 0; padding: 0;
+}
+
+/* Background */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #f0f0f0, #dcdcdc);
+    min-height: 100vh;
+    padding-top: 4rem;
+    position: relative;
+}
+
+/* Container */
+.block-container {
+    max-width: 900px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    padding: 2rem 3rem 3rem 3rem !important;
+    color: #222 !important;
+}
+
+/* Sticky top bar */
+#top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3.5rem;
+    background: #fff;
+    box-shadow: 0 0 12px #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 9999;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #9b30ff;
+    letter-spacing: 2px;
+    user-select: none;
+}
+
+/* Button */
+.stButton > button {
+    background: linear-gradient(45deg, #9B30FF, #FF69B4);
+    color: white !important;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.7rem 2.5rem;
+    box-shadow: 0 0 8px #FF69B4, 0 0 20px #9B30FF;
+    transition: all 0.3s ease;
+    border: none !important;
+    font-size: 1.1rem;
+}
+.stButton > button:hover {
+    box-shadow: 0 0 12px #FF69B4, 0 0 30px #9B30FF;
+    transform: scale(1.05);
+}
+
+/* Input and select styling */
+.stTextInput > div > input,
+.stSelectbox > div > div {
+    background: #fff !important;
+    border-radius: 20px !important;
+    border: 1.5px solid #ddd !important;
+    color: #222 !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 1rem !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.stTextInput > div > input:focus,
+.stSelectbox > div > div:focus {
+    border-color: #9b30ff !important;
+    box-shadow: 0 0 12px #9b30ff !important;
+    outline: none !important;
+}
+
+/* Select dropdown menu */
+div[data-baseweb="menu"] {
+    background: #fff !important;
+    border-radius: 20px !important;
+    border: 1px solid #9b30ff !important;
+    box-shadow: 0 0 20px #9b30ff !important;
+}
+div[data-baseweb="menu"] div[role="option"] {
+    color: #222 !important;
+    padding: 12px 16px !important;
+}
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background: #9b30ff !important;
+    color: #fff !important;
+}
+
+/* Dataframe styling */
+.stDataFrame table {
+    background: #fff !important;
+    color: #222 !important;
+    border-radius: 16px;
+    box-shadow: 0 0 12px #9b30ff;
+}
+
+/* Plotly chart container */
+.js-plotly-plot .plotly {
+    background: #fff !important;
+    border-radius: 20px;
+    box-shadow: 0 0 20px #9b30ff;
+}
+
+/* Card style for sections */
+.card {
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(155, 48, 255, 0.37);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(155, 48, 255, 0.3);
+    color: #222 !important;
+}
+
+/* Section headers with underline */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #9b30ff;
+    margin-bottom: 1rem;
+    position: relative;
+    letter-spacing: 1.5px;
+}
+.section-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #9b30ff, #ff69b4);
+    border-radius: 4px;
+}
+
+/* Chat bubbles */
+.chat-user {
+    background: linear-gradient(135deg, #00ffff, #32cd32);
+    color: #000;
+    border-radius: 24px 24px 0 24px;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-left: auto;
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+.chat-ai {
+    background: linear-gradient(135deg, #9b30ff, #ff69b4);
+    color: #fff;
+    border-radius: 24px 24px 24px 0;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(155, 48, 255, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+
+/* Chat container */
+#chat-window {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-bottom: 1.5rem;
+}
+
+/* Horizontal scroll container */
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+}
+.horizontal-scroll > div {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 320px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 0 20px #9b30ff;
+}
+
+/* Utility spacing */
+.mt-2 { margin-top: 1rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }
 </style>
 """
 
-# Apply CSS based on dark_mode state
-if st.session_state.dark_mode:
-    st.markdown(dark_css, unsafe_allow_html=True)
-else:
-    st.markdown(light_css, unsafe_allow_html=True)
+# You can add more themes here if desired
+themes = {
+    "Dark": dark_css,
+    "Light": light_css,
+}
 
-# --- Top Bar with Dark Mode Toggle and Navigation ---
+# Apply selected theme CSS
+st.markdown(themes[st.session_state.theme], unsafe_allow_html=True)
+
+# --- Top Bar with Theme Selector ---
 st.markdown(
-    """
+    f"""
     <div id="top-bar">
         <div style="display:flex; align-items:center; gap: 1rem;">
             <i class="fa fa-database" style="font-size:1.8rem; color:#ff69b4;"></i>
             <span>DATALICIOUS</span>
         </div>
         <div style="display:flex; align-items:center; gap: 1rem;">
-            <div id="toggle" class="toggle-switch {active_class}" onclick="toggleDarkMode()"></div>
-            <span style="font-size:0.9rem; color:#ff69b4;">{mode_text}</span>
+            <form action="" method="get" id="theme-form">
+                <select name="theme" id="theme-select" style="
+                    background: transparent;
+                    border-radius: 20px;
+                    border: 1.5px solid #ff69b4;
+                    color: #ff69b4;
+                    padding: 0.3rem 0.8rem;
+                    font-weight: 700;
+                    font-family: 'Poppins', sans-serif;
+                    cursor: pointer;
+                ">
+                    <option value="Dark" {"selected" if st.session_state.theme == "Dark" else ""}>Dark</option>
+                    <option value="Light" {"selected" if st.session_state.theme == "Light" else ""}>Light</option>
+                </select>
+            </form>
         </div>
     </div>
+
     <script>
-    const toggle = document.getElementById('toggle');
-    function toggleDarkMode() {{
-        fetch('/?dark_mode_toggle=1').then(() => {{
-            location.reload();
-        }});
-    }}
+    const themeSelect = document.getElementById('theme-select');
+    themeSelect.addEventListener('change', function() {{
+        const selectedTheme = this.value;
+        const url = new URL(window.location);
+        url.searchParams.set('theme', selectedTheme);
+        window.location = url.toString();
+    }});
     </script>
-    """.format(
-        active_class="active" if st.session_state.dark_mode else "",
-        mode_text="Dark Mode" if st.session_state.dark_mode else "Light Mode",
-    ),
+    """,
     unsafe_allow_html=True,
 )
 
-# Handle dark mode toggle via query param
-if "dark_mode_toggle" in st.experimental_get_query_params():
-    toggle_dark_mode()
-    st.experimental_set_query_params()  # clear params
-    st.experimental_rerun()
+# Handle theme change via query params
+query_params = st.experimental_get_query_params()
+if "theme" in query_params:
+    selected_theme = query_params["theme"][0]
+    if selected_theme in themes:
+        set_theme(selected_theme)
+        st.experimental_set_query_params()  # clear params
+        st.experimental_rerun()
 
 # --- Main Content Container ---
 with st.container():
@@ -399,6 +615,8 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Error processing file: {e}")
+
+
 
 
 

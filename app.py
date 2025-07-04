@@ -153,24 +153,41 @@ input, .stTextInput input, .stSelectbox div div {
     transform: scale(1.02);
 }
 
-/* --- Selectbox dropdown & options fix --- */
+/* --- SELECTBOX (Dropdown) VISIBILITY FIX --- */
 div[data-baseweb="select"] {
-    background-color: rgba(0, 0, 0, 0.7) !important;
-    border-radius: 10px !important;
-    color: #fff !important;
-}
-
-div[data-baseweb="select"] * {
-    color: #fff !important;
-}
-
-div[data-baseweb="select"] div[role="option"] {
-    background-color: rgba(30, 30, 30, 0.95) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 12px !important;
     color: #ffffff !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Text inside the select control */
+div[data-baseweb="select"] * {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* Dropdown menu background */
+div[data-baseweb="menu"] {
+    background-color: rgba(15, 15, 15, 0.95) !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Options inside dropdown */
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    padding: 10px 15px;
     font-weight: 500;
 }
-div[data-baseweb="select"] div[role="option"]:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
+
+/* Hover effect */
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
 

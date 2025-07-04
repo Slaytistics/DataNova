@@ -6,20 +6,20 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# --- FontAwesome for icons ---
+# --- FontAwesome ---
 st.markdown(
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
     unsafe_allow_html=True,
 )
 
-# --- Custom Styling ---
-soft_css = """
+# --- Dark CSS & UI Fixes ---
+custom_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
-    color: #ffffff !important;
+    color: #FFFFFF !important;
     background-color: transparent !important;
     margin: 0; padding: 0;
 }
@@ -32,12 +32,13 @@ body, html, div, span, label {
     position: relative;
 }
 
+/* Overlay */
 body::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(20, 15, 10, 0.7);
+    background: rgba(15, 15, 21, 0.85);
     z-index: -1;
 }
 
@@ -46,99 +47,67 @@ body::before {
     max-width: 900px;
     margin: auto;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 18px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 0 15px rgba(50, 30, 10, 0.4);
-    padding: 2rem 2.5rem 3rem 2.5rem !important;
+    border-radius: 24px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 20px 2px #2b2b2b, 0 0 30px 8px #111;
+    padding: 2rem 3rem 3rem 3rem !important;
 }
 
 /* Title */
 .title-block {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
 }
 .title-block h1 {
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 0.3rem;
+    font-size: 3rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
 }
 .title-block p {
-    font-size: 1.1rem;
-    color: #dddddd;
+    font-size: 1.2rem;
+    color: #ccc;
+    letter-spacing: 3px;
     font-weight: 500;
-    letter-spacing: 2px;
 }
 
-/* Section Header (no underline) */
-.section-header {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 1.5rem 0 1rem 0;
-}
-
-/* Button */
+/* Buttons */
 .stButton > button {
-    background: #2a1e14;
-    color: #f5f5f5 !important;
-    font-weight: 600;
-    border-radius: 25px;
-    padding: 0.6rem 2rem;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
+    background: #111 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.7rem 2.5rem;
     border: none !important;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
 }
 .stButton > button:hover {
-    background: #3b2a1c;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    transform: scale(1.02);
+    background-color: #222 !important;
+    transform: scale(1.03);
 }
 
-/* Inputs & Dropdowns */
-input, .stTextInput input, .stSelectbox div div {
-    background-color: rgba(255,255,255,0.08) !important;
-    color: #ffffff !important;
-    border-radius: 14px !important;
-    border: 1px solid #ffffff44 !important;
-    padding: 0.6rem 1rem !important;
-    font-size: 1rem !important;
-}
-
-/* Chat Bubbles */
-.chat-user {
-    background: #ffffff;
-    color: #1d1d1d;
-    border-radius: 20px 20px 0 20px;
-    padding: 12px 18px;
-    max-width: 75%;
-    margin-left: auto;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-.chat-ai {
-    background: #2a1e14;
+/* Headings */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
     color: #ffffff;
-    border-radius: 20px 20px 20px 0;
-    padding: 12px 18px;
-    max-width: 75%;
-    margin-right: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
+    position: relative;
+}
+.section-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #999, #ccc);
+    border-radius: 4px;
 }
 
-#chat-window {
-    max-height: 360px;
-    overflow-y: auto;
-    padding-right: 12px;
-    margin-bottom: 1.5rem;
-}
-/* --- Fix Dropdown Visibility, Width, Readonly, Styling --- */
-
-/* Main dropdown container */
+/* Dropdown Fixes */
 div[data-baseweb="select"] {
     width: 100% !important;
     max-width: 600px;
@@ -149,54 +118,72 @@ div[data-baseweb="select"] {
     font-size: 1rem !important;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
-
-/* Selected value display (readable and aligned) */
 div[data-baseweb="select"] div[role="button"] {
     padding: 0.8rem 1rem !important;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 1.05rem !important;
-    color: #ffffff !important;
+    color: #fff !important;
 }
-
-/* Hide typing field but preserve dropdown click */
 div[data-baseweb="select"] input {
     pointer-events: none !important;
     opacity: 0 !important;
     height: 0px !important;
 }
 
-/* Dropdown menu styling */
+/* Dropdown menu */
 div[data-baseweb="menu"] {
-    background-color: rgba(15, 15, 15, 0.95) !important;
+    background-color: #111 !important;
     border-radius: 10px !important;
     color: #ffffff !important;
-    max-width: 600px;
     box-shadow: 0 0 12px rgba(0,0,0,0.5);
-    z-index: 9999;
+    z-index: 99999 !important;
 }
-
-/* Option styling */
 div[data-baseweb="menu"] div[role="option"] {
     padding: 12px 20px;
     font-size: 1rem;
-    color: #ffffff !important;
+    color: #fff !important;
     background: transparent !important;
-    font-weight: 500;
     transition: background 0.2s ease;
 }
-
-/* Option hover */
 div[data-baseweb="menu"] div[role="option"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     cursor: pointer;
 }
 
+/* Chat Bubbles */
+.chat-user {
+    background: linear-gradient(135deg, #00ffff, #32cd32);
+    color: #000;
+    border-radius: 24px 24px 0 24px;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-left: auto;
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.chat-ai {
+    background: linear-gradient(135deg, #444, #666);
+    color: #fff;
+    border-radius: 24px 24px 24px 0;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+#chat-window {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-bottom: 1.5rem;
+}
 </style>
 """
-st.markdown(soft_css, unsafe_allow_html=True)
+st.markdown(custom_css, unsafe_allow_html=True)
 
-# --- Title Block ---
+# --- Title ---
 st.markdown("""
 <div class="title-block">
     <h1>DATALICIOUS</h1>
@@ -204,7 +191,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Upload Dataset ---
+# --- Upload ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
@@ -216,11 +203,11 @@ if uploaded_file:
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
 
-        # --- Preview Section ---
+        # --- Preview ---
         st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
 
-        # --- Summary Generator ---
+        # --- Summary ---
         st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         if st.button("Generate Summary"):
             with st.spinner("Calling Together AI..."):
@@ -239,7 +226,7 @@ if uploaded_file:
         else:
             st.warning("No numeric columns found for charts.")
 
-        # --- Q&A Section ---
+        # --- Q&A Chat ---
         st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []

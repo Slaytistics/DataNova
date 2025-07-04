@@ -169,6 +169,46 @@ div[role="option"]:hover {
 [data-testid="stActionMenu"] button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
+/* DARK MODE FOR DROPDOWN OPTIONS PANEL */
+div[data-baseweb="popover"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important;
+}
+
+div[data-baseweb="menu"] div[role="option"] {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+div[data-baseweb="menu"] div[role="option"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* DARK MODE FOR STREAMLIT 3-DOT MENU */
+[data-testid="stActionMenuButton"] {
+    filter: invert(100%) brightness(200%) !important; /* Makes 3-dot icon white */
+}
+
+[data-testid="stActionMenu"] {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
+}
+
+[data-testid="stActionMenu"] button {
+    color: white !important;
+    background-color: transparent !important;
+}
+
+[data-testid="stActionMenu"] button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 
     </style>
     """,

@@ -160,7 +160,7 @@ st.markdown(dark_css, unsafe_allow_html=True)
 # --- Main Title ---
 st.markdown("""
 <div class="title-block">
-    <h1>DATALICIOUS</h1>
+    <h1 style="color: white !important;">DATALICIOUS</h1>
     <p>SLEEK. SMART. STREAMLINED.</p>
 </div>
 """, unsafe_allow_html=True)

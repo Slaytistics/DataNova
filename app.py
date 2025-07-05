@@ -11,49 +11,150 @@ st.markdown(
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
     unsafe_allow_html=True,
 )
+
+# --- Apply Dark Theme with Background Image ---
 dark_css = """
 <style>
-/* ... your existing CSS remains unchanged above ... */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-/* Input fields and dropdowns (font color updated) */
+body, html, div, span, label {
+    font-family: 'Poppins', sans-serif !important;
+    color: #FFFFFF !important;
+    background-color: transparent !important;
+    margin: 0; padding: 0;
+}
+
+[data-testid="stAppViewContainer"] {
+    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    padding-top: 6rem;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 15, 21, 0.85);
+    z-index: -1;
+}
+
+.block-container {
+    max-width: 900px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 20px 2px #444;
+    padding: 2rem 3rem 3rem 3rem !important;
+}
+
+.title-block {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.title-block h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff69b4;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+.title-block p {
+    font-size: 1.2rem;
+    color: #eee;
+    letter-spacing: 3px;
+    font-weight: 500;
+}
+
+.stButton > button {
+    background: #111 !important;
+    color: white !important;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 0.7rem 2.5rem;
+    box-shadow: 0 0 8px #222;
+    transition: all 0.3s ease;
+    border: none !important;
+    font-size: 1.1rem;
+}
+.stButton > button:hover {
+    box-shadow: 0 0 12px #444;
+    transform: scale(1.05);
+}
+
+/* Input fields and dropdowns */
 .stTextInput > div > input,
+.css-1xc3v61 edgvbvh3,
 .stSelectbox > div > div,
 .css-1wa3eu0-placeholder {
     background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #00ffff !important;  /* ✅ NEON CYAN TEXT COLOR */
-    font-weight: 600;
+    color: black !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
 }
 
-/* File uploader label font color */
-[data-testid="stFileUploader"] label {
-    color: #00ffff !important;
-    font-weight: 600;
+/* Dropdown options */
+.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue, .css-1okebmr-indicatorSeparator {
+    background-color: black !important;
+    color: white !important;
 }
 
-/* Dropdown menu text */
+/* Dropdown menu list */
 .css-3vnyiq-option {
     background-color: #222 !important;
-    color: #00ffff !important;
+    color: black !important;
     font-weight: 500;
     font-size: 1rem;
 }
 .css-3vnyiq-option:hover {
     background-color: #444 !important;
-    color: #00ffff !important;
+    color: white !important;
 }
 
-/* Optional: dropdown selected value styling */
-.css-1dimb5e-singleValue {
-    color: #00ffff !important;
+/* Section headers */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff69b4;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Chat bubbles */
+.chat-user {
+    background: linear-gradient(135deg, #00ffff, #32cd32);
+    color: #000;
+    border-radius: 24px 24px 0 24px;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-left: auto;
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
     font-weight: 600;
+    margin-bottom: 12px;
+}
+.chat-ai {
+    background: linear-gradient(135deg, #ff69b4, #9b30ff);
+    color: #fff;
+    border-radius: 24px 24px 24px 0;
+    padding: 14px 20px;
+    max-width: 75%;
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
-/* ... rest of your CSS continues below ... */
+#chat-window {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-bottom: 1.5rem;
+}
 </style>
 """
-
 st.markdown(dark_css, unsafe_allow_html=True)
 
 # --- Main Title ---

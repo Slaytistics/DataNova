@@ -58,7 +58,7 @@ body::before {
 .title-block h1 {
     font-size: 3rem;
     font-weight: 900;
-    color: #ff69b4;
+    color: #ffffff; /* Updated to white */
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
 }
@@ -226,3 +226,4 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+

@@ -251,20 +251,13 @@ def toggle_chat():
 
 # Add AI avatar button to the bottom right
 st.markdown("""
-<div id="ai-avatar" onclick="toggleChat()">
+<div id="ai-avatar" onclick="parent.document.getElementById('toggle-chat-button').click()">
     <i class="fa fa-robot"></i>
 </div>
-
-<script>
-function toggleChat() {
-    const chatState = window.parent.document.querySelector('iframe[title="streamlitApp"]').contentWindow.document.getElementById('toggle-chat-button');
-    if (chatState) chatState.click();
-}
-</script>
 """, unsafe_allow_html=True)
 
 # Add a hidden button to trigger the toggle in Streamlit
-st.button("Toggle Chat", key="toggle-chat-button", on_click=toggle_chat, help="Toggle chat visibility", visible=False)
+st.button("Toggle Chat", key="toggle-chat-button", on_click=toggle_chat, help="Toggle chat visibility")
 
 # --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
@@ -305,7 +298,7 @@ if uploaded_file:
             <div class="chatbox-container">
                 <div class="chatbox-header">
                     <h3><i class="fa fa-robot"></i> Dataset Assistant</h3>
-                    <button class="close-chatbox" onclick="toggleChat()">×</button>
+                    <button class="close-chatbox" onclick="parent.document.getElementById('toggle-chat-button').click()">×</button>
                 </div>
                 <div class="chatbox-content">
             """, unsafe_allow_html=True)

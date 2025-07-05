@@ -12,7 +12,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Theme Styling Only ---
+# --- Dark Theme Styling ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -51,11 +51,6 @@ body::before {
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
-/* Force all headings to white */
-h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
-    color: #ffffff !important;
-}
-
 .stButton > button {
     background: #111 !important;
     color: white !important;
@@ -74,7 +69,6 @@ h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
 
 /* Input fields and dropdowns */
 .stTextInput > div > input,
-.css-1xc3v61 edgvbvh3,
 .stSelectbox > div > div,
 .css-1wa3eu0-placeholder {
     background-color: rgba(255, 255, 255, 0.1) !important;
@@ -83,13 +77,11 @@ h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
     padding: 0.6rem 1rem !important;
 }
 
-/* Dropdown options */
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue, .css-1okebmr-indicatorSeparator {
+.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
     background-color: black !important;
     color: white !important;
 }
 
-/* Dropdown menu list */
 .css-3vnyiq-option {
     background-color: #222 !important;
     color: black !important;
@@ -101,7 +93,6 @@ h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
     color: white !important;
 }
 
-/* Section headers */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -110,7 +101,6 @@ h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
     margin-bottom: 1rem;
 }
 
-/* Chat bubbles */
 .chat-user {
     background: linear-gradient(135deg, #00ffff, #32cd32);
     color: #000;
@@ -144,7 +134,16 @@ h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
 """
 st.markdown(dark_css, unsafe_allow_html=True)
 
-# --- Main Title ---
+# --- Force All Headings to White ---
+st.markdown("""
+<style>
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# --- Title ---
 st.markdown("""
 <div style='text-align: center; margin-bottom: 3rem;'>
     <span style='font-size: 3rem; font-weight: 900; color: #ffffff !important; letter-spacing: 2px; margin-bottom: 0.5rem; display: block;'>DATALICIOUS</span>
@@ -152,7 +151,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- File Upload ---
+# --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 

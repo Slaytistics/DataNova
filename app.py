@@ -1,17 +1,18 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
 # --- Hide Streamlit Main Menu, Footer, and Header ---
 hide_st_style = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-</style>
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
 """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
@@ -30,8 +31,7 @@ body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
     color: #FFFFFF !important;
     background-color: transparent !important;
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
 }
 
 [data-testid="stAppViewContainer"] {
@@ -45,10 +45,8 @@ body, html, div, span, label {
 body::before {
     content: "";
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(15, 15, 21, 0.85);
     z-index: -1;
 }
@@ -74,7 +72,6 @@ body::before {
     border: none !important;
     font-size: 1.1rem;
 }
-
 .stButton > button:hover {
     box-shadow: 0 0 12px #444;
     transform: scale(1.05);
@@ -101,7 +98,6 @@ body::before {
     font-weight: 500;
     font-size: 1rem;
 }
-
 .css-3vnyiq-option:hover {
     background-color: #444 !important;
     color: white !important;
@@ -126,7 +122,6 @@ body::before {
     font-weight: 600;
     margin-bottom: 12px;
 }
-
 .chat-ai {
     background: linear-gradient(135deg, #ff69b4, #9b30ff);
     color: #fff;
@@ -144,81 +139,6 @@ body::before {
     overflow-y: auto;
     padding-right: 12px;
     margin-bottom: 1.5rem;
-}
-
-/* AI Avatar Button */
-#ai-avatar {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff69b4, #9b30ff);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(255, 105, 180, 0.7);
-    z-index: 9999;
-    transition: all 0.3s ease;
-    border: 3px solid white;
-}
-
-#ai-avatar:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(255, 105, 180, 0.9);
-}
-
-#ai-avatar i {
-    font-size: 30px;
-    color: white;
-}
-
-/* Chatbox container */
-.chatbox-container {
-    position: fixed;
-    bottom: 120px;
-    right: 30px;
-    width: 400px;
-    background: rgba(15, 15, 21, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-}
-
-.chatbox-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.chatbox-header h3 {
-    margin: 0;
-    color: white;
-    font-size: 1.3rem;
-}
-
-.close-chatbox {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.chatbox-content {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 15px;
 }
 </style>
 """
@@ -241,24 +161,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Initialize session state for chat visibility
-if 'show_chat' not in st.session_state:
-    st.session_state.show_chat = False
-
-# Function to toggle chat visibility
-def toggle_chat():
-    st.session_state.show_chat = not st.session_state.show_chat
-
-# Add AI avatar button to the bottom right
-st.markdown("""
-<div id="ai-avatar" onclick="parent.document.getElementById('toggle-chat-button').click()">
-    <i class="fa fa-robot"></i>
-</div>
-""", unsafe_allow_html=True)
-
-# Add a hidden button to trigger the toggle in Streamlit
-st.button("Toggle Chat", key="toggle-chat-button", on_click=toggle_chat, help="Toggle chat visibility")
-
 # --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -268,20 +170,19 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-        
         for col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="ignore")
-            
+
         st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
-        
+
         st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         if st.button("Generate Summary"):
             with st.spinner("Calling Together AI..."):
                 summary = summarize_dataset(df.head(7))
                 st.success("Summary Generated!")
                 st.markdown(summary)
-                
+
         st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
@@ -291,46 +192,32 @@ if uploaded_file:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No numeric columns found for charts.")
-            
-        # --- Q&A Section ---
-        if st.session_state.show_chat:
-            st.markdown("""
-            <div class="chatbox-container">
-                <div class="chatbox-header">
-                    <h3><i class="fa fa-robot"></i> Dataset Assistant</h3>
-                    <button class="close-chatbox" onclick="parent.document.getElementById('toggle-chat-button').click()">×</button>
-                </div>
-                <div class="chatbox-content">
-            """, unsafe_allow_html=True)
-            
-            st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
-            
-            if "chat_history" not in st.session_state:
-                st.session_state.chat_history = []
-                
-            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-            user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
-            
-            if user_input:
-                with st.spinner("Thinking like a data analyst..."):
-                    reply = ask_dataset_question(df, user_input, mode=mode)
-                    st.session_state.chat_history.append(("user", user_input))
-                    st.session_state.chat_history.append(("ai", reply))
-                    
-            st.markdown('<div id="chat-window">', unsafe_allow_html=True)
-            for role, msg in st.session_state.chat_history:
-                if role == "user":
-                    st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            if st.button("Clear Chat"):
-                st.session_state.chat_history = []
-                st.experimental_rerun()
-                
-            st.markdown("</div></div>", unsafe_allow_html=True)
-            
+
+        st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
+        
+        if user_input:
+            with st.spinner("Thinking like a data analyst..."):
+                reply = ask_dataset_question(df, user_input, mode=mode)
+                st.session_state.chat_history.append(("user", user_input))
+                st.session_state.chat_history.append(("ai", reply))
+
+        st.markdown('<div id="chat-window">', unsafe_allow_html=True)
+        for role, msg in st.session_state.chat_history:
+            if role == "user":
+                st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        if st.button("Clear Chat"):
+            st.session_state.chat_history = []
+            st.experimental_rerun()
+
     except Exception as e:
         st.error(f"Error processing file: {e}")
 else:

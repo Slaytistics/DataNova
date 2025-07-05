@@ -90,9 +90,8 @@ body::before {
 }
 
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: black !important;
-    color: white !important;
-}
+    background-color: mint !important;
+    color: white !important;}
 
 .css-3vnyiq-option {
     background-color: #222 !important;

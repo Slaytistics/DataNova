@@ -199,7 +199,7 @@ if uploaded_file:
 
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
-
+        
         if user_input:
             with st.spinner("Thinking like a data analyst..."):
                 reply = ask_dataset_question(df, user_input, mode=mode)
@@ -222,6 +222,3 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
-
-
-

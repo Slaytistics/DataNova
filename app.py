@@ -51,22 +51,9 @@ body::before {
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
-.title-block {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-.title-block h1 {
-    font-size: 3rem;
-    font-weight: 900;
-    color: #ffffff;
-    letter-spacing: 2px;
-    margin-bottom: 0.5rem;
-}
-.title-block p {
-    font-size: 1.2rem;
-    color: #eee;
-    letter-spacing: 3px;
-    font-weight: 500;
+/* Force all headings to white */
+h1, h2, h3, h4, h5, h6, .css-10trblm, .e1nzilvr5 {
+    color: #ffffff !important;
 }
 
 .stButton > button {
@@ -118,7 +105,7 @@ body::before {
 .section-header {
     font-size: 2rem;
     font-weight: 700;
-    color: #ff69b4;
+    color: #ffffff !important;
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
@@ -164,7 +151,6 @@ st.markdown("""
     <span style='font-size: 1.2rem; color: #eee; letter-spacing: 3px; font-weight: 500;'>SLEEK. SMART. STREAMLINED.</span>
 </div>
 """, unsafe_allow_html=True)
-
 
 # --- File Upload ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)

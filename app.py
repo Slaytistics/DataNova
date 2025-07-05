@@ -12,7 +12,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Apply Dark Theme with Background Image ---
+# --- Dark Theme Styling Only ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -58,7 +58,7 @@ body::before {
 .title-block h1 {
     font-size: 3rem;
     font-weight: 900;
-    color: #ffffff; /* Updated to white */
+    color: #ffffff;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
 }
@@ -190,7 +190,7 @@ if uploaded_file:
         st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
         numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
         if numeric_columns:
-            selected_column = st.selectbox("Choose column:", numeric_columns, label_visibility="visible", disabled=False)
+            selected_column = st.selectbox("Choose column:", numeric_columns)
             top_n = st.slider("Top N values:", 5, 20, 10)
             fig = plot_top_column(df, selected_column, top_n=top_n)
             st.plotly_chart(fig, use_container_width=True)
@@ -201,7 +201,7 @@ if uploaded_file:
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"], label_visibility="visible", disabled=False)
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
         user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
 
         if user_input:

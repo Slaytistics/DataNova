@@ -1,7 +1,14 @@
 [theme]
-base = "dark"
-primaryColor = "#FFFFFF"
-backgroundColor = "#0f0f15"
-secondaryBackgroundColor = "#1f1f2e"
-textColor = "#FFFFFF"
-font = "sans serif"
+base="dark"
+primaryColor="#ff69b4"
+backgroundColor="#0f0f15"
+secondaryBackgroundColor="#222"
+textColor="#ffffff"
+font="sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[ui]
+hideTopBar = true
+hideSidebarNav = true

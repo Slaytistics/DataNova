@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import requests
+import base64
 
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
@@ -140,6 +142,19 @@ body::before {
     padding-right: 12px;
     margin-bottom: 1.5rem;
 }
+
+.figma-container {
+    margin-top: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.figma-iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+}
 </style>
 """
 st.markdown(dark_css, unsafe_allow_html=True)
@@ -160,6 +175,65 @@ st.markdown("""
     <span style='font-size: 1.2rem; color: #eee; letter-spacing: 3px; font-weight: 500;'>SLEEK. SMART. STREAMLINED.</span>
 </div>
 """, unsafe_allow_html=True)
+
+# --- Figma API Integration ---
+def get_figma_file(file_key, access_token):
+    """Fetch Figma file using API"""
+    headers = {"X-Figma-Token": access_token}
+    url = f"https://api.figma.com/v1/files/{file_key}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+def get_figma_image(file_key, access_token, node_ids=None, scale=1, format="png"):
+    """Get image from Figma"""
+    headers = {"X-Figma-Token": access_token}
+    nodes = f"&ids={node_ids}" if node_ids else ""
+    url = f"https://api.figma.com/v1/images/{file_key}?scale={scale}&format={format}{nodes}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+def embed_figma_prototype(file_key, access_token):
+    """Embed Figma prototype"""
+    return f"""
+    <div class="figma-container">
+        <iframe class="figma-iframe" src="https://www.figma.com/embed?embed_host=streamlit&url=https://www.figma.com/file/{file_key}" allowfullscreen></iframe>
+    </div>
+    """
+
+# --- Figma Section ---
+st.markdown('<h2 class="section-header"><i class="fa fa-paint-brush"></i> Figma Integration</h2>', unsafe_allow_html=True)
+
+figma_access_token = st.text_input("Figma Access Token (optional)", type="password", 
+                                 help="Get your access token from Figma account settings")
+figma_file_key = st.text_input("Figma File Key", 
+                              help="The file key from the Figma URL (e.g., for 'figma.com/file/ABC123', the key is 'ABC123')")
+
+if figma_file_key:
+    if st.button("Load Figma Design"):
+        if figma_access_token:
+            try:
+                # Get file metadata
+                file_data = get_figma_file(figma_file_key, figma_access_token)
+                st.success("Figma file loaded successfully!")
+                
+                # Display basic info
+                st.markdown(f"**Document Name:** {file_data.get('name', 'N/A')}")
+                st.markdown(f"**Last Modified:** {file_data.get('lastModified', 'N/A')}")
+                
+                # Get and display image
+                image_data = get_figma_image(figma_file_key, figma_access_token)
+                if 'images' in image_data:
+                    for node_id, image_url in image_data['images'].items():
+                        st.image(image_url, caption=f"Figma Design - Node {node_id}")
+                
+            except Exception as e:
+                st.error(f"Error fetching Figma data: {e}")
+        else:
+            st.warning("Please enter your Figma access token to fetch detailed data")
+    
+    # Always show the embedded prototype (works without token)
+    st.markdown("### Prototype Preview")
+    st.markdown(embed_figma_prototype(figma_file_key, figma_access_token), unsafe_allow_html=True)
 
 # --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)

@@ -140,37 +140,7 @@ body::before {
     padding-right: 12px;
     margin-bottom: 1.5rem;
 }
-
-/* Floating AI Avatar */
-#avatar-btn {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    background-image: url('https://i.imgur.com/fVVaD8c.png');
-    background-size: cover;
-    background-position: center;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    z-index: 9999;
-}
 </style>
-
-<div id="avatar-btn" onclick="window.parent.postMessage({isAvatarClicked:true}, '*')"></div>
-
-<script>
-window.addEventListener("message", (event) => {
-    if (event.data.isAvatarClicked){
-        const streamlitIframe = window.frameElement;
-        streamlitIframe.contentWindow.postMessage({type: "streamlit:rerun"}, "*");
-        window.parent.streamlitChatVisible = !window.parent.streamlitChatVisible;
-        window.localStorage.setItem("chatVisible", window.parent.streamlitChatVisible);
-    }
-});
-</script>
 """
 st.markdown(dark_css, unsafe_allow_html=True)
 
@@ -194,14 +164,6 @@ st.markdown("""
 # --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-
-# Initialize chat visibility
-if "chat_visible" not in st.session_state:
-    st.session_state.chat_visible = False
-
-# Floating avatar toggle
-if st.button("🤖", help="Toggle AI Chat", key="ai_avatar_button"):
-    st.session_state.chat_visible = not st.session_state.chat_visible
 
 if uploaded_file:
     try:
@@ -231,32 +193,30 @@ if uploaded_file:
         else:
             st.warning("No numeric columns found for charts.")
 
-        # --- Chat Interface ---
-        if st.session_state.chat_visible:
-            st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
-            if "chat_history" not in st.session_state:
-                st.session_state.chat_history = []
+        st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
 
-            mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-            user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
+        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
+        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
+        
+        if user_input:
+            with st.spinner("Thinking like a data analyst..."):
+                reply = ask_dataset_question(df, user_input, mode=mode)
+                st.session_state.chat_history.append(("user", user_input))
+                st.session_state.chat_history.append(("ai", reply))
 
-            if user_input:
-                with st.spinner("Thinking like a data analyst..."):
-                    reply = ask_dataset_question(df, user_input, mode=mode)
-                    st.session_state.chat_history.append(("user", user_input))
-                    st.session_state.chat_history.append(("ai", reply))
+        st.markdown('<div id="chat-window">', unsafe_allow_html=True)
+        for role, msg in st.session_state.chat_history:
+            if role == "user":
+                st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-            st.markdown('<div id="chat-window">', unsafe_allow_html=True)
-            for role, msg in st.session_state.chat_history:
-                if role == "user":
-                    st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            if st.button("Clear Chat"):
-                st.session_state.chat_history = []
-                st.experimental_rerun()
+        if st.button("Clear Chat"):
+            st.session_state.chat_history = []
+            st.experimental_rerun()
 
     except Exception as e:
         st.error(f"Error processing file: {e}")

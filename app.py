@@ -6,6 +6,16 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
+# --- Hide Streamlit Main Menu, Footer, and Header ---
+hide_st_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # --- FontAwesome for icons ---
 st.markdown(
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
@@ -212,5 +222,6 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 
 

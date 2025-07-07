@@ -28,7 +28,7 @@ dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-/* Global styles */
+/* Global */
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
     color: #FFFFFF !important;
@@ -36,7 +36,7 @@ body, html, div, span, label {
     margin: 0; padding: 0;
 }
 
-/* App background */
+/* Background */
 [data-testid="stAppViewContainer"] {
     background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
@@ -53,7 +53,7 @@ body::before {
     z-index: -1;
 }
 
-/* Main container */
+/* Main Container */
 .block-container {
     max-width: 900px;
     margin: auto;
@@ -70,27 +70,8 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     color: white !important;
 }
 
-/* Blue Outline Buttons */
-.stButton > button {
-    background: transparent !important;
-    color: #3b82f6 !important;
-    font-weight: 600;
-    border-radius: 30px;
-    padding: 0.6rem 2rem;
-    border: 2px solid #3b82f6 !important;
-    font-size: 1.05rem;
-    transition: all 0.3s ease;
-    box-shadow: none;
-}
-.stButton > button:hover {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-    color: #60a5fa !important;
-    border-color: #60a5fa !important;
-    box-shadow: 0 0 12px #3b82f6;
-    transform: scale(1.04);
-}
-
-/* File uploader button style */
+/* --- BUTTONS (including Browse Files) --- */
+.stButton > button,
 section[data-testid="stFileUploader"] button {
     background: transparent !important;
     color: #3b82f6 !important;
@@ -101,6 +82,7 @@ section[data-testid="stFileUploader"] button {
     font-size: 1.05rem;
     transition: all 0.3s ease;
 }
+.stButton > button:hover,
 section[data-testid="stFileUploader"] button:hover {
     background-color: rgba(59, 130, 246, 0.1) !important;
     color: #60a5fa !important;
@@ -109,20 +91,7 @@ section[data-testid="stFileUploader"] button:hover {
     transform: scale(1.04);
 }
 
-/* File Uploader dropzone outline */
-section[data-testid="stFileUploader"] > div {
-    border: none !important;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-}
-span[data-testid="stFileUploaderDropzoneInstructions"] {
-    color: #93c5fd !important;
-}
-div[role="progressbar"] > div {
-    background-color: #2563eb !important;
-}
-
-/* Dropdown (selectbox) blue outline only */
+/* --- SELECTBOX (Dropdown) --- */
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
     background-color: #0a0f1a !important;
     color: #ffffff !important;
@@ -141,7 +110,30 @@ div[role="progressbar"] > div {
     color: white !important;
 }
 
-/* Chat bubbles */
+/* --- Remove Blue Underline from Inputs --- */
+input, textarea, .stTextInput > div > input,
+.stTextArea > div > textarea,
+.stPasswordInput > div > input {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 0.6rem 1rem !important;
+    outline: none !important;
+}
+input:focus, textarea:focus {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Progress bar */
+div[role="progressbar"] > div {
+    background-color: #2563eb !important;
+}
+
+/* Chat Bubbles */
 .chat-user {
     background: linear-gradient(135deg, #0a2540, #154c79);
     color: #fff;
@@ -186,7 +178,7 @@ div[role="progressbar"] > div {
     border: none;
 }
 
-/* Section header styling */
+/* Section Header */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -198,6 +190,7 @@ div[role="progressbar"] > div {
 }
 </style>
 """
+
 
 
 st.markdown(dark_css, unsafe_allow_html=True)

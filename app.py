@@ -24,11 +24,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# --- Dark Theme Styling with Custom Chat and Fixes ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-/* Global */
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
     color: #FFFFFF !important;
@@ -36,7 +36,6 @@ body, html, div, span, label {
     margin: 0; padding: 0;
 }
 
-/* Background */
 [data-testid="stAppViewContainer"] {
     background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
@@ -44,120 +43,109 @@ body, html, div, span, label {
     padding-top: 6rem;
     position: relative;
 }
+
 body::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(10, 15, 30, 0.75);
+    background: rgba(24, 24, 24, 0.75);
     z-index: -1;
 }
 
-/* Main Container */
 .block-container {
     max-width: 900px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 24px;
     backdrop-filter: blur(18px);
-    box-shadow: 0 0 24px 3px #0b3d91;
+    box-shadow: 0 0 24px 3px #333;
     padding: 2rem 3rem 3rem 3rem !important;
-    border: none !important;
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+/* Buttons */
+.stButton > button {
+    background: #111 !important;
     color: white !important;
-}
-
-/* --- BUTTONS (including Browse Files) --- */
-.stButton > button,
-section[data-testid="stFileUploader"] button {
-    background: transparent !important;
-    color: #3b82f6 !important;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 30px;
-    padding: 0.6rem 2rem;
-    border: 2px solid #3b82f6 !important;
-    font-size: 1.05rem;
+    padding: 0.7rem 2.5rem;
+    box-shadow: 0 0 8px #222;
     transition: all 0.3s ease;
-}
-.stButton > button:hover,
-section[data-testid="stFileUploader"] button:hover {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-    color: #60a5fa !important;
-    border-color: #60a5fa !important;
-    box-shadow: 0 0 10px #3b82f6;
-    transform: scale(1.04);
-}
-
-/* --- SELECTBOX (Dropdown) --- */
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: #0a0f1a !important;
-    color: #ffffff !important;
-    border: 2px solid #3b82f6 !important;
-    border-radius: 12px;
-}
-.css-3vnyiq-option {
-    background-color: #1e293b !important;
-    color: #e0e0e0 !important;
-    font-weight: 500;
-    font-size: 1rem;
-    border-bottom: 1px solid #334155;
-}
-.css-3vnyiq-option:hover {
-    background-color: #2563eb !important;
-    color: white !important;
-}
-
-/* --- Remove Blue Underline from Inputs --- */
-input, textarea, .stTextInput > div > input,
-.stTextArea > div > textarea,
-.stPasswordInput > div > input {
     border: none !important;
-    box-shadow: none !important;
-    background-color: rgba(255, 255, 255, 0.06) !important;
+    font-size: 1.1rem;
+}
+.stButton > button:hover {
+    box-shadow: 0 0 12px #444;
+    transform: scale(1.05);
+}
+
+/* Input field + hover border */
+input[type="text"], .stTextInput > div > input {
+    background-color: rgba(255, 255, 255, 0.15) !important;
     color: white !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
-    outline: none !important;
+    border: 2px solid transparent !important;
+    transition: border 0.3s ease;
 }
-input:focus, textarea:focus {
-    border: none !important;
-    box-shadow: none !important;
+input[type="text"]:hover, input[type="text"]:focus,
+.stTextInput > div > input:focus {
+    border: 2px solid #2255ff !important;
     outline: none !important;
 }
 
-/* Progress bar */
-div[role="progressbar"] > div {
-    background-color: #2563eb !important;
+/* Dropdown selected value */
+.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
+    background-color: #111 !important;
+    color: #fff !important;
 }
 
-/* Chat Bubbles */
+/* Dropdown options */
+.css-3vnyiq-option {
+    background-color: #222 !important;
+    color: #eee !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.css-3vnyiq-option:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* Section headers */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff !important;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Chat Bubbles - Dark Mode */
 .chat-user {
-    background: linear-gradient(135deg, #0a2540, #154c79);
+    background: linear-gradient(135deg, #1a3c3c, #1f5f5f);
     color: #fff;
     border-radius: 24px 24px 0 24px;
     padding: 14px 20px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.2);
     font-weight: 500;
     margin-bottom: 12px;
 }
 .chat-ai {
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    background: linear-gradient(135deg, #3e1f4d, #4e2f6f);
     color: #fff;
     border-radius: 24px 24px 24px 0;
     padding: 14px 20px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 16px rgba(200, 100, 255, 0.3);
     font-weight: 500;
     margin-bottom: 12px;
 }
 
-/* Chat container */
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
@@ -165,7 +153,7 @@ div[role="progressbar"] > div {
     margin-bottom: 1.5rem;
 }
 
-/* Figma container */
+/* Figma iframe styling */
 .figma-container {
     margin-top: 2rem;
     border-radius: 12px;
@@ -178,15 +166,9 @@ div[role="progressbar"] > div {
     border: none;
 }
 
-/* Section Header */
-.section-header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ffffff !important;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #2563eb;
-    padding-bottom: 0.3rem;
+/* Headings color fix */
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
 }
 </style>
 """

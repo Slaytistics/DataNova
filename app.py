@@ -24,8 +24,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Theme Styling ---
-# --- Updated Dark Theme Styling with New Background ---
+# --- Dark Theme Styling with Custom Chat and Fixes ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -50,7 +49,7 @@ body::before {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(24, 24, 24, 0.75);  /* Slightly lighter overlay than before */
+    background: rgba(24, 24, 24, 0.75);
     z-index: -1;
 }
 
@@ -64,6 +63,7 @@ body::before {
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
+/* Buttons */
 .stButton > button {
     background: #111 !important;
     color: white !important;
@@ -80,32 +80,40 @@ body::before {
     transform: scale(1.05);
 }
 
-/* Input fields and dropdowns */
-.stTextInput > div > input,
-.stSelectbox > div > div,
-.css-1wa3eu0-placeholder {
+/* Input field + hover border */
+input[type="text"], .stTextInput > div > input {
     background-color: rgba(255, 255, 255, 0.15) !important;
-    color: black !important;
+    color: white !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
+    border: 2px solid transparent !important;
+    transition: border 0.3s ease;
+}
+input[type="text"]:hover, input[type="text"]:focus,
+.stTextInput > div > input:focus {
+    border: 2px solid #2255ff !important;
+    outline: none !important;
 }
 
+/* Dropdown selected value */
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: black !important;
-    color: white !important;
+    background-color: #111 !important;
+    color: #fff !important;
 }
 
+/* Dropdown options */
 .css-3vnyiq-option {
-    background-color: #eee !important;
-    color: black !important;
+    background-color: #222 !important;
+    color: #eee !important;
     font-weight: 500;
     font-size: 1rem;
 }
 .css-3vnyiq-option:hover {
-    background-color: #ccc !important;
-    color: black !important;
+    background-color: #333 !important;
+    color: #fff !important;
 }
 
+/* Section headers */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -114,26 +122,27 @@ body::before {
     margin-bottom: 1rem;
 }
 
+/* Chat Bubbles - Dark Mode */
 .chat-user {
-    background: linear-gradient(135deg, #00ffff, #32cd32);
-    color: #000;
+    background: linear-gradient(135deg, #1a3c3c, #1f5f5f);
+    color: #fff;
     border-radius: 24px 24px 0 24px;
     padding: 14px 20px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.5);
-    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.2);
+    font-weight: 500;
     margin-bottom: 12px;
 }
 .chat-ai {
-    background: linear-gradient(135deg, #ff69b4, #9b30ff);
+    background: linear-gradient(135deg, #3e1f4d, #4e2f6f);
     color: #fff;
     border-radius: 24px 24px 24px 0;
     padding: 14px 20px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.5);
-    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(200, 100, 255, 0.3);
+    font-weight: 500;
     margin-bottom: 12px;
 }
 
@@ -144,22 +153,26 @@ body::before {
     margin-bottom: 1.5rem;
 }
 
+/* Figma iframe styling */
 .figma-container {
     margin-top: 2rem;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
-
 .figma-iframe {
     width: 100%;
     height: 500px;
     border: none;
 }
+
+/* Headings color fix */
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
+}
 </style>
 """
 st.markdown(dark_css, unsafe_allow_html=True)
-
 
 # --- Force All Headings to White ---
 st.markdown("""

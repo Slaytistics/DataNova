@@ -24,11 +24,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Theme Styling with Custom Chat and Fixes ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
+/* Global Font + Reset */
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
     color: #FFFFFF !important;
@@ -36,6 +36,7 @@ body, html, div, span, label {
     margin: 0; padding: 0;
 }
 
+/* Background Image and Overlay */
 [data-testid="stAppViewContainer"] {
     background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
@@ -43,114 +44,132 @@ body, html, div, span, label {
     padding-top: 6rem;
     position: relative;
 }
-
 body::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(24, 24, 24, 0.75);
+    background: rgba(10, 15, 30, 0.75);
     z-index: -1;
 }
 
+/* Block container card */
 .block-container {
     max-width: 900px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);
     border-radius: 24px;
     backdrop-filter: blur(18px);
-    box-shadow: 0 0 24px 3px #333;
+    box-shadow: 0 0 24px 3px #0b3d91;
+    border: 1px solid #2255ff;
     padding: 2rem 3rem 3rem 3rem !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
 }
 
 /* Buttons */
 .stButton > button {
-    background: #111 !important;
+    background: #0a0f1a !important;
     color: white !important;
     font-weight: 700;
     border-radius: 30px;
     padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #222;
+    box-shadow: 0 0 8px #2255ff;
     transition: all 0.3s ease;
-    border: none !important;
+    border: 2px solid #2255ff !important;
     font-size: 1.1rem;
 }
 .stButton > button:hover {
-    box-shadow: 0 0 12px #444;
+    box-shadow: 0 0 12px #3377ff;
     transform: scale(1.05);
+    border-color: #3377ff !important;
 }
 
-/* Input field + hover border */
-input[type="text"], .stTextInput > div > input {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+/* Text Inputs */
+.stTextInput > div > input {
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: white !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
-    border: 2px solid transparent !important;
-    transition: border 0.3s ease;
+    border: 2px solid #1e3a8a !important;
 }
-input[type="text"]:hover, input[type="text"]:focus,
 .stTextInput > div > input:focus {
-    border: 2px solid #2255ff !important;
-    outline: none !important;
+    border: 2px solid #2563eb !important;
 }
 
-/* Dropdown selected value */
+/* Dropdown styling */
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: #111 !important;
-    color: #fff !important;
+    background-color: #0a0f1a !important;
+    color: #ffffff !important;
+    border: 2px solid #2255ff !important;
 }
-
-/* Dropdown options */
 .css-3vnyiq-option {
-    background-color: #222 !important;
-    color: #eee !important;
+    background-color: #1e293b !important;
+    color: #e0e0e0 !important;
     font-weight: 500;
     font-size: 1rem;
+    border-bottom: 1px solid #334155;
 }
 .css-3vnyiq-option:hover {
-    background-color: #333 !important;
-    color: #fff !important;
+    background-color: #2563eb !important;
+    color: white !important;
 }
 
-/* Section headers */
-.section-header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ffffff !important;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+/* File Uploader */
+section[data-testid="stFileUploader"] > div {
+    border: 2px dashed #2563eb !important;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+}
+section[data-testid="stFileUploader"]:hover {
+    border-color: #3b82f6 !important;
+}
+span[data-testid="stFileUploaderDropzoneInstructions"] {
+    color: #93c5fd !important;
 }
 
-/* Chat Bubbles - Dark Mode */
+/* File Upload Progress Bar */
+div[role="progressbar"] > div {
+    background-color: #2563eb !important;
+}
+
+/* Chat bubbles */
 .chat-user {
-    background: linear-gradient(135deg, #1a3c3c, #1f5f5f);
+    background: linear-gradient(135deg, #0a2540, #154c79);
     color: #fff;
     border-radius: 24px 24px 0 24px;
     padding: 14px 20px;
     max-width: 75%;
     margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
     font-weight: 500;
     margin-bottom: 12px;
+    border: 1px solid #1e40af;
 }
 .chat-ai {
-    background: linear-gradient(135deg, #3e1f4d, #4e2f6f);
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
     color: #fff;
     border-radius: 24px 24px 24px 0;
     padding: 14px 20px;
     max-width: 75%;
     margin-right: auto;
-    box-shadow: 0 4px 16px rgba(200, 100, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     font-weight: 500;
     margin-bottom: 12px;
+    border: 1px solid #1e40af;
 }
 
+/* Chat wrapper */
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
     padding-right: 12px;
     margin-bottom: 1.5rem;
+    border-left: 2px solid #2563eb;
+    border-right: 2px solid #2563eb;
 }
 
 /* Figma iframe styling */
@@ -166,12 +185,19 @@ input[type="text"]:hover, input[type="text"]:focus,
     border: none;
 }
 
-/* Headings color fix */
-h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
-    color: white !important;
+/* Section headers */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff !important;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 0.3rem;
 }
 </style>
 """
+
 st.markdown(dark_css, unsafe_allow_html=True)
 
 # --- Force All Headings to White ---

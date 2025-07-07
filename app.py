@@ -28,7 +28,7 @@ dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
-/* Global Font + Reset */
+/* Global styles */
 body, html, div, span, label {
     font-family: 'Poppins', sans-serif !important;
     color: #FFFFFF !important;
@@ -36,7 +36,7 @@ body, html, div, span, label {
     margin: 0; padding: 0;
 }
 
-/* Background Image and Overlay */
+/* App background */
 [data-testid="stAppViewContainer"] {
     background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
@@ -53,7 +53,7 @@ body::before {
     z-index: -1;
 }
 
-/* Block container card */
+/* Main container */
 .block-container {
     max-width: 900px;
     margin: auto;
@@ -61,8 +61,8 @@ body::before {
     border-radius: 24px;
     backdrop-filter: blur(18px);
     box-shadow: 0 0 24px 3px #0b3d91;
-    border: 1px solid #2255ff;
     padding: 2rem 3rem 3rem 3rem !important;
+    border: none !important;
 }
 
 /* Headings */
@@ -70,41 +70,64 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     color: white !important;
 }
 
-/* Buttons */
+/* Blue Outline Buttons */
 .stButton > button {
-    background: #0a0f1a !important;
-    color: white !important;
-    font-weight: 700;
+    background: transparent !important;
+    color: #3b82f6 !important;
+    font-weight: 600;
     border-radius: 30px;
-    padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #2255ff;
+    padding: 0.6rem 2rem;
+    border: 2px solid #3b82f6 !important;
+    font-size: 1.05rem;
     transition: all 0.3s ease;
-    border: 2px solid #2255ff !important;
-    font-size: 1.1rem;
+    box-shadow: none;
 }
 .stButton > button:hover {
-    box-shadow: 0 0 12px #3377ff;
-    transform: scale(1.05);
-    border-color: #3377ff !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    color: #60a5fa !important;
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 12px #3b82f6;
+    transform: scale(1.04);
 }
 
-/* Text Inputs */
-.stTextInput > div > input {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    border-radius: 12px !important;
-    padding: 0.6rem 1rem !important;
-    border: 2px solid #1e3a8a !important;
+/* File uploader button style */
+section[data-testid="stFileUploader"] button {
+    background: transparent !important;
+    color: #3b82f6 !important;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 0.6rem 2rem;
+    border: 2px solid #3b82f6 !important;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
 }
-.stTextInput > div > input:focus {
-    border: 2px solid #2563eb !important;
+section[data-testid="stFileUploader"] button:hover {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    color: #60a5fa !important;
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 10px #3b82f6;
+    transform: scale(1.04);
 }
 
-/* Dropdown styling */
+/* File Uploader dropzone outline */
+section[data-testid="stFileUploader"] > div {
+    border: none !important;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+}
+span[data-testid="stFileUploaderDropzoneInstructions"] {
+    color: #93c5fd !important;
+}
+div[role="progressbar"] > div {
+    background-color: #2563eb !important;
+}
+
+/* Dropdown (selectbox) blue outline only */
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
     background-color: #0a0f1a !important;
     color: #ffffff !important;
-    border: 2px solid #2255ff !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 12px;
 }
 .css-3vnyiq-option {
     background-color: #1e293b !important;
@@ -118,24 +141,6 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     color: white !important;
 }
 
-/* File Uploader */
-section[data-testid="stFileUploader"] > div {
-    border: 2px dashed #2563eb !important;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-}
-section[data-testid="stFileUploader"]:hover {
-    border-color: #3b82f6 !important;
-}
-span[data-testid="stFileUploaderDropzoneInstructions"] {
-    color: #93c5fd !important;
-}
-
-/* File Upload Progress Bar */
-div[role="progressbar"] > div {
-    background-color: #2563eb !important;
-}
-
 /* Chat bubbles */
 .chat-user {
     background: linear-gradient(135deg, #0a2540, #154c79);
@@ -147,7 +152,6 @@ div[role="progressbar"] > div {
     box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
     font-weight: 500;
     margin-bottom: 12px;
-    border: 1px solid #1e40af;
 }
 .chat-ai {
     background: linear-gradient(135deg, #0f172a, #1e3a8a);
@@ -159,20 +163,17 @@ div[role="progressbar"] > div {
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     font-weight: 500;
     margin-bottom: 12px;
-    border: 1px solid #1e40af;
 }
 
-/* Chat wrapper */
+/* Chat container */
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
     padding-right: 12px;
     margin-bottom: 1.5rem;
-    border-left: 2px solid #2563eb;
-    border-right: 2px solid #2563eb;
 }
 
-/* Figma iframe styling */
+/* Figma container */
 .figma-container {
     margin-top: 2rem;
     border-radius: 12px;
@@ -185,7 +186,7 @@ div[role="progressbar"] > div {
     border: none;
 }
 
-/* Section headers */
+/* Section header styling */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -197,6 +198,7 @@ div[role="progressbar"] > div {
 }
 </style>
 """
+
 
 st.markdown(dark_css, unsafe_allow_html=True)
 

@@ -25,6 +25,7 @@ st.markdown(
 )
 
 # --- Dark Theme Styling ---
+# --- Updated Dark Theme Styling with New Background ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -37,7 +38,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://i.imgur.com/1JiHshs.jpeg") no-repeat center center fixed;
+    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;
@@ -49,17 +50,17 @@ body::before {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(15, 15, 21, 0.85);
+    background: rgba(24, 24, 24, 0.75);  /* Slightly lighter overlay than before */
     z-index: -1;
 }
 
 .block-container {
     max-width: 900px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 24px;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 0 20px 2px #444;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 0 24px 3px #333;
     padding: 2rem 3rem 3rem 3rem !important;
 }
 
@@ -83,7 +84,7 @@ body::before {
 .stTextInput > div > input,
 .stSelectbox > div > div,
 .css-1wa3eu0-placeholder {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
     color: black !important;
     border-radius: 12px !important;
     padding: 0.6rem 1rem !important;
@@ -95,14 +96,14 @@ body::before {
 }
 
 .css-3vnyiq-option {
-    background-color: #222 !important;
+    background-color: #eee !important;
     color: black !important;
     font-weight: 500;
     font-size: 1rem;
 }
 .css-3vnyiq-option:hover {
-    background-color: #444 !important;
-    color: white !important;
+    background-color: #ccc !important;
+    color: black !important;
 }
 
 .section-header {
@@ -158,6 +159,7 @@ body::before {
 </style>
 """
 st.markdown(dark_css, unsafe_allow_html=True)
+
 
 # --- Force All Headings to White ---
 st.markdown("""

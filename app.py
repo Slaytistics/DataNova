@@ -189,7 +189,7 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
 # --- Title ---
 st.markdown("""
 <div style='text-align: center; margin-bottom: 3rem;'>
-    <span style='font-size: 3rem; font-weight: 900; color: #ffffff !important; letter-spacing: 2px; margin-bottom: 0.5rem; display: block;'>DATALICIOUS</span>
+    <span style='font-size: 3rem; font-weight: 900; color: #ffffff !important; letter-spacing: 2px; margin-bottom: 0.5rem; display: block;'>DATANOVA</span>
     <span style='font-size: 1.2rem; color: #eee; letter-spacing: 3px; font-weight: 500;'>SLEEK. SMART. STREAMLINED.</span>
 </div>
 """, unsafe_allow_html=True)

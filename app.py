@@ -175,7 +175,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Figma API Integration ---
+# --- Figma Section ---
 def get_figma_file(file_key, access_token):
     headers = {"X-Figma-Token": access_token}
     url = f"https://api.figma.com/v1/files/{file_key}"
@@ -194,7 +194,6 @@ def embed_figma_prototype(file_key, access_token):
     </div>
     """
 
-# --- Figma Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-paint-brush"></i> Figma Integration</h2>', unsafe_allow_html=True)
 figma_access_token = st.text_input("Figma Access Token (optional)", type="password")
 figma_file_key = st.text_input("Figma File Key")
@@ -280,4 +279,5 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Upload a CSV file to begin your Datalicious journey.")
+
 

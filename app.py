@@ -2,19 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import requests
+import base64
 
 from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
 # --- Hide Streamlit Main Menu, Footer, and Header ---
-st.markdown("""
+hide_st_style = """
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # --- FontAwesome for icons ---
 st.markdown(
@@ -22,7 +24,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Custom Dark Theme CSS with Freepik Background ---
+# --- Dark Theme Styling with Custom Chat and Fixes ---
 dark_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
@@ -35,7 +37,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://www.freepik.com/free-photo/dark-gray-waving-lines_1037116.htm") no-repeat center center fixed;
+    background: url("https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;
@@ -78,7 +80,7 @@ body::before {
     transform: scale(1.05);
 }
 
-/* Input fields */
+/* Input field + hover border */
 input[type="text"], .stTextInput > div > input {
     background-color: rgba(255, 255, 255, 0.15) !important;
     color: white !important;
@@ -93,11 +95,13 @@ input[type="text"]:hover, input[type="text"]:focus,
     outline: none !important;
 }
 
-/* Dropdowns */
+/* Dropdown selected value */
 .css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
     background-color: #111 !important;
     color: #fff !important;
 }
+
+/* Dropdown options */
 .css-3vnyiq-option {
     background-color: #222 !important;
     color: #eee !important;
@@ -109,7 +113,7 @@ input[type="text"]:hover, input[type="text"]:focus,
     color: #fff !important;
 }
 
-/* Headings */
+/* Section headers */
 .section-header {
     font-size: 2rem;
     font-weight: 700;
@@ -117,11 +121,8 @@ input[type="text"]:hover, input[type="text"]:focus,
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
-h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
-    color: white !important;
-}
 
-/* Chat Bubbles */
+/* Chat Bubbles - Dark Mode */
 .chat-user {
     background: linear-gradient(135deg, #1a3c3c, #1f5f5f);
     color: #fff;
@@ -144,6 +145,7 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     font-weight: 500;
     margin-bottom: 12px;
 }
+
 #chat-window {
     max-height: 360px;
     overflow-y: auto;
@@ -151,7 +153,7 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     margin-bottom: 1.5rem;
 }
 
-/* Figma */
+/* Figma iframe styling */
 .figma-container {
     margin-top: 2rem;
     border-radius: 12px;
@@ -163,9 +165,26 @@ h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
     height: 500px;
     border: none;
 }
+
+/* Headings color fix */
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
+}
 </style>
 """
+
+
+
 st.markdown(dark_css, unsafe_allow_html=True)
+
+# --- Force All Headings to White ---
+st.markdown("""
+<style>
+h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # --- Title ---
 st.markdown("""
@@ -175,50 +194,66 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Figma Section ---
+# --- Figma API Integration ---
 def get_figma_file(file_key, access_token):
+    """Fetch Figma file using API"""
     headers = {"X-Figma-Token": access_token}
     url = f"https://api.figma.com/v1/files/{file_key}"
-    return requests.get(url, headers=headers).json()
+    response = requests.get(url, headers=headers)
+    return response.json()
 
 def get_figma_image(file_key, access_token, node_ids=None, scale=1, format="png"):
+    """Get image from Figma"""
     headers = {"X-Figma-Token": access_token}
     nodes = f"&ids={node_ids}" if node_ids else ""
     url = f"https://api.figma.com/v1/images/{file_key}?scale={scale}&format={format}{nodes}"
-    return requests.get(url, headers=headers).json()
+    response = requests.get(url, headers=headers)
+    return response.json()
 
 def embed_figma_prototype(file_key, access_token):
+    """Embed Figma prototype"""
     return f"""
     <div class="figma-container">
         <iframe class="figma-iframe" src="https://www.figma.com/embed?embed_host=streamlit&url=https://www.figma.com/file/{file_key}" allowfullscreen></iframe>
     </div>
     """
 
+# --- Figma Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-paint-brush"></i> Figma Integration</h2>', unsafe_allow_html=True)
-figma_access_token = st.text_input("Figma Access Token (optional)", type="password")
-figma_file_key = st.text_input("Figma File Key")
+
+figma_access_token = st.text_input("Figma Access Token (optional)", type="password", 
+                                 help="Get your access token from Figma account settings")
+figma_file_key = st.text_input("Figma File Key", 
+                              help="The file key from the Figma URL (e.g., for 'figma.com/file/ABC123', the key is 'ABC123')")
 
 if figma_file_key:
     if st.button("Load Figma Design"):
         if figma_access_token:
             try:
+                # Get file metadata
                 file_data = get_figma_file(figma_file_key, figma_access_token)
                 st.success("Figma file loaded successfully!")
+                
+                # Display basic info
                 st.markdown(f"**Document Name:** {file_data.get('name', 'N/A')}")
                 st.markdown(f"**Last Modified:** {file_data.get('lastModified', 'N/A')}")
+                
+                # Get and display image
                 image_data = get_figma_image(figma_file_key, figma_access_token)
                 if 'images' in image_data:
                     for node_id, image_url in image_data['images'].items():
-                        st.image(image_url, caption=f"Node {node_id}")
+                        st.image(image_url, caption=f"Figma Design - Node {node_id}")
+                
             except Exception as e:
                 st.error(f"Error fetching Figma data: {e}")
         else:
-            st.warning("Enter access token to fetch detailed data.")
-
+            st.warning("Please enter your Figma access token to fetch detailed data")
+    
+    # Always show the embedded prototype (works without token)
     st.markdown("### Prototype Preview")
     st.markdown(embed_figma_prototype(figma_file_key, figma_access_token), unsafe_allow_html=True)
 
-# --- Upload Dataset Section ---
+# --- Upload Section ---
 st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
@@ -235,7 +270,7 @@ if uploaded_file:
 
         st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
         if st.button("Generate Summary"):
-            with st.spinner("Generating summary..."):
+            with st.spinner("Calling Together AI..."):
                 summary = summarize_dataset(df.head(7))
                 st.success("Summary Generated!")
                 st.markdown(summary)
@@ -248,17 +283,17 @@ if uploaded_file:
             fig = plot_top_column(df, selected_column, top_n=top_n)
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.warning("No numeric columns found.")
+            st.warning("No numeric columns found for charts.")
 
         st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
         if "chat_history" not in st.session_state:
             st.session_state.chat_history = []
 
         mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-        user_input = st.text_input("Your question:")
-
+        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
+        
         if user_input:
-            with st.spinner("Analyzing..."):
+            with st.spinner("Thinking like a data analyst..."):
                 reply = ask_dataset_question(df, user_input, mode=mode)
                 st.session_state.chat_history.append(("user", user_input))
                 st.session_state.chat_history.append(("ai", reply))

@@ -35,7 +35,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://img.freepik.com/free-photo/wavy-dark-gray-texture_53876-104016.jpg") no-repeat center center fixed;
+    background: url("https://www.freepik.com/free-photo/dark-gray-waving-lines_1037116.htm") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;

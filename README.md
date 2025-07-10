@@ -1,4 +1,4 @@
-# 🎉 **Datalicious**
+# 🎉 **DataNova**
 
 **Datalicious** is a **no-code Streamlit web app** that transforms structured data into meaningful insights — instantly.
 

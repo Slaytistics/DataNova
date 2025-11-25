@@ -37,7 +37,7 @@ body, html, div, span, label {
 }
 
 [data-testid="stAppViewContainer"] {
-    background: url("https://i.pinimg.com/736x/0c/00/f5/0c00f5aa70924aa6683e0c44b625ce6d.jpg") no-repeat center center fixed;
+    background: url("https://i.pinimg.com/736x/1c/c5/6e/1cc56e17ae9f24317ac1a5c61a82644d.jpg") no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     padding-top: 6rem;

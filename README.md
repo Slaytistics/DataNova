@@ -1,16 +1,35 @@
-# 🎉 **DataNova**
+# 📊 DataNova
 
-**DataNova** is a **no-code Streamlit web app** that transforms structured data into meaningful insights — instantly.
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-orange.svg)
 
-Whether you're a data newbie or a pro, DataNova helps you **upload**, **summarize**, and **visualize** your data with ease. Plus, **export-ready visuals** via Figma make it presentation-perfect. 💡📊
+DataNova is a beginner-friendly **data analysis and visualization project** built using Python.  
+It helps users explore datasets, understand data, and create simple charts.
 
 ---
 
-## ✨ **Features**
+## ✨ Features
 
-- 📁 **Upload CSV or Excel files**  
-- 🤖 **AI-powered summaries using GPT-4**  
-- 📊 **Interactive charts with Plotly**  
-- 🎨 **Export-ready designs via Figma API**  
-- ⚡ **No coding required**
+- Load CSV datasets
+- View basic data statistics
+- Create simple graphs and charts
+- Beginner-friendly structure
 
+---
+
+## 🛠️ Technologies Used
+
+- Python
+- Pandas
+- Matplotlib
+- Seaborn
+
+---
+
+## 🚀 How to Run the Project
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/Slaytistics/DataNova.git

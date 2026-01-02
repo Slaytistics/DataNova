@@ -8,7 +8,6 @@
 DataNova is a beginner-friendly **data analysis and visualization project** built using Python.  
 It helps users explore datasets, understand data, and create simple charts.
 
----
 
 ## ✨ Features
 
@@ -17,7 +16,6 @@ It helps users explore datasets, understand data, and create simple charts.
 - Create simple graphs and charts
 - Beginner-friendly structure
 
----
 
 ## 🛠️ Technologies Used
 
@@ -26,7 +24,6 @@ It helps users explore datasets, understand data, and create simple charts.
 - Matplotlib
 - Seaborn
 
----
 
 ## 🚀 How to Run the Project
 

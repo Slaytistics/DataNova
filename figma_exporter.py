@@ -10,7 +10,7 @@ def export_to_figma(text, frame_name="Datalicious Summary"):
         "Content-Type": "application/json"
     }
 
-    # Example: create a text node inside a frame
+    
     payload = {
         "event_type": "TEXT_EXPORT",
         "description": "Exported from Datalicious",
@@ -20,8 +20,6 @@ def export_to_figma(text, frame_name="Datalicious Summary"):
         }
     }
 
-    # This is a placeholder — Figma API doesn't support direct write yet,
-    # so you'd typically use a plugin or webhook to receive this data.
-    # For now, simulate export by logging or sending to a webhook.
+   
     print("🚀 Export payload:", payload)
     return "✅ Export simulated (Figma API write access is limited — consider using a plugin or webhook)."

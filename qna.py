@@ -4,38 +4,38 @@ import requests
 def ask_dataset_question(df, question, mode="Normal"):
     api_key = st.secrets["TOGETHER_API_KEY"]
 
-    # 🌐 Sample data
+
     try:
         sample_data = df.sample(min(20, len(df)), random_state=42).to_string(index=False)
     except Exception:
         sample_data = "Not available."
 
-    # 📊 Summary stats
+ 
     try:
         stats = df.describe(include='all').to_string()
     except Exception:
         stats = "Not available."
 
-    # ❓ Missing values
+   
     try:
         missing_counts = df.isnull().sum().to_string()
     except Exception:
         missing_counts = "Not available."
 
-    # ⚙️ Column data types
+  
     try:
         dtypes_info = df.dtypes.to_string()
     except Exception:
         dtypes_info = "Not available."
 
-    # 🧠 Style hint
+  
     style_hint = {
         "Explain like I'm 5": "Explain in simple and beginner-friendly terms.",
         "Detailed": "Provide a detailed and technical answer for advanced users.",
         "Normal": ""
     }.get(mode, "")
 
-    # 📝 Build the full prompt
+   
     prompt = f"""You're a helpful data analyst assisting the user.
 
 == Sample Rows ==

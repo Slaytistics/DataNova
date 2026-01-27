@@ -1,5 +1,6 @@
-streamlit>=1.33.0
-pandas>=2.2.2
-requests>=2.31.0
-plotly>=5.22.0
-python-dotenv>=1.0.1
+fastapi
+uvicorn
+streamlit
+pandas
+plotly
+openai

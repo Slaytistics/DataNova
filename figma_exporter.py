@@ -1,48 +1,55 @@
-import os
 import pandas as pd
 
 def generate_figma_design_spec(data_dict):
     """
-    Transforms analysis data into a structured design specification 
-    that the frontend uses to build Figma frames.
+    Converts raw data analysis into a structured JSON 'Design Spec'.
+    This spec is used by the frontend to draw Canvas reports and 
+    by Figma plugins to generate UI frames.
     """
-    file_name = data_dict.get("fileName", "Untitled_Report")
+    file_name = data_dict.get("fileName", "DataNova_Report")
     rows = data_dict.get("row_count", 0)
     cols = data_dict.get("column_count", 0)
-    summary = data_dict.get("summary", "No summary provided.")
-    
-    # Define a professional color palette
-    palette = {
-        "primary": "#F97316",  # Orange
-        "secondary": "#8B5CF6", # Purple
-        "bg": "#F8FAFC",
-        "text": "#1E293B"
-    }
+    summary = data_dict.get("summary", "Analysis pending...")
 
+    # We define the visual hierarchy here so the frontend stays light.
     spec = {
         "metadata": {
-            "title": f"Design Spec: {file_name}",
-            "generated_at": "2026-01-29"
+            "title": f"Report: {file_name}",
+            "brand": "DataNova AI",
+            "theme_color": "#F97316"
         },
-        "frames": [
+        "structure": [
             {
-                "id": "frame_1",
-                "name": "Executive Dashboard",
-                "layout": "grid",
-                "layers": [
-                    {"type": "heading", "text": "DataNova Analytics", "color": palette["primary"]},
-                    {"type": "subheading", "text": f"Dataset: {file_name}", "color": palette["text"]},
-                    {"type": "stat_card", "label": "Total Records", "value": f"{rows:,}"},
-                    {"type": "stat_card", "label": "Features", "value": f"{cols}"}
+                "frame_name": "Header & KPI",
+                "elements": [
+                    {"type": "text", "value": "Executive Data Summary", "style": "heading"},
+                    {"type": "metric", "label": "Total Observations", "value": f"{rows:,}"},
+                    {"type": "metric", "label": "Data Dimensions", "value": f"{cols} Columns"}
                 ]
             },
             {
-                "id": "frame_2",
-                "name": "AI Insights Summary",
-                "layers": [
-                    {"type": "paragraph", "text": summary, "font_size": 16}
+                "frame_name": "AI Narrative",
+                "elements": [
+                    {"type": "paragraph", "value": summary}
                 ]
             }
-        ]
+        ],
+        "figma_config": {
+            "version": "2.0",
+            "import_path": "JSON to Design Plugin",
+            "instructions": "Download JSON and upload to Figma via the plugin to see these frames."
+        }
     }
+    
     return spec
+
+def create_export_metadata(df):
+    """
+    Optional helper to extract specific column metadata for 
+    advanced Figma table components.
+    """
+    return {
+        "columns": df.columns.tolist(),
+        "sample_size": len(df.head(5)),
+        "data_types": df.dtypes.astype(str).to_dict()
+    }

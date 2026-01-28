@@ -9,3 +9,5 @@ streamlit
 matplotlib
 matplotlib
 python-multipart
+seaborn
+matplotlib

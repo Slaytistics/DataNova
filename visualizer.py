@@ -1,56 +1,48 @@
-import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+from fastapi import APIRouter, UploadFile, File, Form
+import pandas as pd
 
-def plot_top_column(df, column, top_n=10):
-    if not column or column not in df.columns:
-        fig = px.bar(title="No valid column selected")
-        fig.update_layout(
-            plot_bgcolor='rgba(20,20,20,0.8)',
-            paper_bgcolor='rgba(10,10,10,0.7)',
-            font_color='white',
-            font_family='Inter',
-            title_font_size=20
-        )
-        return fig
+router = APIRouter()
 
-    top_values = df[column].value_counts().nlargest(top_n).reset_index()
-    top_values.columns = [column, 'Count']
+@router.post("/visualize")
+async def visualize(file: UploadFile = File(...), chart_type: str = Form("bar")):
+    df = pd.read_csv(file.file)
+    
+    # Auto-select numeric columns for plotting
+    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+    if not numeric_cols:
+        return {"error": "No numeric data found to plot"}
 
-    fig = px.bar(
-        top_values,
-        x=column,
-        y='Count',
-        title=f"Top {top_n} values in {column}",
-        text='Count' 
-    )
+    plt.figure(figsize=(10, 6))
+    sns.set_theme(style="whitegrid")
 
-    fig.update_traces(
-        marker_color='rgba(0, 180, 255, 0.9)', 
-        textfont=dict(color='white')           
-    )
+    # Simple logic to pick columns
+    x = df.columns[0] # Usually a label/name
+    y = numeric_cols[0]
 
-    fig.update_layout(
-        plot_bgcolor='rgba(20,20,20,0.8)',
-        paper_bgcolor='rgba(10,10,10,0.7)',
-        font=dict(
-            color='white',                
-            family='Inter',
-            size=14
-        ),
-        title_font=dict(
-            color='white',
-            size=20
-        ),
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            color='white'                  
-        ),
-        yaxis=dict(
-            showgrid=True,
-            gridcolor='rgba(255,255,255,0.1)',
-            zeroline=False,
-            color='white'                      
-        ),
-    )
+    if chart_type == "bar":
+        sns.barplot(data=df.head(10), x=x, y=y, palette="Oranges")
+    elif chart_type == "line":
+        sns.lineplot(data=df, x=x, y=y, color="#f97316")
+    elif chart_type == "heatmap":
+        sns.heatmap(df.corr(), annot=True, cmap="Oranges")
+    elif chart_type == "scatter":
+        sns.scatterplot(data=df, x=df.columns[1], y=y, hue=x)
+    
+    plt.title(f"{chart_type.capitalize()} Analysis of {file.filename}")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
 
-    return fig
+    # Save plot to a buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    
+    # Encode to Base64
+    img_str = base64.b64encode(buf.read()).decode("utf-8")
+    plt.close()
+
+    return {"chart_base64": img_str}

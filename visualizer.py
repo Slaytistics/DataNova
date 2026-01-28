@@ -1,3 +1,6 @@
+import matplotlib
+# CRITICAL: Use 'Agg' backend for headless server environments like Render
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import io
@@ -8,7 +11,7 @@ import pandas as pd
 router = APIRouter()
 
 def get_chart_suggestions(df):
-    """Analyze the dataframe to suggest the best charts for the AI Assistant."""
+    """Analyzes the dataframe to suggest optimal charts for the AI Assistant."""
     num_cols = df.select_dtypes(include=['number']).columns.tolist()
     cat_cols = df.select_dtypes(include=['object']).columns.tolist()
     
@@ -28,25 +31,25 @@ async def visualize(
     y_axis: str = Form(None)
 ):
     try:
-        # 1. Load Data
+        # 1. Load and Clean Data
         df = pd.read_csv(file.file)
         df.columns = [col.strip() for col in df.columns]
 
-        # 2. Smart Column Selection (Use provided axes or auto-detect)
+        # 2. Smart Axis Selection
         numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
         cat_cols = df.select_dtypes(include=['object']).columns.tolist()
 
         if not numeric_cols:
-            return {"error": "No numeric data found to plot"}
+            return {"error": "No numeric data found to plot."}
 
-        # Fallback logic if user didn't pick axes
+        # Determine axes: User choice -> Detected categorical/numeric -> Default first columns
         final_x = x_axis if x_axis in df.columns else (cat_cols[0] if cat_cols else df.columns[0])
         final_y = y_axis if y_axis in df.columns else numeric_cols[0]
 
-        # 3. Plotting Configuration
+        # 3. Global Styling (DataNova Branding)
         plt.figure(figsize=(10, 6))
-        sns.set_theme(style="whitegrid")
-        color_palette = "Oranges_r" # Consistent with DataNova branding
+        sns.set_theme(style="darkgrid") # Matches your dark theme app
+        color_palette = "Oranges_r" 
 
         # 4. Chart Logic
         if chart_type == "bar":
@@ -58,27 +61,28 @@ async def visualize(
         elif chart_type == "heatmap":
             sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="Oranges")
         elif chart_type == "pie":
-            # For Pie, we group by X and count or sum Y
             data_pie = df.groupby(final_x)[final_y].sum().head(5)
             plt.pie(data_pie, labels=data_pie.index, autopct='%1.1f%%', colors=sns.color_palette(color_palette))
 
-        plt.title(f"{chart_type.capitalize()} Analysis: {final_y} by {final_x}", fontsize=14, fontweight='bold')
-        plt.xticks(rotation=45)
-        plt.tight_layout()
+        plt.title(f"{chart_type.capitalize()} Analysis: {final_y} by {final_x}", fontsize=14, fontweight='bold', color='white')
+        plt.xticks(rotation=45, color='white')
+        plt.yticks(color='white')
+        plt.tight_layout(pad=3.0)
 
         # 5. Buffer and Base64 Encoding
         buf = io.BytesIO()
-        plt.savefig(buf, format="png", dpi=150)
+        # Save with transparent background to blend into the UI
+        plt.savefig(buf, format="png", dpi=150, transparent=True)
         buf.seek(0)
         img_str = base64.b64encode(buf.read()).decode("utf-8")
-        plt.close()
+        plt.close('all') # Essential to clear memory
 
-        # 6. Return Image + Smart Metadata for the AI
         return {
             "chart_base64": img_str,
-            "analysis_note": f"This {chart_type} focuses on {final_y} trends across {final_x}.",
+            "analysis_note": f"Visualizing {final_y} trends across {final_x}.",
             "suggestions": get_chart_suggestions(df)
         }
 
     except Exception as e:
+        plt.close('all')
         return {"error": str(e)}

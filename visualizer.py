@@ -7,42 +7,78 @@ import pandas as pd
 
 router = APIRouter()
 
+def get_chart_suggestions(df):
+    """Analyze the dataframe to suggest the best charts for the AI Assistant."""
+    num_cols = df.select_dtypes(include=['number']).columns.tolist()
+    cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+    
+    suggestions = []
+    if cat_cols and num_cols:
+        suggestions.append(f"A Bar Chart comparing {cat_cols[0]} against {num_cols[0]}.")
+    if len(num_cols) >= 2:
+        suggestions.append(f"A Scatter Plot showing the relationship between {num_cols[0]} and {num_cols[1]}.")
+    
+    return suggestions
+
 @router.post("/visualize")
-async def visualize(file: UploadFile = File(...), chart_type: str = Form("bar")):
-    df = pd.read_csv(file.file)
-    
-    # Auto-select numeric columns for plotting
-    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
-    if not numeric_cols:
-        return {"error": "No numeric data found to plot"}
+async def visualize(
+    file: UploadFile = File(...), 
+    chart_type: str = Form("bar"),
+    x_axis: str = Form(None),
+    y_axis: str = Form(None)
+):
+    try:
+        # 1. Load Data
+        df = pd.read_csv(file.file)
+        df.columns = [col.strip() for col in df.columns]
 
-    plt.figure(figsize=(10, 6))
-    sns.set_theme(style="whitegrid")
+        # 2. Smart Column Selection (Use provided axes or auto-detect)
+        numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+        cat_cols = df.select_dtypes(include=['object']).columns.tolist()
 
-    # Simple logic to pick columns
-    x = df.columns[0] # Usually a label/name
-    y = numeric_cols[0]
+        if not numeric_cols:
+            return {"error": "No numeric data found to plot"}
 
-    if chart_type == "bar":
-        sns.barplot(data=df.head(10), x=x, y=y, palette="Oranges")
-    elif chart_type == "line":
-        sns.lineplot(data=df, x=x, y=y, color="#f97316")
-    elif chart_type == "heatmap":
-        sns.heatmap(df.corr(), annot=True, cmap="Oranges")
-    elif chart_type == "scatter":
-        sns.scatterplot(data=df, x=df.columns[1], y=y, hue=x)
-    
-    plt.title(f"{chart_type.capitalize()} Analysis of {file.filename}")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+        # Fallback logic if user didn't pick axes
+        final_x = x_axis if x_axis in df.columns else (cat_cols[0] if cat_cols else df.columns[0])
+        final_y = y_axis if y_axis in df.columns else numeric_cols[0]
 
-    # Save plot to a buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png")
-    buf.seek(0)
-    
-    # Encode to Base64
-    img_str = base64.b64encode(buf.read()).decode("utf-8")
-    plt.close()
+        # 3. Plotting Configuration
+        plt.figure(figsize=(10, 6))
+        sns.set_theme(style="whitegrid")
+        color_palette = "Oranges_r" # Consistent with DataNova branding
 
-    return {"chart_base64": img_str}
+        # 4. Chart Logic
+        if chart_type == "bar":
+            sns.barplot(data=df.head(15), x=final_x, y=final_y, palette=color_palette)
+        elif chart_type == "line":
+            sns.lineplot(data=df, x=final_x, y=final_y, color="#f97316", marker="o")
+        elif chart_type == "scatter":
+            sns.scatterplot(data=df, x=final_x, y=final_y, color="#ea580c", s=100)
+        elif chart_type == "heatmap":
+            sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="Oranges")
+        elif chart_type == "pie":
+            # For Pie, we group by X and count or sum Y
+            data_pie = df.groupby(final_x)[final_y].sum().head(5)
+            plt.pie(data_pie, labels=data_pie.index, autopct='%1.1f%%', colors=sns.color_palette(color_palette))
+
+        plt.title(f"{chart_type.capitalize()} Analysis: {final_y} by {final_x}", fontsize=14, fontweight='bold')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        # 5. Buffer and Base64 Encoding
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", dpi=150)
+        buf.seek(0)
+        img_str = base64.b64encode(buf.read()).decode("utf-8")
+        plt.close()
+
+        # 6. Return Image + Smart Metadata for the AI
+        return {
+            "chart_base64": img_str,
+            "analysis_note": f"This {chart_type} focuses on {final_y} trends across {final_x}.",
+            "suggestions": get_chart_suggestions(df)
+        }
+
+    except Exception as e:
+        return {"error": str(e)}

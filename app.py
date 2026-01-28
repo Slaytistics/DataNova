@@ -2,317 +2,129 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import requests
-import base64
+import os
 
+# Import your corrected backend modules
 from summarizer import summarize_dataset
-from visualizer import plot_top_column
+from visualizer import plot_top_column  # Ensure this returns a plotly fig
 from qna import ask_dataset_question
 
-# --- Hide Streamlit Main Menu, Footer, and Header ---
-hide_st_style = """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide_st_style, unsafe_allow_html=True)
+# --- Page Config ---
+st.set_page_config(page_title="DataNova AI", page_icon="🚀", layout="wide")
 
-# --- FontAwesome for icons ---
-st.markdown(
-    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">',
-    unsafe_allow_html=True,
-)
-
-# --- Dark Theme Styling with Custom Chat and Fixes ---
+# --- CSS Styling (Optimized) ---
 dark_css = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    
+    html, body, [data-testid="stAppViewContainer"] {
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+    }
+    
+    .stCard {
+        background: rgba(30, 41, 59, 0.7);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 20px;
+    }
 
-body, html, div, span, label {
-    font-family: 'Poppins', sans-serif !important;
-    color: #FFFFFF !important;
-    background-color: transparent !important;
-    margin: 0; padding: 0;
-}
-
-[data-testid="stAppViewContainer"] {
-    background: url("https://i.pinimg.com/1200x/69/7b/72/697b72b60c5c7029f616752fc4afb505.jpg") no-repeat center center fixed;
-    background-size: cover;
-    min-height: 100vh;
-    padding-top: 6rem;
-    position: relative;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(24, 24, 24, 0.75);
-    z-index: -1;
-}
-
-.block-container {
-    max-width: 900px;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 24px;
-    backdrop-filter: blur(18px);
-    box-shadow: 0 0 24px 3px #333;
-    padding: 2rem 3rem 3rem 3rem !important;
-}
-
-/* Buttons */
-.stButton > button {
-    background: #111 !important;
-    color: white !important;
-    font-weight: 700;
-    border-radius: 30px;
-    padding: 0.7rem 2.5rem;
-    box-shadow: 0 0 8px #222;
-    transition: all 0.3s ease;
-    border: none !important;
-    font-size: 1.1rem;
-}
-.stButton > button:hover {
-    box-shadow: 0 0 12px #444;
-    transform: scale(1.05);
-}
-
-/* Input field + hover border */
-input[type="text"], .stTextInput > div > input {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    color: white !important;
-    border-radius: 12px !important;
-    padding: 0.6rem 1rem !important;
-    border: 2px solid transparent !important;
-    transition: border 0.3s ease;
-}
-input[type="text"]:hover, input[type="text"]:focus,
-.stTextInput > div > input:focus {
-    border: 2px solid #2255ff !important;
-    outline: none !important;
-}
-
-/* Dropdown selected value */
-.css-1n76uvr, .css-1jqq78o, .css-1dimb5e-singleValue {
-    background-color: #111 !important;
-    color: #fff !important;
-}
-
-/* Dropdown options */
-.css-3vnyiq-option {
-    background-color: #222 !important;
-    color: #eee !important;
-    font-weight: 500;
-    font-size: 1rem;
-}
-.css-3vnyiq-option:hover {
-    background-color: #333 !important;
-    color: #fff !important;
-}
-
-/* Section headers */
-.section-header {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ffffff !important;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-/* Chat Bubbles - Dark Mode */
-.chat-user {
-    background: linear-gradient(135deg, #1a3c3c, #1f5f5f);
-    color: #fff;
-    border-radius: 24px 24px 0 24px;
-    padding: 14px 20px;
-    max-width: 75%;
-    margin-left: auto;
-    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.2);
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-.chat-ai {
-    background: linear-gradient(135deg, #3e1f4d, #4e2f6f);
-    color: #fff;
-    border-radius: 24px 24px 24px 0;
-    padding: 14px 20px;
-    max-width: 75%;
-    margin-right: auto;
-    box-shadow: 0 4px 16px rgba(200, 100, 255, 0.3);
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-#chat-window {
-    max-height: 360px;
-    overflow-y: auto;
-    padding-right: 12px;
-    margin-bottom: 1.5rem;
-}
-
-/* Figma iframe styling */
-.figma-container {
-    margin-top: 2rem;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-.figma-iframe {
-    width: 100%;
-    height: 500px;
-    border: none;
-}
-
-/* Headings color fix */
-h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
-    color: white !important;
-}
+    h1, h2, h3 { color: #f97316 !important; font-weight: 900 !important; }
+    
+    /* Custom Chat Styling */
+    .chat-user { background: #1e293b; border-left: 5px solid #f97316; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+    .chat-ai { background: #334155; border-left: 5px solid #38bdf8; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
 </style>
 """
-
-
-
 st.markdown(dark_css, unsafe_allow_html=True)
 
-# --- Force All Headings to White ---
+# --- Header ---
 st.markdown("""
-<style>
-h1, h2, h3, h4, h5, h6, .title-block h1, .css-10trblm {
-    color: white !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# --- Title ---
-st.markdown("""
-<div style='text-align: center; margin-bottom: 3rem;'>
-    <span style='font-size: 3rem; font-weight: 900; color: #ffffff !important; letter-spacing: 2px; margin-bottom: 0.5rem; display: block;'>DATANOVA</span>
-    <span style='font-size: 1.2rem; color: #eee; letter-spacing: 3px; font-weight: 500;'>SLEEK. SMART. STREAMLINED.</span>
+<div style='text-align: center; padding: 40px 0;'>
+    <h1 style='font-size: 4rem; margin-bottom: 0;'>DATANOVA <span style='color:white'>AI</span></h1>
+    <p style='letter-spacing: 5px; color: #94a3b8;'>PREDICTIVE . DESIGN . ANALYTICS</p>
 </div>
 """, unsafe_allow_html=True)
 
-# --- Figma API Integration ---
-def get_figma_file(file_key, access_token):
-    """Fetch Figma file using API"""
-    headers = {"X-Figma-Token": access_token}
-    url = f"https://api.figma.com/v1/files/{file_key}"
-    response = requests.get(url, headers=headers)
-    return response.json()
+# --- Sidebar: Configuration ---
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=100)
+    st.title("Settings")
+    analysis_style = st.selectbox("AI Summary Style", ["Executive Summary", "Technical Analysis", "Business Insights"])
+    chat_mode = st.selectbox("Chat Depth", ["Normal", "Deep", "Quick"])
+    if st.button("Clear Cache & History"):
+        st.session_state.clear()
+        st.rerun()
 
-def get_figma_image(file_key, access_token, node_ids=None, scale=1, format="png"):
-    """Get image from Figma"""
-    headers = {"X-Figma-Token": access_token}
-    nodes = f"&ids={node_ids}" if node_ids else ""
-    url = f"https://api.figma.com/v1/images/{file_key}?scale={scale}&format={format}{nodes}"
-    response = requests.get(url, headers=headers)
-    return response.json()
+# --- Layout: Two Columns ---
+col1, col2 = st.columns([2, 1])
 
-def embed_figma_prototype(file_key, access_token):
-    """Embed Figma prototype"""
-    return f"""
-    <div class="figma-container">
-        <iframe class="figma-iframe" src="https://www.figma.com/embed?embed_host=streamlit&url=https://www.figma.com/file/{file_key}" allowfullscreen></iframe>
-    </div>
-    """
+with col1:
+    st.markdown("### 📤 Step 1: Data Ingestion")
+    uploaded_file = st.file_uploader("Drop your CSV here", type=["csv"])
 
-# --- Figma Section ---
-st.markdown('<h2 class="section-header"><i class="fa fa-paint-brush"></i> Figma Integration</h2>', unsafe_allow_html=True)
-
-figma_access_token = st.text_input("Figma Access Token (optional)", type="password", 
-                                 help="Get your access token from Figma account settings")
-figma_file_key = st.text_input("Figma File Key", 
-                              help="The file key from the Figma URL (e.g., for 'figma.com/file/ABC123', the key is 'ABC123')")
-
-if figma_file_key:
-    if st.button("Load Figma Design"):
-        if figma_access_token:
-            try:
-                # Get file metadata
-                file_data = get_figma_file(figma_file_key, figma_access_token)
-                st.success("Figma file loaded successfully!")
-                
-                # Display basic info
-                st.markdown(f"**Document Name:** {file_data.get('name', 'N/A')}")
-                st.markdown(f"**Last Modified:** {file_data.get('lastModified', 'N/A')}")
-                
-                # Get and display image
-                image_data = get_figma_image(figma_file_key, figma_access_token)
-                if 'images' in image_data:
-                    for node_id, image_url in image_data['images'].items():
-                        st.image(image_url, caption=f"Figma Design - Node {node_id}")
-                
-            except Exception as e:
-                st.error(f"Error fetching Figma data: {e}")
-        else:
-            st.warning("Please enter your Figma access token to fetch detailed data")
-    
-    # Always show the embedded prototype (works without token)
-    st.markdown("### Prototype Preview")
-    st.markdown(embed_figma_prototype(figma_file_key, figma_access_token), unsafe_allow_html=True)
-
-# --- Upload Section ---
-st.markdown('<h2 class="section-header"><i class="fa fa-upload"></i> Upload Your Dataset</h2>', unsafe_allow_html=True)
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-
-if uploaded_file:
-    try:
+    if uploaded_file:
         df = pd.read_csv(uploaded_file)
+        # Cleaning logic from main.py
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-        for col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="ignore")
-
-        st.markdown('<h2 class="section-header"><i class="fa fa-table"></i> Preview</h2>', unsafe_allow_html=True)
-        st.dataframe(df.head(), use_container_width=True)
-
-        st.markdown('<h2 class="section-header"><i class="fa fa-lightbulb-o"></i> Generate Summary</h2>', unsafe_allow_html=True)
-        if st.button("Generate Summary"):
-            with st.spinner("Calling Together AI..."):
-                summary = summarize_dataset(df.head(7))
-                st.success("Summary Generated!")
-                st.markdown(summary)
-
-        st.markdown('<h2 class="section-header"><i class="fa fa-bar-chart"></i> Chart Generator</h2>', unsafe_allow_html=True)
-        numeric_columns = df.select_dtypes(include=["float64", "int64", "int32"]).columns.tolist()
-        if numeric_columns:
-            selected_column = st.selectbox("Choose column:", numeric_columns)
-            top_n = st.slider("Top N values:", 5, 20, 10)
-            fig = plot_top_column(df, selected_column, top_n=top_n)
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("No numeric columns found for charts.")
-
-        st.markdown('<h2 class="section-header"><i class="fa fa-comments"></i> Ask About This Dataset</h2>', unsafe_allow_html=True)
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = []
-
-        mode = st.selectbox("Answer style:", ["Normal", "Explain like I'm 5", "Detailed"])
-        user_input = st.text_input("Your question:", placeholder="e.g. Which country starts with C?")
         
-        if user_input:
-            with st.spinner("Thinking like a data analyst..."):
-                reply = ask_dataset_question(df, user_input, mode=mode)
-                st.session_state.chat_history.append(("user", user_input))
-                st.session_state.chat_history.append(("ai", reply))
+        st.success(f"Loaded {uploaded_file.name} successfully!")
+        st.dataframe(df.head(10), use_container_width=True)
 
-        st.markdown('<div id="chat-window">', unsafe_allow_html=True)
-        for role, msg in st.session_state.chat_history:
-            if role == "user":
-                st.markdown(f"<div class='chat-user'><strong>You:</strong><br>{msg}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div class='chat-ai'><strong>AI:</strong><br>{msg}</div>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # --- AI Summarization ---
+        st.markdown("### 🤖 Step 2: AI Narrative")
+        if st.button(f"Generate {analysis_style}"):
+            with st.spinner("Synthesizing data..."):
+                summary = summarize_dataset(df, style=analysis_style)
+                st.markdown(f"<div class='stCard'>{summary}</div>", unsafe_allow_html=True)
 
-        if st.button("Clear Chat"):
-            st.session_state.chat_history = []
-            st.experimental_rerun()
+with col2:
+    if uploaded_file:
+        st.markdown("### 🎨 Step 3: Figma Key View")
+        figma_key = st.text_input("Figma File Key", placeholder="Enter key...")
+        
+        if figma_key:
+            st.markdown(f"""
+            <iframe style="border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px;" 
+            width="100%" height="300" 
+            src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/file/{figma_key}" 
+            allowfullscreen></iframe>
+            """, unsafe_allow_html=True)
+            
+        st.markdown("### 📊 Quick Visualization")
+        numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+        if numeric_cols:
+            viz_col = st.selectbox("Select Target", numeric_cols)
+            # Use plotly for the interactive feel
+            fig = px.histogram(df, x=viz_col, color_discrete_sequence=['#f97316'])
+            st.plotly_chart(fig, use_container_width=True)
 
-    except Exception as e:
-        st.error(f"Error processing file: {e}")
+# --- Chat Interface (Full Width) ---
+if uploaded_file:
+    st.markdown("---")
+    st.markdown("### 💬 DataNova Smart Assistant")
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat history
+    for message in st.session_state.messages:
+        role_class = "chat-user" if message["role"] == "user" else "chat-ai"
+        st.markdown(f"<div class='{role_class}'>{message['content']}</div>", unsafe_allow_html=True)
+
+    if prompt := st.chat_input("Ask anything about your data..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            with st.spinner("Analyzing..."):
+                response = ask_dataset_question(df, prompt, mode=chat_mode)
+                st.markdown(response)
+                st.session_state.messages.append({"role": "assistant", "content": response})
+
 else:
-    st.info("Upload a CSV file to begin your Datalicious journey.")
-
-
+    st.info("Please upload a CSV file to unlock AI Analysis and Chat features.")

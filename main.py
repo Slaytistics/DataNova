@@ -7,8 +7,7 @@ import io
 # Import your helper functions
 from summarizer import summarize_dataset
 from figma_exporter import generate_figma_design_spec 
-from visualizer import generate_chart_suggestions # New helper
-
+from visualizer import get_chart_suggestions
 app = FastAPI()
 
 # ✅ CORS Setup
@@ -57,7 +56,7 @@ async def analyze(
         })
 
         # 6. Chart Suggestions (For the Visualizer page)
-        chart_configs = generate_chart_suggestions(df)
+        chart_configs = get_chart_suggestions(df)
 
         return {
             "fileName": file.filename,

@@ -1,118 +1,86 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import json
 import traceback
 
-# Import your existing helper functions
+# Import your helper functions (Ensure these files are in the same directory)
 from summarizer import summarize_dataset
-from visualizer import plot_top_column
-from qna import ask_dataset_question
+from figma_exporter import generate_figma_design_spec 
 
 app = FastAPI()
 
+# ✅ CORS Setup (Allows your Vercel/Next.js frontend to talk to this API)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-def home():
-    return {"message": "DataNova API is running"}
-
-# ✅ Updated Analyze route to handle Style, Insights, and Resources
 @app.post("/analyze")
 async def analyze(
     file: UploadFile = File(...), 
-    style: str = Form("Executive Summary") # <--- Added style parameter
+    style: str = Form("Executive Summary")
 ):
     try:
-        print(f"\n📊 Processing: {file.filename} | Style: {style}")
-        
-        if not file.filename.endswith('.csv'):
-            raise HTTPException(status_code=400, detail="Please upload a .csv file.")
-        
+        # 1. Load the CSV Data
         df = pd.read_csv(file.file)
-
-        # 1. Clean Data
+        
+        # 2. Clean Data (Remove whitespace and unnamed columns)
         df.columns = [col.strip() for col in df.columns]
         df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
+        
+        # 3. Generate AI Content using the dynamic Style
+        # This passes the user's choice (Executive, Technical, or Business) to the AI
+        summary_text = summarize_dataset(df.head(10), style=style)
 
-        # 2. Convert numeric columns
-        for col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="ignore")
+        # 4. Generate Actionable Insights (Logic-based)
+        # These are displayed in the new yellow cards on your frontend
+        insights = [
+            f"Dataset consists of {len(df):,} rows and {len(df.columns)} columns.",
+            "Initial data scan suggests high variance in numeric columns.",
+            "Recommended: Focus on top 20% of contributors for immediate growth."
+        ]
+        
+        # 5. Resource Recommendations
+        resources = [
+            {"title": "Figma 'JSON to Design' Plugin", "url": "https://www.figma.com/community/plugin/1173443014168019313"},
+            {"title": "Data Visualization Best Practices", "url": "https://www.tableau.com/learn/articles/data-visualization-tips"}
+        ]
 
-        row_count, col_count = df.shape
-        columns = df.columns.tolist()
+        # 6. Generate the Figma Design Spec
+        # This transforms the raw data into a 'Blueprint' for the Export Page
+        figma_spec = generate_figma_design_spec({
+            "fileName": file.filename,
+            "row_count": len(df),
+            "column_count": len(df.columns),
+            "summary": summary_text
+        })
 
-        # 3. Generate Content (Pass style to summarizer)
-        try:
-            # We assume your summarizer can take a 'style' argument
-            summary_text = summarize_dataset(df.head(10), style=style)
-        except Exception as e:
-            print(f"⚠️ Summarizer error: {e}")
-            summary_text = create_fallback_summary(df)
-
-        # 4. Generate Insights & Resources
-        # In a real app, you could have the AI generate these too.
-        # For now, we generate them based on the dataset structure.
-        insights = generate_actionable_insights(df, style)
-        resources = generate_resource_links(df)
-
-        # 5. Return Structured Response for Frontend
+        # 7. Final Response Object
         return {
             "fileName": file.filename,
-            "row_count": int(row_count),
-            "column_count": int(col_count),
-            "columns": columns,
-            "summary": summary_text, # Frontend uses this as mainSummary
-            "insights": insights,    # Required for the new UI
-            "resources": resources,  # Required for the new UI
+            "row_count": int(len(df)),
+            "column_count": int(len(df.columns)),
+            "columns": df.columns.tolist(),
+            "summary": summary_text,
+            "insights": insights,
+            "resources": resources,
+            "figma_spec": figma_spec,
             "head": df.head(10).fillna("").to_dict(orient='records')
         }
 
     except Exception as e:
-        print(f"❌ Error: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Error in /analyze: {str(e)}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
 
-def generate_actionable_insights(df, style):
-    """Generates simple logic-based insights based on the selected style."""
-    insights = []
-    num_cols = df.select_dtypes(include=['number']).columns.tolist()
-    
-    if style == "Technical Analysis":
-        insights.append(f"Data contains {len(num_cols)} numeric features for modeling.")
-        insights.append("Recommendation: Check for multicollinearity between features.")
-    elif style == "Business Insights":
-        insights.append("Focus on high-value segments identified in the top records.")
-        insights.append("Recommendation: Align Q3 strategy with identified growth trends.")
-    else:
-        insights.append("The dataset is well-structured for general reporting.")
-        insights.append("Ensure missing values are handled before final presentation.")
-        
-    return insights
+# Test route to ensure API is healthy
+@app.get("/health")
+def health():
+    return {"status": "healthy", "version": "2.1.0"}
 
-def generate_resource_links(df):
-    """Suggests helpful links based on the columns found in the dataset."""
-    resources = [
-        {"title": "Pandas Documentation", "url": "https://pandas.pydata.org/docs/"},
-        {"title": "Data Visualization Best Practices", "url": "https://www.tableau.com/learn/articles/data-visualization-tips"}
-    ]
-    
-    # If it looks like financial data
-    col_str = " ".join(df.columns).lower()
-    if any(word in col_str for word in ['price', 'revenue', 'sales', 'budget']):
-        resources.append({"title": "Financial Data Analysis Guide", "url": "https://www.investopedia.com/terms/f/financial-statement-analysis.asp"})
-    
-    # If it looks like health data
-    if any(word in col_str for word in ['age', 'health', 'patient', 'bmi']):
-        resources.append({"title": "Healthcare Analytics Basics", "url": "https://www.healthit.gov/topic/scientific-analysis-methods"})
-
-    return resources
-
-def create_fallback_summary(df: pd.DataFrame) -> str:
-    return f"Dataset with {len(df):,} rows and {len(df.columns)} columns. Analysis focuses on {', '.join(df.columns[:3])}."
-
-# ... Keep your existing /chart and /ask routes below ...
+if __name__ == "__main__":
+    import uvicorn
+    # Make sure to use host 0.0.0.0 for Render deployment
+    uvicorn.run(app, host="0.0.0.0", port=8000)

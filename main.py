@@ -6,29 +6,29 @@ from summarizer import summarize_dataset
 from visualizer import plot_top_column
 from qna import ask_dataset_question
 
-# 1️⃣ Create app
 app = FastAPI()
 
-# 2️⃣ Add CORS (VERY IMPORTANT)
+# ✅ CORS (allow frontend to talk to backend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # allow frontend from Vercel
+    allow_origins=["*"],   # allow all origins (simple for now)
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 3️⃣ Test route
+# ✅ Test route
 @app.get("/")
 def home():
     return {"message": "DataNova API is running"}
 
-# 4️⃣ Analyze route
+# ✅ Analyze route
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...)):
     df = pd.read_csv(file.file)
 
     df.columns = [col.strip() for col in df.columns]
     df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
+
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors="ignore")
 
@@ -39,7 +39,7 @@ async def analyze(file: UploadFile = File(...)):
         "columns": df.columns.tolist()
     }
 
-# 5️⃣ Chart route
+# ✅ Chart route
 @app.post("/chart")
 async def chart(
     file: UploadFile = File(...),
@@ -50,7 +50,7 @@ async def chart(
     fig = plot_top_column(df, column, top_n=top_n)
     return fig.to_dict()
 
-# 6️⃣ Ask question route
+# ✅ Ask question route
 @app.post("/ask")
 async def ask_question(
     file: UploadFile = File(...),

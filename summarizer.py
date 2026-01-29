@@ -21,31 +21,42 @@ async def summarize_dataset(
         df = pd.read_csv(io.BytesIO(await file.read()))
         df.columns = df.columns.str.strip()
 
-        # limit dataset for speed
+        # Store original counts before sampling
+        original_row_count = len(df)
+        original_column_count = len(df.columns)
+        
+        # Get column names and head data BEFORE sampling
+        columns = df.columns.tolist()
+        head_data = df.head(10).to_dict(orient='records')
+
+        # limit dataset for speed (for AI summary only)
         if len(df) > 5000:
-            df = df.sample(5000)
+            df_sample = df.sample(5000)
+        else:
+            df_sample = df
 
         api_key = os.getenv("TOGETHER_API_KEY")
         if not api_key:
-            return {"summary": create_fallback_summary(df), "mode": "fallback"}
+            summary_text = create_fallback_summary(df)
+            mode = "fallback"
+        else:
+            style_prompts = {
+                "Executive Summary": "Give a high-level overview of the dataset for executives.",
+                "Technical Analysis": "Provide technical insights about distributions and data quality.",
+                "Business Insights": "Extract 2-3 actionable business trends."
+            }
 
-        style_prompts = {
-            "Executive Summary": "Give a high-level overview of the dataset for executives.",
-            "Technical Analysis": "Provide technical insights about distributions and data quality.",
-            "Business Insights": "Extract 2-3 actionable business trends."
-        }
+            instruction = style_prompts.get(style, style_prompts["Executive Summary"])
 
-        instruction = style_prompts.get(style, style_prompts["Executive Summary"])
+            sample_data = df_sample.head(5).to_string(index=False)
+            stats = df_sample.describe().round(2).to_string()
 
-        sample_data = df.head(5).to_string(index=False)
-        stats = df.describe().round(2).to_string()
-
-        prompt = f"""
+            prompt = f"""
 You are a professional data analyst.
 
 Task: {instruction}
 
-Columns: {', '.join(df.columns)}
+Columns: {', '.join(df_sample.columns)}
 
 Sample Data:
 {sample_data}
@@ -59,36 +70,54 @@ Rules:
 - Focus only on this dataset
 """
 
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+
+            payload = {
+                "model": MODEL_NAME,
+                "messages": [
+                    {"role": "system", "content": "You are DataNova AI, a dataset analysis assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                "max_tokens": 400,
+                "temperature": 0.4
+            }
+
+            try:
+                response = requests.post(
+                    TOGETHER_API_URL,
+                    headers=headers,
+                    json=payload,
+                    timeout=12
+                )
+
+                if response.status_code == 200:
+                    data = response.json()
+                    summary_text = data["choices"][0]["message"]["content"]
+                    mode = "ai"
+                else:
+                    summary_text = create_fallback_summary(df)
+                    mode = "fallback"
+            except Exception as api_error:
+                print(f"AI API Error: {api_error}")
+                summary_text = create_fallback_summary(df)
+                mode = "fallback"
+
+        # Return complete response with all required fields
+        return {
+            "fileName": file.filename,
+            "row_count": original_row_count,
+            "column_count": original_column_count,
+            "columns": columns,
+            "head": head_data,
+            "summary": summary_text,
+            "mode": mode
         }
-
-        payload = {
-            "model": MODEL_NAME,
-            "messages": [
-                {"role": "system", "content": "You are DataNova AI, a dataset analysis assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            "max_tokens": 400,
-            "temperature": 0.4
-        }
-
-        response = requests.post(
-            TOGETHER_API_URL,
-            headers=headers,
-            json=payload,
-            timeout=12
-        )
-
-        if response.status_code == 200:
-            data = response.json()
-            summary = data["choices"][0]["message"]["content"]
-            return {"summary": summary, "mode": "ai"}
-        else:
-            return {"summary": create_fallback_summary(df), "mode": "fallback"}
 
     except Exception as e:
+        print(f"Error in summarize_dataset: {e}")
         return {"error": str(e)}
 
 

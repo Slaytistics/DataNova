@@ -1,88 +1,92 @@
 import matplotlib
-# CRITICAL: Use 'Agg' backend for headless server environments like Render
-matplotlib.use('Agg') 
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import seaborn as sns
-import io
-import base64
+import io, base64
 from fastapi import APIRouter, UploadFile, File, Form
 import pandas as pd
 
 router = APIRouter()
 
-def get_chart_suggestions(df):
-    """Analyzes the dataframe to suggest optimal charts for the AI Assistant."""
-    num_cols = df.select_dtypes(include=['number']).columns.tolist()
-    cat_cols = df.select_dtypes(include=['object']).columns.tolist()
-    
-    suggestions = []
-    if cat_cols and num_cols:
-        suggestions.append(f"A Bar Chart comparing {cat_cols[0]} against {num_cols[0]}.")
-    if len(num_cols) >= 2:
-        suggestions.append(f"A Scatter Plot showing the relationship between {num_cols[0]} and {num_cols[1]}.")
-    
-    return suggestions
+# ---------------- UTILS ---------------- #
+
+def get_columns(df):
+    return {
+        "numeric_columns": df.select_dtypes(include=["number"]).columns.tolist(),
+        "categorical_columns": df.select_dtypes(include=["object"]).columns.tolist(),
+        "all_columns": df.columns.tolist()
+    }
+
+
+# ---------------- API ---------------- #
 
 @router.post("/visualize")
 async def visualize(
-    file: UploadFile = File(...), 
-    chart_type: str = Form("bar"),
-    x_axis: str = Form(None),
-    y_axis: str = Form(None)
+    file: UploadFile = File(...),
+    chart_type: str = Form(...),   # bar, line, scatter, hist
+    x_axis: str = Form(...),
+    y_axis: str = Form(None),
+    limit: int = Form(50)          # number of rows user wants
 ):
     try:
-        # 1. Load and Clean Data
         df = pd.read_csv(file.file)
-        df.columns = [col.strip() for col in df.columns]
+        df.columns = df.columns.str.strip()
 
-        # 2. Smart Axis Selection
-        numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
-        cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+        # limit rows for performance
+        df = df.head(limit)
 
-        if not numeric_cols:
-            return {"error": "No numeric data found to plot."}
+        columns_info = get_columns(df)
 
-        # Determine axes: User choice -> Detected categorical/numeric -> Default first columns
-        final_x = x_axis if x_axis in df.columns else (cat_cols[0] if cat_cols else df.columns[0])
-        final_y = y_axis if y_axis in df.columns else numeric_cols[0]
+        # validate x_axis
+        if x_axis not in df.columns:
+            return {"error": f"Invalid X axis column: {x_axis}"}
 
-        # 3. Global Styling (DataNova Branding)
-        plt.figure(figsize=(10, 6))
-        sns.set_theme(style="darkgrid") # Matches your dark theme app
-        color_palette = "Oranges_r" 
+        # validate y_axis if needed
+        if chart_type != "hist" and y_axis not in df.columns:
+            return {"error": f"Invalid Y axis column: {y_axis}"}
 
-        # 4. Chart Logic
+        sns.set_theme(style="darkgrid")
+        plt.figure(figsize=(8,5))
+
+        # -------- CHART LOGIC -------- #
         if chart_type == "bar":
-            sns.barplot(data=df.head(15), x=final_x, y=final_y, palette=color_palette)
+            sns.barplot(data=df, x=x_axis, y=y_axis)
+
         elif chart_type == "line":
-            sns.lineplot(data=df, x=final_x, y=final_y, color="#f97316", marker="o")
+            sns.lineplot(data=df, x=x_axis, y=y_axis, marker="o")
+
         elif chart_type == "scatter":
-            sns.scatterplot(data=df, x=final_x, y=final_y, color="#ea580c", s=100)
-        elif chart_type == "heatmap":
-            sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="Oranges")
-        elif chart_type == "pie":
-            data_pie = df.groupby(final_x)[final_y].sum().head(5)
-            plt.pie(data_pie, labels=data_pie.index, autopct='%1.1f%%', colors=sns.color_palette(color_palette))
+            sns.scatterplot(data=df, x=x_axis, y=y_axis)
 
-        plt.title(f"{chart_type.capitalize()} Analysis: {final_y} by {final_x}", fontsize=14, fontweight='bold', color='white')
-        plt.xticks(rotation=45, color='white')
-        plt.yticks(color='white')
-        plt.tight_layout(pad=3.0)
+        elif chart_type == "hist":
+            sns.histplot(df[x_axis], bins=20)
 
-        # 5. Buffer and Base64 Encoding
+        else:
+            return {"error": "Invalid chart type. Use bar, line, scatter, hist."}
+
+        plt.title(f"{chart_type.capitalize()} Chart")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        # -------- IMAGE ENCODE -------- #
         buf = io.BytesIO()
-        # Save with transparent background to blend into the UI
-        plt.savefig(buf, format="png", dpi=150, transparent=True)
+        plt.savefig(buf, format="png", dpi=120)
         buf.seek(0)
-        img_str = base64.b64encode(buf.read()).decode("utf-8")
-        plt.close('all') # Essential to clear memory
+        img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+        plt.close()
 
         return {
-            "chart_base64": img_str,
-            "analysis_note": f"Visualizing {final_y} trends across {final_x}.",
-            "suggestions": get_chart_suggestions(df)
+            "chart": img_base64,
+            "columns": columns_info,
+            "used": {
+                "chart_type": chart_type,
+                "x_axis": x_axis,
+                "y_axis": y_axis,
+                "limit": limit
+            }
         }
 
     except Exception as e:
-        plt.close('all')
+        plt.close()
         return {"error": str(e)}

@@ -1,107 +1,141 @@
 import requests
 import os
 import pandas as pd
+import io
+from fastapi import APIRouter, UploadFile, File, Form
 
-def ask_dataset_question(df: pd.DataFrame, question: str, mode: str = "Normal") -> str:
-    """
-    Analyzes user questions against the provided DataFrame using Together AI.
-    Optimized for DataNova FastAPI backend.
-    """
-    
-    # Use environment variables instead of Streamlit secrets for Render/Backend deployment
-    api_key = os.getenv("TOGETHER_API_KEY")
-    if not api_key:
-        print("⚠️ TOGETHER_API_KEY not found in environment.")
-        return create_fallback_answer(df, question)
-    
-    # 1. Prepare Context (Summary + Sample)
-    context = prepare_dataset_context(df, mode)
-    
-    # 2. Build the Prompt
-    prompt = f"""
-    You are the DataNova AI Assistant. 
-    Below is the context of a dataset currently uploaded by the user.
-    
-    {context}
+router = APIRouter()
 
-    Question: {question}
+TOGETHER_API_URL = "https://api.together.xyz/v1/chat/completions"
+MODEL_NAME = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
-    Instructions:
-    - If the user asks for specific data points, refer to the 'Sample Data' provided.
-    - If the question involves math/stats, use the 'Overview' counts.
-    - Be conversational but professional.
-    """
 
-    max_tokens, temperature = get_mode_parameters(mode)
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+# ---------------- CHAT ENDPOINT ---------------- #
 
-    payload = {
-        "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-        "messages": [
-            {"role": "system", "content": "You are a helpful data analyst. Use the provided dataset metadata to answer user queries accurately."},
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": max_tokens,
-        "temperature": temperature
-    }
-
+@router.post("/chat")
+async def ask_dataset_question(
+    file: UploadFile = File(...),
+    question: str = Form(...),
+    mode: str = Form("Normal")
+):
     try:
-        response = requests.post(
-            "https://api.together.xyz/v1/chat/completions", 
-            headers=headers, 
-            json=payload,
-            timeout=15 # Quicker timeout for better UX
-        )
-        
-        if response.status_code == 200:
-            res_json = response.json()
-            # Clean extraction of the message
-            return res_json["choices"][0]["message"]["content"].strip()
-        else:
-            return create_fallback_answer(df, question)
-            
-    except Exception as e:
-        print(f"❌ Q&A Engine Error: {e}")
-        return create_fallback_answer(df, question)
+        df = pd.read_csv(io.BytesIO(await file.read()))
+        df.columns = df.columns.str.strip()
 
-def prepare_dataset_context(df: pd.DataFrame, mode: str) -> str:
-    """Creates a textual snapshot of the data for the AI's 'memory'."""
-    row_count = len(df)
+        # limit rows for speed & token safety
+        if len(df) > 3000:
+            df = df.sample(3000)
+
+        api_key = os.getenv("TOGETHER_API_KEY")
+        if not api_key:
+            return {"answer": create_fallback_answer(df, question), "mode": "fallback"}
+
+        context = prepare_dataset_context(df)
+
+        prompt = f"""
+You are DataNova AI. You MUST answer strictly using the dataset below.
+
+Dataset Context:
+{context}
+
+User Question: {question}
+
+Rules:
+- Do not invent information
+- Answer only from the dataset
+- If answer is not in data, say "Not found in the dataset"
+- Keep response under 150 words
+"""
+
+        max_tokens, temperature = get_mode_parameters(mode)
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": MODEL_NAME,
+            "messages": [
+                {"role": "system", "content": "You are a dataset question-answering assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": max_tokens,
+            "temperature": temperature
+        }
+
+        response = requests.post(
+            TOGETHER_API_URL,
+            headers=headers,
+            json=payload,
+            timeout=12
+        )
+
+        if response.status_code == 200:
+            data = response.json()
+            answer = data["choices"][0]["message"]["content"].strip()
+            return {"answer": answer, "mode": "ai"}
+        else:
+            return {"answer": create_fallback_answer(df, question), "mode": "fallback"}
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ---------------- CONTEXT BUILDER ---------------- #
+
+def prepare_dataset_context(df: pd.DataFrame) -> str:
+    rows = len(df)
     cols = df.columns.tolist()
-    
-    # We provide a mix of metadata and actual values
-    context = f"OVERVIEW:\n- Rows: {row_count}\n- Columns: {', '.join(cols)}\n"
-    
-    if mode == "Deep":
-        # Deep mode includes data types and a larger sample
-        context += f"DATA TYPES:\n{df.dtypes.to_string()}\n"
-        context += f"SAMPLE DATA:\n{df.head(10).to_string()}"
-    else:
-        # Normal/Quick mode just gives a small preview
-        context += f"SAMPLE DATA:\n{df.head(3).to_string()}"
-        
-    return context
+
+    numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
+    cat_cols = df.select_dtypes(include=["object"]).columns.tolist()
+
+    context = f"""
+OVERVIEW:
+Rows: {rows}
+Columns: {', '.join(cols)}
+
+NUMERIC COLUMNS: {', '.join(numeric_cols[:5])}
+CATEGORICAL COLUMNS: {', '.join(cat_cols[:5])}
+
+SAMPLE DATA:
+{df.head(5).to_string(index=False)}
+"""
+    return context.strip()
+
+
+# ---------------- MODE PARAMETERS ---------------- #
 
 def get_mode_parameters(mode: str):
-    """Modes allow the user to control AI 'creativity'."""
-    if mode == "Deep": return 600, 0.3 # Accurate, long
-    if mode == "Quick": return 200, 0.8 # Creative, fast
-    return 400, 0.6 # Balanced
+    if mode == "Deep":
+        return 500, 0.3   # accurate
+    elif mode == "Quick":
+        return 200, 0.7   # faster
+    else:
+        return 350, 0.5   # balanced
+
+
+# ---------------- FALLBACK ANSWERS ---------------- #
 
 def create_fallback_answer(df: pd.DataFrame, question: str) -> str:
-    """Hardcoded logic to answer basic questions if the AI API fails."""
     q = question.lower()
-    
-    if "how many rows" in q or "count" in q:
+
+    if "how many rows" in q or "row count" in q:
         return f"The dataset contains {len(df)} rows."
-    if "columns" in q or "names" in q:
-        return f"The columns are: {', '.join(df.columns.tolist())}."
+
+    if "columns" in q or "column names" in q:
+        return f"The dataset columns are: {', '.join(df.columns.tolist())}."
+
     if "missing" in q or "null" in q:
-        nulls = df.isnull().sum().sum()
-        return f"There are {nulls} missing values in the dataset."
-        
-    return "I'm having trouble connecting to my AI brain, but I can see you have a dataset with " + str(len(df.columns)) + " columns loaded. Ask me about the row count or column names!"
+        return f"There are {df.isnull().sum().sum()} missing values in the dataset."
+
+    if "average" in q or "mean" in q:
+        num_cols = df.select_dtypes(include=["number"]).columns.tolist()
+        if num_cols:
+            return f"The average of {num_cols[0]} is {df[num_cols[0]].mean():.2f}"
+
+    return (
+        "I couldn't find that information in the dataset. "
+        "Try asking about row count, column names, missing values, or averages."
+    )

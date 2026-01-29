@@ -2,129 +2,108 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import requests
-import os
 
-# Import your corrected backend modules
-from summarizer import summarize_dataset
-from visualizer import plot_top_column  # Ensure this returns a plotly fig
-from qna import ask_dataset_question
+BACKEND_URL = "https://your-render-backend-url/api"  # 🔴 change this
 
-# --- Page Config ---
 st.set_page_config(page_title="DataNova AI", page_icon="🚀", layout="wide")
 
-# --- CSS Styling (Optimized) ---
-dark_css = """
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-    
-    html, body, [data-testid="stAppViewContainer"] {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a;
-        color: #f8fafc;
-    }
-    
-    .stCard {
-        background: rgba(30, 41, 59, 0.7);
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid rgba(255,255,255,0.1);
-        margin-bottom: 20px;
-    }
-
-    h1, h2, h3 { color: #f97316 !important; font-weight: 900 !important; }
-    
-    /* Custom Chat Styling */
-    .chat-user { background: #1e293b; border-left: 5px solid #f97316; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-    .chat-ai { background: #334155; border-left: 5px solid #38bdf8; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-</style>
-"""
-st.markdown(dark_css, unsafe_allow_html=True)
-
-# --- Header ---
+# ---------------- CSS ---------------- #
 st.markdown("""
-<div style='text-align: center; padding: 40px 0;'>
-    <h1 style='font-size: 4rem; margin-bottom: 0;'>DATANOVA <span style='color:white'>AI</span></h1>
-    <p style='letter-spacing: 5px; color: #94a3b8;'>PREDICTIVE . DESIGN . ANALYTICS</p>
-</div>
+<style>
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+.stCard {
+    background: rgba(30, 41, 59, 0.7);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+.chat-user { background: #1e293b; padding: 10px; border-radius: 8px; }
+.chat-ai { background: #334155; padding: 10px; border-radius: 8px; }
+</style>
 """, unsafe_allow_html=True)
 
-# --- Sidebar: Configuration ---
-with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=100)
-    st.title("Settings")
-    analysis_style = st.selectbox("AI Summary Style", ["Executive Summary", "Technical Analysis", "Business Insights"])
-    chat_mode = st.selectbox("Chat Depth", ["Normal", "Deep", "Quick"])
-    if st.button("Clear Cache & History"):
-        st.session_state.clear()
-        st.rerun()
+st.markdown("<h1 style='text-align:center;color:#f97316'>DATANOVA AI</h1>", unsafe_allow_html=True)
 
-# --- Layout: Two Columns ---
-col1, col2 = st.columns([2, 1])
+uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
-with col1:
-    st.markdown("### 📤 Step 1: Data Ingestion")
-    uploaded_file = st.file_uploader("Drop your CSV here", type=["csv"])
+analysis_style = st.selectbox("AI Summary Style", ["Executive Summary","Technical Analysis","Business Insights"])
+chat_mode = st.selectbox("Chat Mode", ["Normal","Deep","Quick"])
 
-    if uploaded_file:
-        df = pd.read_csv(uploaded_file)
-        # Cleaning logic from main.py
-        df.columns = [col.strip() for col in df.columns]
-        df = df.loc[:, ~df.columns.str.contains('^Unnamed', case=False)]
-        
-        st.success(f"Loaded {uploaded_file.name} successfully!")
-        st.dataframe(df.head(10), use_container_width=True)
-
-        # --- AI Summarization ---
-        st.markdown("### 🤖 Step 2: AI Narrative")
-        if st.button(f"Generate {analysis_style}"):
-            with st.spinner("Synthesizing data..."):
-                summary = summarize_dataset(df, style=analysis_style)
-                st.markdown(f"<div class='stCard'>{summary}</div>", unsafe_allow_html=True)
-
-with col2:
-    if uploaded_file:
-        st.markdown("### 🎨 Step 3: Figma Key View")
-        figma_key = st.text_input("Figma File Key", placeholder="Enter key...")
-        
-        if figma_key:
-            st.markdown(f"""
-            <iframe style="border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px;" 
-            width="100%" height="300" 
-            src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/file/{figma_key}" 
-            allowfullscreen></iframe>
-            """, unsafe_allow_html=True)
-            
-        st.markdown("### 📊 Quick Visualization")
-        numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
-        if numeric_cols:
-            viz_col = st.selectbox("Select Target", numeric_cols)
-            # Use plotly for the interactive feel
-            fig = px.histogram(df, x=viz_col, color_discrete_sequence=['#f97316'])
-            st.plotly_chart(fig, use_container_width=True)
-
-# --- Chat Interface (Full Width) ---
 if uploaded_file:
-    st.markdown("---")
-    st.markdown("### 💬 DataNova Smart Assistant")
-    
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df.head())
+
+    # -------- SUMMARY -------- #
+    if st.button("Generate Summary"):
+        with st.spinner("Analyzing..."):
+            files = {"file": uploaded_file}
+            data = {"style": analysis_style}
+
+            res = requests.post(f"{BACKEND_URL}/summary", files=files, data=data)
+
+            if res.status_code == 200:
+                summary = res.json()["summary"]
+                st.markdown(f"<div class='stCard'>{summary}</div>", unsafe_allow_html=True)
+            else:
+                st.error("Summary failed")
+
+    # -------- VISUALIZATION -------- #
+    st.markdown("### Visualization")
+
+    chart_type = st.selectbox("Chart Type", ["bar","line","scatter","hist"])
+    x_axis = st.selectbox("X Axis", df.columns)
+    y_axis = st.selectbox("Y Axis", df.columns)
+    limit = st.slider("Number of rows", 10, 100, 50)
+
+    if st.button("Generate Chart"):
+        with st.spinner("Generating chart..."):
+            files = {"file": uploaded_file}
+            data = {
+                "chart_type": chart_type,
+                "x_axis": x_axis,
+                "y_axis": y_axis,
+                "limit": limit
+            }
+
+            res = requests.post(f"{BACKEND_URL}/visualize", files=files, data=data)
+
+            if res.status_code == 200:
+                img = res.json()["chart"]
+                st.image(f"data:image/png;base64,{img}")
+            else:
+                st.error("Visualization failed")
+
+    # -------- CHATBOT -------- #
+    st.markdown("### 💬 DataNova Assistant")
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Display chat history
-    for message in st.session_state.messages:
-        role_class = "chat-user" if message["role"] == "user" else "chat-ai"
-        st.markdown(f"<div class='{role_class}'>{message['content']}</div>", unsafe_allow_html=True)
+    for msg in st.session_state.messages:
+        css = "chat-user" if msg["role"]=="user" else "chat-ai"
+        st.markdown(f"<div class='{css}'>{msg['content']}</div>", unsafe_allow_html=True)
 
-    if prompt := st.chat_input("Ask anything about your data..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    question = st.chat_input("Ask about your dataset...")
 
-        with st.chat_message("assistant"):
-            with st.spinner("Analyzing..."):
-                response = ask_dataset_question(df, prompt, mode=chat_mode)
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+    if question:
+        st.session_state.messages.append({"role":"user","content":question})
+
+        files = {"file": uploaded_file}
+        data = {"question": question, "mode": chat_mode}
+
+        with st.spinner("Thinking..."):
+            res = requests.post(f"{BACKEND_URL}/chat", files=files, data=data)
+
+            if res.status_code == 200:
+                answer = res.json()["answer"]
+            else:
+                answer = "Error contacting AI service."
+
+        st.session_state.messages.append({"role":"assistant","content":answer})
+        st.rerun()
 
 else:
-    st.info("Please upload a CSV file to unlock AI Analysis and Chat features.")
+    st.info("Upload a CSV file to begin.")

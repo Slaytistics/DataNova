@@ -1,21 +1,37 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from summarizer import router as summary_router
+from visualizer import router as visualizer_router
+from qna import router as qna_router
 
-# Allow frontend to call this API
+app = FastAPI(title="DataNova API", version="3.0")
+
+# ---------------- CORS ---------------- #
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow requests from anywhere
+    allow_origins=["*"],  # later restrict to your Vercel domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Example endpoint for your frontend
-@app.post("/analyze")
-async def analyze(file: UploadFile = File(...)):
-    contents = await file.read()
-    # Replace this with your actual analysis logic
-    result = "File received! Replace this with your logic."
-    return {"result": result}
+# ---------------- ROUTERS ---------------- #
+app.include_router(summary_router, prefix="/api")
+app.include_router(visualizer_router, prefix="/api")
+app.include_router(qna_router, prefix="/api")
+
+
+# ---------------- ROOT ---------------- #
+@app.get("/")
+def root():
+    return {"message": "DataNova API is running"}
+
+@app.get("/health")
+def health():
+    return {"status": "healthy", "version": "3.0"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

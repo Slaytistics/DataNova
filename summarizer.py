@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import io
 import json
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from typing import Optional
 
 router = APIRouter()
@@ -15,135 +15,144 @@ MODEL_NAME = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 # ---------------- ENHANCED SUMMARY ENDPOINT ---------------- #
 
 @router.post("/summary")
-async def summarize_dataset(
-    file: Optional[UploadFile] = File(None),
-    style: str = Form("Executive Summary"),  # Keep for backward compatibility
-    length: str = Form("medium"),  # NEW: concise, medium, lengthy
-    tone: str = Form("professional"),  # NEW: professional, technical, casual
-    audience: str = Form("general"),  # NEW: general, executive, technical, academic
-    existingData: Optional[str] = Form(None)  # NEW: For regeneration
-):
+async def summarize_dataset(request: Request):
     """
     Enhanced summary endpoint supporting:
-    1. New CSV file uploads
-    2. Regeneration with existing data
+    1. New CSV file uploads (multipart/form-data)
+    2. Regeneration with existing data (application/json)
     3. Customizable length, tone, and audience
     """
+    content_type = request.headers.get("content-type", "")
+    
     try:
-        # Handle regeneration with existing data
-        if existingData:
-            try:
-                data = json.loads(existingData)
-                df_info = data.get('dataInfo', {})
-                
-                if not df_info:
-                    raise HTTPException(status_code=400, detail="No data information found in existingData")
-                
-                # Regenerate summary with new preferences
-                summary_text, mode = await generate_summary_from_info(
-                    df_info, length, tone, audience, style
-                )
-                
-                # Update response with new summary
-                return {
-                    "fileName": df_info.get('filename', 'Unknown'),
-                    "row_count": df_info.get('rows', 0),
-                    "column_count": df_info.get('columns', 0),
-                    "columns": df_info.get('column_names', []),
-                    "head": df_info.get('head_data', []),
-                    "summary": summary_text,
-                    "mode": mode,
-                    "insights": generate_insights(df_info),
-                    "resources": generate_resources(audience, tone),
-                    "dataInfo": df_info,  # Store for future regeneration
-                    "preferences": {
-                        "length": length,
-                        "tone": tone,
-                        "audience": audience
-                    }
+        # Handle JSON request (regeneration with existing data)
+        if "application/json" in content_type:
+            data = await request.json()
+            existing_data = data.get('existingData')
+            length = data.get('length', 'medium')
+            tone = data.get('tone', 'professional')
+            audience = data.get('audience', 'general')
+            style = data.get('style', 'Executive Summary')
+            
+            if not existing_data:
+                raise HTTPException(status_code=400, detail="No existingData provided")
+            
+            df_info = existing_data.get('dataInfo')
+            if not df_info:
+                raise HTTPException(status_code=400, detail="No dataInfo found in existingData")
+            
+            # Regenerate summary with new preferences
+            summary_text, mode = await generate_summary_from_info(
+                df_info, length, tone, audience, style
+            )
+            
+            # Return updated response
+            return {
+                "fileName": df_info.get('filename', 'Unknown'),
+                "row_count": df_info.get('rows', 0),
+                "column_count": df_info.get('columns', 0),
+                "columns": df_info.get('column_names', []),
+                "head": df_info.get('head_data', []),
+                "summary": summary_text,
+                "mode": mode,
+                "insights": generate_insights(df_info),
+                "resources": generate_resources(audience, tone),
+                "dataInfo": df_info,
+                "preferences": {
+                    "length": length,
+                    "tone": tone,
+                    "audience": audience
                 }
-            except json.JSONDecodeError:
-                raise HTTPException(status_code=400, detail="Invalid JSON in existingData")
-        
-        # Handle new file upload
-        if not file:
-            raise HTTPException(status_code=400, detail="No file or existingData provided")
-        
-        if not file.filename.endswith('.csv'):
-            raise HTTPException(status_code=400, detail="Only CSV files are supported")
-        
-        # Read and process CSV
-        contents = await file.read()
-        df = pd.read_csv(io.BytesIO(contents))
-        df.columns = df.columns.str.strip()
-
-        # Store original data info
-        original_row_count = len(df)
-        original_column_count = len(df.columns)
-        columns = df.columns.tolist()
-        head_data = df.head(10).to_dict(orient='records')
-
-        # Create comprehensive data info for storage
-        df_info = {
-            'filename': file.filename,
-            'rows': original_row_count,
-            'columns': original_column_count,
-            'column_names': columns,
-            'head_data': head_data,
-            'dtypes': {col: str(dtype) for col, dtype in df.dtypes.items()},
-            'missing_values': df.isnull().sum().to_dict(),
-            'numeric_columns': df.select_dtypes(include=["number"]).columns.tolist(),
-            'categorical_columns': df.select_dtypes(include=["object"]).columns.tolist(),
-        }
-
-        # Sample for AI analysis
-        if len(df) > 5000:
-            df_sample = df.sample(5000)
-        else:
-            df_sample = df
-
-        # Add sample statistics to df_info
-        df_info['sample_data'] = df_sample.head(5).to_string(index=False)
-        df_info['statistics'] = df_sample.describe().round(2).to_string()
-
-        # Generate AI summary
-        summary_text, mode = await generate_summary_from_info(
-            df_info, length, tone, audience, style
-        )
-
-        # Generate insights and resources
-        insights = generate_insights(df_info)
-        resources = generate_resources(audience, tone)
-
-        # Return complete response
-        return {
-            "fileName": file.filename,
-            "row_count": original_row_count,
-            "column_count": original_column_count,
-            "columns": columns,
-            "head": head_data,
-            "summary": summary_text,
-            "mode": mode,
-            "insights": insights,
-            "resources": resources,
-            "stats": {
-                "Rows": original_row_count,
-                "Columns": original_column_count,
-                "Missing Values": sum(df.isnull().sum().to_dict().values())
-            },
-            "dataInfo": df_info,  # Store for future regeneration
-            "preferences": {
-                "length": length,
-                "tone": tone,
-                "audience": audience
             }
-        }
+        
+        # Handle multipart/form-data request (new file upload)
+        else:
+            form = await request.form()
+            file = form.get('file')
+            length = form.get('length', 'medium')
+            tone = form.get('tone', 'professional')
+            audience = form.get('audience', 'general')
+            style = form.get('style', 'Executive Summary')
+            
+            if not file:
+                raise HTTPException(status_code=400, detail="No file provided")
+            
+            # Verify it's a CSV file
+            if not file.filename.endswith('.csv'):
+                raise HTTPException(status_code=400, detail="Only CSV files are supported")
+            
+            # Read and process CSV
+            contents = await file.read()
+            df = pd.read_csv(io.BytesIO(contents))
+            df.columns = df.columns.str.strip()
+
+            # Store original data info
+            original_row_count = len(df)
+            original_column_count = len(df.columns)
+            columns = df.columns.tolist()
+            head_data = df.head(10).to_dict(orient='records')
+
+            # Create comprehensive data info for storage
+            df_info = {
+                'filename': file.filename,
+                'rows': original_row_count,
+                'columns': original_column_count,
+                'column_names': columns,
+                'head_data': head_data,
+                'dtypes': {col: str(dtype) for col, dtype in df.dtypes.items()},
+                'missing_values': df.isnull().sum().to_dict(),
+                'numeric_columns': df.select_dtypes(include=["number"]).columns.tolist(),
+                'categorical_columns': df.select_dtypes(include=["object"]).columns.tolist(),
+            }
+
+            # Sample for AI analysis
+            if len(df) > 5000:
+                df_sample = df.sample(5000)
+            else:
+                df_sample = df
+
+            # Add sample statistics to df_info
+            df_info['sample_data'] = df_sample.head(5).to_string(index=False)
+            df_info['statistics'] = df_sample.describe().round(2).to_string()
+
+            # Generate AI summary
+            summary_text, mode = await generate_summary_from_info(
+                df_info, length, tone, audience, style
+            )
+
+            # Generate insights and resources
+            insights = generate_insights(df_info)
+            resources = generate_resources(audience, tone)
+
+            # Return complete response
+            return {
+                "fileName": file.filename,
+                "row_count": original_row_count,
+                "column_count": original_column_count,
+                "columns": columns,
+                "head": head_data,
+                "summary": summary_text,
+                "mode": mode,
+                "insights": insights,
+                "resources": resources,
+                "stats": {
+                    "Rows": original_row_count,
+                    "Columns": original_column_count,
+                    "Missing Values": sum(df.isnull().sum().to_dict().values())
+                },
+                "dataInfo": df_info,
+                "preferences": {
+                    "length": length,
+                    "tone": tone,
+                    "audience": audience
+                }
+            }
 
     except HTTPException:
         raise
     except Exception as e:
         print(f"Error in summarize_dataset: {e}")
-        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
 
 
 # ---------------- GENERATE SUMMARY WITH CUSTOMIZATION ---------------- #

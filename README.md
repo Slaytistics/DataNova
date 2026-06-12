@@ -56,7 +56,7 @@ At its core, DataNova integrates **GPT-4** for natural language data summarizati
 │                                                                 │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────┐   │
 │  │   summarizer.py  │  │  visualizer.py   │  │   qna.py     │   │
-│  │   GPT-4 · /summary│  │  Plotly · /viz   │  │  GPT-4·/chat │  │
+│  │  GPT-4 · /summary│  │  Plotly · /viz   │  │  GPT-4·/chat │   │
 │  └──────────────────┘  └────────┬─────────┘  └──────────────┘   │
 │                                 │                               │
 │                                 ▼                               │

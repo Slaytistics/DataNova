@@ -12,7 +12,7 @@
 
 **DataNova bridges the gap between raw data and actionable insight — no data science background required.**
 
-[Live Demo](#) · [Report Bug](https://github.com/Slaytistics/DataNova/issues) · [Request Feature](https://github.com/Slaytistics/DataNova/issues)
+[Live Demo](https://datanova-frontend.vercel.app/) · [Report Bug](https://github.com/Slaytistics/DataNova/issues) · [Request Feature](https://github.com/Slaytistics/DataNova/issues)
 
 </div>
 

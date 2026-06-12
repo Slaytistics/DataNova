@@ -12,7 +12,7 @@
 
 **DataNova bridges the gap between raw data and actionable insight — no data science background required.**
 
-[Live Demo](https://datanova-frontend.vercel.app/) · [Report Bug](https://github.com/Slaytistics/DataNova/issues) · [Request Feature](https://github.com/Slaytistics/DataNova/issues)
+[🌐 Live Demo](https://datanova-frontend.vercel.app) · [Report Bug](https://github.com/Slaytistics/DataNova/issues) · [Request Feature](https://github.com/Slaytistics/DataNova/issues)
 
 </div>
 
@@ -42,26 +42,29 @@ At its core, DataNova integrates **GPT-4** for natural language data summarizati
 ## 🏗️ Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                    DataNova Frontend                      │
-│              (Streamlit — app.py)                        │
-│   Upload → Summary Mode → Chart Builder → Chat Interface │
-└──────────────────┬───────────────────────────────────────┘
-                   │  REST API (requests)
-┌──────────────────▼───────────────────────────────────────┐
-│                  DataNova Backend                         │
-│                    (api.py / main.py)                    │
-│                                                          │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────────┐  │
-│  │ summarizer  │  │  visualizer  │  │     qna        │  │
-│  │   (GPT-4)   │  │   (Plotly)   │  │   (GPT-4)      │  │
-│  └─────────────┘  └──────────────┘  └────────────────┘  │
-│                         │                                │
-│               ┌─────────▼──────────┐                    │
-│               │  figma_exporter.py  │                    │
-│               │   (Figma REST API)  │                    │
-│               └────────────────────┘                    │
-└──────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                      DataNova Frontend                          │
+│                    (Streamlit — app.py)                         │
+│                                                                 │
+│   [Upload] ──▶ [Summary Mode] ──▶ [Chart Builder] ──▶ [Chat]    │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │  REST API (requests)
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      DataNova Backend                           │
+│                     (api.py / main.py)                          │
+│                                                                 │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────┐   │
+│  │   summarizer.py  │  │  visualizer.py   │  │   qna.py     │   │
+│  │   GPT-4 · /summary│  │  Plotly · /viz   │  │  GPT-4·/chat │  │
+│  └──────────────────┘  └────────┬─────────┘  └──────────────┘   │
+│                                 │                               │
+│                                 ▼                               │
+│                    ┌────────────────────────┐                   │
+│                    │   figma_exporter.py    │                   │
+│                    │    Figma REST API      │                   │
+│                    └────────────────────────┘                   │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
